@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buzz Fly - To Infinity And Beyond</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/pages/home.css" />
+</head>
+<body>
+
+  <!-- ==============  NAVBAR  ============== -->
+  <header class="navbar">
+    <a href="index.html" class="navbar__brand">Buzz Fly</a>
+
+    <nav class="navbar__nav">
+      <a href="index.html" class="navbar__link navbar__link--active">Explore</a>
+      <a href="pages/my-trips.html" class="navbar__link">Trips</a>
+      <a href="pages/contact.html" class="navbar__link">Support</a>
+    </nav>
+
+        <div class="navbar__actions">
+      <!-- =====  NOTIFICATIONS DROPDOWN  ===== -->
+      <div class="notif-menu" data-menu>
+        <button type="button" class="icon-btn" aria-label="Notifications" aria-haspopup="true" aria-expanded="false" data-menu-trigger>
+          <img src="assets/icons/bell.svg" alt="" />
+        </button>
+
+        <div class="notif-menu__dropdown" data-menu-panel>
+          <div class="notif-menu__head">
+            <h4 class="notif-menu__title">Notifications</h4>
+          </div>
+
+          <ul class="notif-menu__list">
+            <li class="notif-item notif-item--unread">
+              <div class="notif-item__icon"><img src="assets/icons/plane-takeoff.svg" alt="" /></div>
+              <div class="notif-item__body">
+                <p class="notif-item__title">Flash deal: 40% off Bali flights</p>
+                <p class="notif-item__meta">Expires in 2 days · 15m ago</p>
+              </div>
+            </li>
+
+            <li class="notif-item notif-item--unread">
+              <div class="notif-item__icon"><img src="assets/icons/plane.svg" alt="" /></div>
+              <div class="notif-item__body">
+                <p class="notif-item__title">Price dropped $120 on LHR → JFK</p>
+                <p class="notif-item__meta">Your watched flight · 2h ago</p>
+              </div>
+            </li>
+
+            <li class="notif-item">
+              <div class="notif-item__icon"><img src="assets/icons/bed.svg" alt="" /></div>
+              <div class="notif-item__body">
+                <p class="notif-item__title">Booking confirmed</p>
+                <p class="notif-item__meta">Amaya Resort &amp; Spa · 1d ago</p>
+              </div>
+            </li>
+
+            <li class="notif-item">
+              <div class="notif-item__icon"><img src="assets/icons/star.svg" alt="" /></div>
+              <div class="notif-item__body">
+                <p class="notif-item__title">Kyoto is trending this week</p>
+                <p class="notif-item__meta">New destination spotlight · 2d ago</p>
+              </div>
+            </li>
+
+            <li class="notif-item">
+              <div class="notif-item__icon"><img src="assets/icons/calendar.svg" alt="" /></div>
+              <div class="notif-item__body">
+                <p class="notif-item__title">Your trip to Paris starts in 3 days</p>
+                <p class="notif-item__meta">Reminder · 3d ago</p>
+              </div>
+            </li>
+          </ul>
+
+          <a href="#" class="notif-menu__footer">View all notifications</a>
+        </div>
+      </div>
+      <!-- =====  /NOTIFICATIONS DROPDOWN  ===== -->
+
+      <!-- =====  ACCOUNT DROPDOWN MENU  ===== -->
+      <div class="account-menu" data-menu>
+        <button type="button" class="icon-btn" aria-label="Account" aria-haspopup="true" aria-expanded="false" data-menu-trigger>
+          <img src="assets/icons/user.svg" alt="" />
+        </button>
+
+        <div class="account-menu__dropdown" data-menu-panel>
+          <div class="account-menu__header">
+            <p class="account-menu__title">Welcome User!</p>
+            <p class="account-menu__subtitle">Sign in to unlock your trips</p>
+          </div>
+          <a href="pages/auth/signin.html" class="account-menu__item account-menu__item--primary">
+            Sign In/Up
+          </a>
+        </div>
+      </div>
+      <!-- =====  /ACCOUNT DROPDOWN MENU  ===== -->
+    </div>
+
+  </header>
+
+  <main>
+
+    <!--   HERO   -->
+    <section class="hero">
+      <div class="hero__content">
+        <p class="hero__eyebrow">New destinations await</p>
+        <h1 class="hero__title">To Infinity And Beyond.</h1>
+        <p class="hero__lead">
+          Experience luxury travel curated by experts. From hidden rainforest retreats to bustling neon metropolises.
+        </p>
+      </div>
+
+      <figure class="hero__media">
+        <img src="assets/images/hero-islands.png" alt="" class="hero__image" />
+        <figcaption class="hero__badge">
+          <img src="assets/icons/badge-verified.svg" alt="" />
+          Top Rated Concierge 2024
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ==============  SEARCH CARD  ============== -->
+    <section class="search">
+      <form class="search__card">
+        <div class="search__tabs">
+          <button type="button" class="tab tab--active" data-form-target="flights">
+            <img src="assets/icons/plane.svg" alt="" />
+            Flights
+          </button>
+          <button type="button" class="tab" data-form-target="hotels">
+            <img src="assets/icons/bed.svg" alt="" />
+            Hotels
+          </button>
+        </div>
+
+        <!-- FLIGHTS FORM -->
+        <div class="search__fields search__fields--flights" data-form="flights">
+          <label class="search__field">
+            <span class="search__field-label">Departure</span>
+            <input type="text" name="from" placeholder="Where from?" class="search__field-input" />
+          </label>
+
+          <label class="search__field">
+            <span class="search__field-label">Destination</span>
+            <input type="text" name="to" placeholder="Where to?" class="search__field-input" />
+          </label>
+
+          <label class="search__field search__field--dates">
+            <span class="search__field-label">Check-in</span>
+            <input type="date" name="checkin" class="search__field-input" />
+          </label>
+
+          <label class="search__field search__field--dates">
+            <span class="search__field-label">Check-out</span>
+            <input type="date" name="checkout" class="search__field-input" />
+          </label>
+
+          <button type="submit" class="search__submit">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="m21 21-4.3-4.3"/>
+            </svg>
+            Search
+          </button>
+        </div>
+
+        <!-- HOTELS FORM (hidden by default) -->
+        <div class="search__fields search__fields--hotels" data-form="hotels" hidden>
+          <label class="search__field search__field--with-icon">
+            <span class="search__field-label">Destination</span>
+            <span class="search__field-row">
+              <img src="assets/icons/globe.svg" alt="" class="search__field-leading" />
+              <input type="text" name="hotel-dest" placeholder="Where are you going?" class="search__field-input" />
+            </span>
+          </label>
+
+          <label class="search__field search__field--dates">
+            <span class="search__field-label">Check-in</span>
+            <input type="date" name="hotel-checkin" class="search__field-input" />
+          </label>
+
+          <label class="search__field search__field--dates">
+            <span class="search__field-label">Check-out</span>
+            <input type="date" name="hotel-checkout" class="search__field-input" />
+          </label>
+
+          <label class="search__field search__field--with-icon">
+            <span class="search__field-label">Guests</span>
+            <span class="search__field-row">
+              <img src="assets/icons/user.svg" alt="" class="search__field-leading" />
+              <input type="text" name="hotel-guests" placeholder="2 adults" class="search__field-input" />
+            </span>
+          </label>
+
+          <button type="submit" class="search__submit">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="m21 21-4.3-4.3"/>
+            </svg>
+            Search
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ==============  TRENDING DESTINATIONS  ============== -->
+    <section class="trending">
+      <header class="trending__head">
+        <h2 class="trending__title">Trending Destinations</h2>
+        <p class="trending__subtitle">Curated spots that are defining travel this season.</p>
+        <a href="#" class="trending__more">
+          View all
+          <img src="assets/icons/arrow-right.svg" alt="" />
+        </a>
+      </header>
+
+      <ul class="trending__grid">
+        <li class="dest-card dest-card--featured">
+          <a href="#" class="dest-card__link">
+            <img src="assets/images/dest-ubud.png" alt="" class="dest-card__img" />
+            <span class="dest-card__badge">Editor's Choice</span>
+            <h3 class="dest-card__title">Ubud, Bali</h3>
+            <p class="dest-card__meta">Spiritual retreats and emerald terraces.</p>
+          </a>
+        </li>
+
+        <li class="dest-card dest-card--tall">
+          <a href="#" class="dest-card__link">
+            <img src="assets/images/dest-kyoto.png" alt="" class="dest-card__img" />
+            <h3 class="dest-card__title">Kyoto, Japan</h3>
+            <p class="dest-card__meta">Autumn Zen Garden</p>
+          </a>
+        </li>
+
+        <li class="dest-card">
+          <a href="#" class="dest-card__link">
+            <img src="assets/images/dest-zermatt.png" alt="" class="dest-card__img" />
+            <h3 class="dest-card__title">Zermatt, Swiss</h3>
+          </a>
+        </li>
+
+        <li class="dest-card">
+          <a href="#" class="dest-card__link">
+            <img src="assets/images/dest-paris.png" alt="" class="dest-card__img" />
+            <h3 class="dest-card__title">Paris, France</h3>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ==============  POPULAR THIS WEEK  ============== -->
+    <section class="popular">
+      <h2 class="popular__title">Popular This Week</h2>
+
+      <div class="popular__grid">
+
+        <!-- Top Flight Deals column -->
+        <div class="popular__col">
+          <h3 class="popular__col-title">
+            <img src="assets/icons/plane-takeoff.svg" alt="" />
+            Top Flight Deals
+          </h3>
+
+          <div class="deal">
+            <span class="deal__code">LHR</span>
+            <h4 class="deal__title">London to New York</h4>
+            <p class="deal__meta">Round trip - Economy</p>
+            <p class="deal__price">$452</p>
+            <a href="pages/flight-details.html" class="deal__details">Details</a>
+          </div>
+
+          <div class="deal">
+            <span class="deal__code">SFO</span>
+            <h4 class="deal__title">San Francisco to Tokyo</h4>
+            <p class="deal__meta">Round trip - Premium</p>
+            <p class="deal__price">$890</p>
+            <a href="pages/flight-details.html" class="deal__details">Details</a>
+          </div>
+        </div>
+
+        <!-- Featured Stays column -->
+        <div class="popular__col">
+          <h3 class="popular__col-title">
+            <img src="assets/icons/bed-double.svg" alt="" />
+            Featured Stays
+          </h3>
+
+          <div class="stay-list">
+            <div class="stay">
+              <img src="assets/images/stay-amaya.png" alt="" class="stay__img" />
+              <h4 class="stay__title">Amaya Resort and Spa</h4>
+              <p class="stay__rating"><img src="assets/icons/star.svg" alt="" />4.9</p>
+              <p class="stay__location">Maldives</p>
+              <p class="stay__price">$320 / night</p>
+            </div>
+
+            <div class="stay">
+              <img src="assets/images/stay-skyline.png" alt="" class="stay__img" />
+              <h4 class="stay__title">The Skyline Suites</h4>
+              <p class="stay__rating"><img src="assets/icons/star.svg" alt="" />4.7</p>
+              <p class="stay__location">Singapore</p>
+              <p class="stay__price">$275 / night</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==============  FOOTER  ============== -->
+  <footer class="footer">
+    <div class="footer__brand">
+      <p class="footer__brand-name">Buzz Fly</p>
+      <p class="footer__brand-tag">Crafting your next legendary journey with digital precision.</p>
+    </div>
+
+    <div class="footer__col">
+      <h4 class="footer__col-title">Explore</h4>
+      <a href="#" class="footer__col-link">About Us</a>
+      <a href="#" class="footer__col-link">Terms of Service</a>
+    </div>
+
+    <div class="footer__col">
+      <h4 class="footer__col-title">Legal</h4>
+      <a href="#" class="footer__col-link">Privacy Policy</a>
+      <a href="#" class="footer__col-link">Cookie Policy</a>
+    </div>
+
+    <div class="footer__col">
+      <h4 class="footer__col-title">Connect</h4>
+      <a href="pages/contact.html" class="footer__col-link">Contact</a>
+      <a href="#" class="footer__col-link">Instagram</a>
+    </div>
+
+    <div class="footer__bottom">
+      <p>&copy; 2026 Buzz Fly Travel. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Floating help / chat button -->
+  <button type="button" class="fab" aria-label="Open help chat">
+    <img src="assets/icons/support.svg" alt="" />
+  </button>
+   <script src="js/main.js" defer></script>
+   <script src="js/pages/home.js" defer></script>
+
+</body>
+</html>
