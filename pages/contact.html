@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Buzz Fly - Support</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/pages/contact.css">
@@ -11,18 +14,88 @@
 <body>
     <div class="page-background-glow"></div>
 
-    <header class="navbar">
-        <div class="navbar__brand">Buzz Fly</div>
-        <nav class="navbar__nav">
-            <a href="#" class="navbar__link">Explore</a>
-            <a href="#" class="navbar__link">Trips</a>
-            <a href="#" class="navbar__link navbar__link--active">Support</a>
-        </nav>
-        <div class="navbar__actions">
-            <button class="icon-btn"><img src="../assets/icons/bell.svg" alt="Notifications"></button>
-            <button class="icon-btn"><img src="../assets/icons/user.svg" alt="Profile"></button>
+<header class="navbar">
+  <a href="../index.html" class="navbar__brand">Buzz Fly</a>
+
+  <nav class="navbar__nav">
+    <a href="../index.html" class="navbar__link">Explore</a>
+    <a href="my-trips.html" class="navbar__link">Trips</a>
+    <a href="contact.html" class="navbar__link navbar__link--active">Support</a>
+  </nav>
+
+  <div class="navbar__actions">
+    <div class="notif-menu" data-menu>
+      <button type="button" class="icon-btn" aria-label="Notifications" aria-haspopup="true" aria-expanded="false" data-menu-trigger>
+        <img src="../assets/icons/bell.svg" alt="" />
+      </button>
+
+      <div class="notif-menu__dropdown" data-menu-panel>
+        <div class="notif-menu__head">
+          <h4 class="notif-menu__title">Notifications</h4>
         </div>
-    </header>
+
+        <ul class="notif-menu__list">
+          <li class="notif-item notif-item--unread">
+            <div class="notif-item__icon"><img src="../assets/icons/plane-takeoff.svg" alt="" /></div>
+            <div class="notif-item__body">
+              <p class="notif-item__title">Flash deal: 40% off Bali flights</p>
+              <p class="notif-item__meta">Expires in 2 days · 15m ago</p>
+            </div>
+          </li>
+
+          <li class="notif-item notif-item--unread">
+            <div class="notif-item__icon"><img src="../assets/icons/plane.svg" alt="" /></div>
+            <div class="notif-item__body">
+              <p class="notif-item__title">Price dropped $120 on LHR → JFK</p>
+              <p class="notif-item__meta">Your watched flight · 2h ago</p>
+            </div>
+          </li>
+
+          <li class="notif-item">
+            <div class="notif-item__icon"><img src="../assets/icons/bed.svg" alt="" /></div>
+            <div class="notif-item__body">
+              <p class="notif-item__title">Booking confirmed</p>
+              <p class="notif-item__meta">Amaya Resort &amp; Spa · 1d ago</p>
+            </div>
+          </li>
+
+          <li class="notif-item">
+            <div class="notif-item__icon"><img src="../assets/icons/star.svg" alt="" /></div>
+            <div class="notif-item__body">
+              <p class="notif-item__title">Kyoto is trending this week</p>
+              <p class="notif-item__meta">New destination spotlight · 2d ago</p>
+            </div>
+          </li>
+
+          <li class="notif-item">
+            <div class="notif-item__icon"><img src="../assets/icons/calendar.svg" alt="" /></div>
+            <div class="notif-item__body">
+              <p class="notif-item__title">Your trip to Paris starts in 3 days</p>
+              <p class="notif-item__meta">Reminder · 3d ago</p>
+            </div>
+          </li>
+        </ul>
+
+        <a href="#" class="notif-menu__footer">View all notifications</a>
+      </div>
+    </div>
+    <div class="account-menu" data-menu>
+      <button type="button" class="icon-btn" aria-label="Account" aria-haspopup="true" aria-expanded="false" data-menu-trigger>
+        <img src="../assets/icons/user.svg" alt="" />
+      </button>
+
+      <div class="account-menu__dropdown" data-menu-panel>
+        <div class="account-menu__header">
+          <p class="account-menu__title">Welcome User!</p>
+          <p class="account-menu__subtitle">Sign in to unlock your trips</p>
+        </div>
+        <a href="auth/signin.html" class="account-menu__item account-menu__item--primary">
+          Sign In/Up
+        </a>
+      </div>
+    </div>
+    </div>
+</header>
 
     <div class="contact-page">
         <main>
@@ -111,29 +184,33 @@
     </div>
 
     <footer class="footer">
-        <div class="footer__brand">
-            <div class="footer__brand-name">Buzz Fly</div>
-            <p class="footer__brand-tag">ELEVATING YOUR TRAVEL EXPERIENCE THROUGH DIGITAL EXCELLENCE.</p>
-        </div>
-        <div class="footer__col">
-            <h4 class="footer__col-title">COMPANY</h4>
-            <a href="#" class="footer__col-link">ABOUT US</a>
-            <a href="#" class="footer__col-link">TERMS OF SERVICE</a>
-        </div>
-        <div class="footer__col">
-            <h4 class="footer__col-title">LEGAL</h4>
-            <a href="#" class="footer__col-link">PRIVACY POLICY</a>
-            <a href="#" class="footer__col-link">COOKIE POLICY</a>
-        </div>
-        <div class="footer__col footer__social-col">
-            <h4 class="footer__col-title">SOCIAL</h4>
-            <div class="social-icons">
-                <img src="../assets/icons/globe.svg" alt="Web" class="social-icon">
-                <img src="../assets/icons/arrow-right.svg" alt="Share" class="social-icon">
-            </div>
-            <p class="footer__copyright">© 2024 BUZZ FLY TRAVEL. ALL RIGHTS RESERVED.</p>
-        </div>
-    </footer>
+    <div class="footer__brand">
+      <p class="footer__brand-name">Buzz Fly</p>
+      <p class="footer__brand-tag">Crafting your next legendary journey with digital precision.</p>
+    </div>
+
+    <div class="footer__col">
+      <h4 class="footer__col-title">Explore</h4>
+      <a href="#" class="footer__col-link">About Us</a>
+      <a href="#" class="footer__col-link">Terms of Service</a>
+    </div>
+
+    <div class="footer__col">
+      <h4 class="footer__col-title">Legal</h4>
+      <a href="#" class="footer__col-link">Privacy Policy</a>
+      <a href="#" class="footer__col-link">Cookie Policy</a>
+    </div>
+
+    <div class="footer__col">
+      <h4 class="footer__col-title">Connect</h4>
+      <a href="pages/contact.html" class="footer__col-link">Contact</a>
+      <a href="#" class="footer__col-link">Instagram</a>
+    </div>
+
+    <div class="footer__bottom">
+      <p>&copy; 2026 Buzz Fly Travel. All rights reserved.</p>
+    </div>
+  </footer>
 
     <script>
         document.getElementById('contactForm').addEventListener('submit', function(event) {
