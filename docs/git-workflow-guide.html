@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Buzz Fly — Git & GitHub Workflow Guide</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+    color: #0F1B2D;
+    line-height: 1.55;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 24px;
+    font-size: 11pt;
+  }
+  h1 {
+    font-size: 26pt;
+    font-weight: 800;
+    margin: 0 0 4px;
+    background: linear-gradient(135deg, #1F9D55, #8B5CF6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  h1 + .subtitle {
+    color: #5C6675;
+    margin-bottom: 28px;
+    font-size: 11pt;
+  }
+  h2 {
+    font-size: 16pt;
+    font-weight: 700;
+    margin-top: 28px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #E6E8EC;
+    padding-bottom: 6px;
+    color: #0E7C3A;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 12pt;
+    font-weight: 700;
+    margin-top: 18px;
+    margin-bottom: 6px;
+    color: #0F1B2D;
+    page-break-after: avoid;
+  }
+  h3 .tag {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  p { margin: 6px 0 10px; }
+  strong { color: #0E7C3A; }
+  em { color: #7C3AED; font-style: normal; font-weight: 600; }
+  ul, ol { padding-left: 22px; margin: 6px 0 12px; }
+  li { margin: 3px 0; }
+  code {
+    background: #F1F3F7;
+    color: #7C3AED;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+    font-size: 10pt;
+  }
+  pre {
+    background: #0F1B2D;
+    color: #F2F5FA;
+    padding: 12px 14px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+    font-size: 9.5pt;
+    line-height: 1.5;
+    margin: 8px 0 14px;
+    page-break-inside: avoid;
+  }
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  pre .c { color: #9099A8; }
+  blockquote {
+    border-left: 3px solid #8B5CF6;
+    background: #F7F4FF;
+    margin: 10px 0 14px;
+    padding: 8px 14px;
+    color: #4A3A6B;
+    border-radius: 0 6px 6px 0;
+    page-break-inside: avoid;
+  }
+  blockquote p { margin: 4px 0; }
+  .callout {
+    background: #E8F7EE;
+    border-left: 3px solid #1F9D55;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin: 10px 0 14px;
+    page-break-inside: avoid;
+  }
+  .danger {
+    background: #FDECEE;
+    border-left: 3px solid #E5484D;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin: 10px 0 14px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0 16px;
+    font-size: 10pt;
+    page-break-inside: avoid;
+  }
+  th, td {
+    border: 1px solid #E6E8EC;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #F7F8FA;
+    font-weight: 700;
+    color: #0E7C3A;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #E6E8EC;
+    margin: 22px 0;
+  }
+  .pill {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 9pt;
+    font-weight: 700;
+    color: #fff;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .pill.green  { background: #1F9D55; }
+  .pill.blue   { background: #3B82F6; }
+  .pill.yellow { background: #F5A524; }
+  .pill.purple { background: #8B5CF6; }
+  .pill.orange { background: #F2731F; }
+  .pill.gray   { background: #5C6675; }
+  .ascii {
+    font-family: "Cascadia Code", Consolas, monospace;
+    background: #F7F8FA;
+    border: 1px dashed #C5EAD2;
+    padding: 12px;
+    white-space: pre;
+    border-radius: 6px;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+  }
+  .footer {
+    margin-top: 36px;
+    padding-top: 12px;
+    border-top: 1px solid #E6E8EC;
+    color: #9099A8;
+    font-size: 9pt;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>Buzz Fly — Git &amp; GitHub Workflow</h1>
+<div class="subtitle">A practical guide for a 6-person team using a single shared repo. Read once, refer back when stuck.</div>
+
+<h2>Do you (Karim) need to <code>git clone</code>?</h2>
+<p><strong>No.</strong> You already have the project on your computer — you created it. Cloning is for <em>downloading</em> a repo you don't have yet.</p>
+<ul>
+  <li><strong>You (Karim):</strong> skip the clone. Your repo is already linked to GitHub. Just <code>git pull</code> to get teammates' changes.</li>
+  <li><strong>Your 5 teammates:</strong> they each clone <em>once</em> to download a copy onto their own machines.</li>
+</ul>
+<div class="callout">
+  <strong>Mental model:</strong> GitHub is like a shared Google Drive folder. You uploaded the project — you don't need to download what you uploaded. Your friends download it (clone) so they have their own copy to work on.
+</div>
+
+<h2>The big picture</h2>
+<div class="ascii">    GitHub (cloud / shared)
+                          ↑ git push                ↓ git pull / git clone
+
+    Your computer    →   git checkout -b   →   edit files   →   git add   →   git commit</div>
+<p>Two halves to remember:</p>
+<ul>
+  <li><strong>Local</strong> (<code>add</code>, <code>commit</code>, <code>checkout</code>, <code>branch</code>) — happens on your computer. Free, instant, reversible.</li>
+  <li><strong>Remote</strong> (<code>push</code>, <code>pull</code>, <code>clone</code>) — talks to GitHub. Syncs you with the team.</li>
+</ul>
+
+<h2>Step-by-step: every command explained</h2>
+
+<h3><span class="pill green">1</span> First time only — for teammates</h3>
+
+<pre><code>git clone https://github.com/Karimkimoz74/buzz-fly.git</code></pre>
+<p><strong>What:</strong> Downloads the entire project (all files + full history) from GitHub to their computer.<br>
+<strong>Why:</strong> They need a local copy to edit. Internet folder → their hard drive.<br>
+<strong>When:</strong> Once per teammate, ever. After this they never clone again.</p>
+
+<pre><code>cd buzz-fly</code></pre>
+<p><strong>What:</strong> Move into the folder that was just created.<br>
+<strong>Why:</strong> All other git commands must be run <em>inside</em> the project folder.</p>
+
+<h3><span class="pill blue">2</span> Every time you start a new task — everyone, including you</h3>
+
+<pre><code>git checkout main</code></pre>
+<p><strong>What:</strong> Switch to the <code>main</code> branch (the "official" version).<br>
+<strong>Why:</strong> Always start from the latest official code, not from someone's half-finished work.</p>
+
+<pre><code>git pull</code></pre>
+<p><strong>What:</strong> Download any new changes teammates pushed since you last looked.<br>
+<strong>Why:</strong> If Rawan merged her hotel page yesterday, your local copy doesn't know. <code>pull</code> syncs you up.<br>
+<strong>Analogy:</strong> Refreshing the page to see new messages.</p>
+
+<pre><code>git checkout -b feature/my-task</code></pre>
+<p><strong>What:</strong> Create a new branch called <code>feature/my-task</code> and switch to it.<br>
+<strong>Why:</strong> A branch is a copy of the project where you can experiment <em>without breaking the official version</em>.<br>
+<strong>Naming:</strong> Replace <code>my-task</code> with what you're doing — <code>feature/home-page</code>, <code>feature/login-form</code>, <code>fix/navbar-mobile</code>.</p>
+
+<blockquote><strong>Why branches matter:</strong> If everyone edited <code>main</code> directly, you'd all overwrite each other constantly. Branches = each person works in their own sandbox, then merges that sandbox into <code>main</code> when ready.</blockquote>
+
+<h3><span class="pill yellow">3</span> While you're working — save your progress</h3>
+
+<pre><code>git status</code></pre>
+<p><strong>What:</strong> Shows which files you've changed (not committed yet).<br>
+<strong>Why:</strong> Sanity check — "did I touch what I think I touched?"</p>
+
+<pre><code>git add index.html css/pages/home.css</code></pre>
+<p><strong>What:</strong> Mark these specific files for your next save (commit).<br>
+<strong>Why:</strong> You might have changed 10 files but only want to save 3 right now.<br>
+<strong>Tip:</strong> Avoid <code>git add .</code> — saves everything blindly, risky if you have secrets or junk.</p>
+
+<pre><code>git commit -m "home: add hero section"</code></pre>
+<p><strong>What:</strong> Saves a snapshot of the staged files to your local history with a label.<br>
+<strong>Why:</strong> A commit is a save point. You can always come back to it. The message tells future-you (and your team) what changed.<br>
+<strong>Important:</strong> This only saves <em>on your computer</em>. GitHub doesn't know about it yet.</p>
+
+<div class="callout"><strong>Make commits small and frequent.</strong> Don't write 3 hours of code then commit once. Commit every time you finish a small piece — "added the navbar", "styled the hero", "fixed mobile spacing". Easier to undo a small mistake than untangle a giant one.</div>
+
+<h3><span class="pill purple">4</span> Share your work with the team</h3>
+
+<pre><code>git push -u origin feature/my-task</code></pre>
+<p><strong>What:</strong> Upload your branch + all its commits to GitHub.<br>
+<strong>Why:</strong> Now your teammates can see and review it.</p>
+<ul>
+  <li><code>origin</code> = the GitHub repo</li>
+  <li><code>feature/my-task</code> = your branch name</li>
+  <li><code>-u</code> = "remember this connection so next time I just type <code>git push</code>"</li>
+</ul>
+<p>After the first push, every following push is just:</p>
+<pre><code>git push</code></pre>
+
+<h3><span class="pill orange">5</span> Get your work into <code>main</code> — Pull Request (PR)</h3>
+<p>A PR is <em>not</em> a git command — it's done on <strong>github.com</strong> in the browser.</p>
+<ol>
+  <li>After you push, go to your repo on github.com</li>
+  <li>GitHub shows a yellow banner: <strong>"Compare &amp; pull request"</strong> — click it</li>
+  <li><strong>Title:</strong> what you did (e.g. "Home page hero section")</li>
+  <li><strong>Description:</strong> 2–3 bullets explaining what changed + a screenshot if it's UI</li>
+  <li><strong>Reviewers:</strong> pick a teammate</li>
+  <li>They look at your code, leave comments, click <strong>Approve</strong></li>
+  <li>Click the green <strong>Merge pull request</strong> button → use <strong>Squash and merge</strong></li>
+  <li>Your branch is now part of <code>main</code>. Done.</li>
+</ol>
+<p><strong>Why PRs?</strong> Two reasons: <em>code review</em> (a teammate catches your bugs before they reach <code>main</code>) and <em>discussion</em> (comments live next to the actual code lines).</p>
+
+<h3><span class="pill gray">6</span> After your PR is merged — clean up</h3>
+<pre><code>git checkout main
+git pull
+git branch -d feature/my-task</code></pre>
+<p>Switch back to <code>main</code>, pull the latest (which now includes <em>your</em> merged work), delete your finished branch. Old branches accumulate clutter — delete once they've served their purpose.</p>
+<p>Then start the cycle again with <code>git checkout -b feature/next-task</code>.</p>
+
+<h2>Who works on what</h2>
+<p>To avoid conflicts, <strong>split by page</strong>, not by file. One person owns one page at a time:</p>
+<table>
+  <thead>
+    <tr><th>Page</th><th>Files they touch</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Home</td><td><code>index.html</code>, <code>css/pages/home.css</code>, <code>js/pages/home.js</code></td></tr>
+    <tr><td>Flights</td><td><code>pages/flights.html</code>, <code>css/pages/flights.css</code>, <code>js/pages/flights.js</code></td></tr>
+    <tr><td>Hotels</td><td><code>pages/hotels.html</code>, <code>css/pages/hotels.css</code>, <code>js/pages/hotels.js</code></td></tr>
+    <tr><td>My Trips</td><td><code>pages/my-trips.html</code>, <code>css/pages/my-trips.css</code>, <code>js/pages/my-trips.js</code></td></tr>
+    <tr><td>Profile</td><td><code>pages/profile.html</code>, <code>css/pages/profile.css</code>, <code>js/pages/profile.js</code></td></tr>
+    <tr><td>Auth</td><td><code>pages/auth/*.html</code>, <code>css/pages/auth.css</code>, <code>js/pages/auth.js</code></td></tr>
+    <tr><td>Contact</td><td><code>pages/contact.html</code>, <code>css/pages/contact.css</code>, <code>js/pages/contact.js</code></td></tr>
+  </tbody>
+</table>
+<div class="callout"><strong>Shared files</strong> (<code>css/base.css</code>, <code>css/components.css</code>, <code>js/main.js</code>) — coordinate in the group chat <em>before</em> editing. These cause the most merge conflicts.</div>
+
+<h2>When something goes wrong</h2>
+
+<h3>"I have unsaved changes but need to pull"</h3>
+<pre><code>git stash         <span class="c"># tuck them away</span>
+git pull
+git stash pop     <span class="c"># bring them back</span></code></pre>
+
+<h3>"I committed to the wrong branch"</h3>
+<pre><code>git log -1                    <span class="c"># copy the commit hash</span>
+git reset --soft HEAD~1       <span class="c"># undo the commit, keep changes staged</span>
+git checkout correct-branch
+git commit -m "..."</code></pre>
+
+<h3>"Merge conflict"</h3>
+<ol>
+  <li>Open the file — find the <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> markers</li>
+  <li>Decide which version to keep (or combine both)</li>
+  <li>Delete the markers</li>
+  <li><code>git add &lt;file&gt;</code> then <code>git commit</code></li>
+  <li>If lost, ask the group chat <strong>before</strong> running anything destructive</li>
+</ol>
+
+<h2>Never do these without asking the team</h2>
+<div class="danger">
+<ul style="margin:0">
+  <li><code>git push --force</code> — rewrites history for everyone</li>
+  <li><code>git reset --hard</code> on a shared branch</li>
+  <li>Pushing directly to <code>main</code> — always go through a PR</li>
+  <li>Committing secrets (<code>.env</code>, passwords, API keys)</li>
+</ul>
+</div>
+
+<h2>Karim's checklist (right now)</h2>
+<ol>
+  <li>Create the GitHub repo at <code>github.com/new</code> — name it <code>buzz-fly</code>, do not add README/.gitignore</li>
+  <li>Run the 3 commands GitHub shows you (<code>git remote add</code>, <code>git branch -M main</code>, <code>git push -u origin main</code>) — these connect your <em>already-existing</em> local repo to the empty GitHub repo</li>
+  <li>Add the 5 teammates as collaborators (Settings → Collaborators)</li>
+  <li>Send them the repo URL — each one runs <code>git clone &lt;url&gt;</code> once</li>
+  <li>From then on, everyone (including you) follows the daily workflow above</li>
+</ol>
+
+<div class="footer">
+  Buzz Fly · Web Engineering — Semester 8 · Git &amp; GitHub Workflow Reference
+</div>
+
+</body>
+</html>
