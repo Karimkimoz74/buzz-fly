@@ -10,7 +10,7 @@
   z-index: 20;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: var(--s-6);
   max-width: var(--container);
   margin: 0 auto;
@@ -29,6 +29,13 @@
 .navbar__nav {
   display: flex;
   gap: var(--s-8);
+}
+
+.navbar__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
 }
 
 .navbar__link {
@@ -94,9 +101,16 @@
   margin: var(--s-20) auto 0;
   padding: var(--s-12) var(--container-pad) var(--s-8);
   display: grid;
-  grid-template-columns: 1.8fr 1fr 1fr 1fr;
+  grid-template-columns: minmax(240px, 1.6fr) minmax(140px, 1fr) minmax(140px, 1fr) minmax(170px, 1fr);
   gap: var(--s-10);
+  align-items: start;
   border-top: 1px solid var(--border);
+}
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
 }
 
 .footer__brand-name {
@@ -104,7 +118,6 @@
   font-size: 1.25rem;
   color: var(--green);
   letter-spacing: -0.02em;
-  margin-bottom: var(--s-3);
 }
 
 .footer__brand-tag {
@@ -112,7 +125,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-faint);
-  max-width: 28ch;
+  max-width: 24ch;
   line-height: 1.6;
 }
 
@@ -121,7 +134,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text);
+  color: var(--green);
   margin-bottom: var(--s-4);
 }
 
@@ -137,18 +150,28 @@
   color: var(--green);
 }
 
-.footer__bottom {
-  grid-column: 1 / -1;
-  padding-top: var(--s-6);
-  border-top: 1px solid var(--border);
+.footer__col {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: var(--s-3);
 }
 
-.footer__bottom p {
+.social-icons {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.footer__social-col {
+  justify-content: flex-start;
+}
+
+.footer__copyright {
+  margin-top: var(--s-6);
   font-size: 0.8125rem;
   color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 /*   FLOATING CHAT BUTTON (FAB)   */
