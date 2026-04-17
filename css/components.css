@@ -1,0 +1,209 @@
+/* 
+   Buzz Fly — components.css
+   Shared UI: navbar, footer, icon buttons, FAB
+    */
+
+/*   NAVBAR   */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-6);
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--s-4) var(--container-pad);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.navbar__brand {
+  font-weight: 800;
+  font-size: 1.375rem;
+  letter-spacing: -0.02em;
+  color: var(--green);
+}
+
+.navbar__nav {
+  display: flex;
+  gap: var(--s-8);
+}
+
+.navbar__link {
+  position: relative;
+  padding: var(--s-2) 0;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  transition: color var(--t-fast) var(--ease);
+}
+
+.navbar__link:hover {
+  color: var(--text);
+}
+
+.navbar__link--active {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.navbar__link--active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  background: var(--grad-primary);
+  border-radius: var(--r-pill);
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+/*   ICON BUTTON   */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-muted);
+  transition: background var(--t-fast) var(--ease);
+}
+
+.icon-btn:hover {
+  background: var(--bg-soft);
+}
+
+.icon-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+/*   FOOTER   */
+.footer {
+  max-width: var(--container);
+  margin: var(--s-20) auto 0;
+  padding: var(--s-12) var(--container-pad) var(--s-8);
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr 1fr;
+  gap: var(--s-10);
+  border-top: 1px solid var(--border);
+}
+
+.footer__brand-name {
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--green);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--s-3);
+}
+
+.footer__brand-tag {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  max-width: 28ch;
+  line-height: 1.6;
+}
+
+.footer__col-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: var(--s-4);
+}
+
+.footer__col-link {
+  display: block;
+  padding: var(--s-1) 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  transition: color var(--t-fast) var(--ease);
+}
+
+.footer__col-link:hover {
+  color: var(--green);
+}
+
+.footer__bottom {
+  grid-column: 1 / -1;
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer__bottom p {
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+}
+
+/*   FLOATING CHAT BUTTON (FAB)   */
+.fab {
+  position: fixed;
+  right: var(--s-6);
+  bottom: var(--s-6);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--grad-primary);
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--t-fast) var(--ease),
+              box-shadow var(--t-fast) var(--ease);
+}
+
+.fab img {
+  width: 24px;
+  height: 24px;
+}
+
+.fab:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-xl);
+}
+
+/* ====================  RESPONSIVE  ==================== */
+@media (max-width: 960px) {
+  .navbar {
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+  .navbar__nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: var(--s-5);
+  }
+  .footer {
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer__bottom {
+    flex-direction: column;
+    gap: var(--s-3);
+    text-align: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .footer {
+    grid-template-columns: 1fr;
+  }
+}
