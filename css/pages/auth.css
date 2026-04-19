@@ -1,0 +1,491 @@
+/* ======================================================
+   Buzz Fly — auth.css
+   Sign-in / sign-up / forgot-password pages.
+   Uses tokens from base.css (colors, radii, spacing, shadows).
+   ====================================================== */
+
+
+/* ╔══════════════════════════════════════════════════════╗
+   ║                                                      ║
+   ║                     SHARED                           ║
+   ║       (used by both sign-in and sign-up pages)       ║
+   ║                                                      ║
+   ╚══════════════════════════════════════════════════════╝ */
+
+/* ---------- Page background (mint → light purple glow) ---------- */
+.auth-body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 60% 50% at 0% 0%,   rgba(31, 175, 90, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(99, 44, 229, 0.10) 0%, transparent 60%),
+    var(--bg-page);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Layout container ---------- */
+.auth-page {
+  flex: 1;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 var(--s-5) var(--s-12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-8);
+}
+
+/* ---------- Card (white box that holds the form) ---------- */
+.auth-card {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-2xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--s-8);
+}
+
+/* ---------- Form ---------- */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.auth-field__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.auth-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ---------- Input wrapper (icon + field + optional toggle) ---------- */
+.auth-input {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: 0 var(--s-4);
+  background: var(--bg-soft);
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.auth-input:focus-within {
+  border-color: var(--green);
+  background: var(--bg-surface);
+}
+
+.auth-input__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.auth-input__control {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: var(--s-4) 0;
+  font: inherit;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.auth-input__control::placeholder {
+  color: var(--text-ghost);
+}
+
+/* ---------- Password eye toggle ---------- */
+.auth-input__toggle {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: var(--s-1);
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-sm);
+}
+
+.auth-input__toggle img {
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+}
+
+.auth-input__toggle:hover img {
+  opacity: 1;
+}
+
+/* ---------- Links ---------- */
+.auth-link {
+  color: var(--green);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+.auth-link--purple {
+  color: var(--purple);
+}
+
+/* ---------- Buttons ---------- */
+.auth-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  width: 100%;
+  padding: var(--s-4) var(--s-5);
+  border-radius: var(--r-pill);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.15s, background 0.15s;
+}
+
+.auth-btn--primary {
+  background: var(--grad-primary);
+  color: #fff;
+  border: none;
+  box-shadow: var(--shadow-md);
+}
+
+.auth-btn--primary img {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) invert(1);
+}
+
+.auth-btn--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.auth-btn--social {
+  background: var(--bg-surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.auth-btn--social img {
+  width: 20px;
+  height: 20px;
+}
+
+.auth-btn--social:hover {
+  background: var(--bg-soft);
+  border-color: var(--text-ghost);
+}
+
+/* ---------- OR divider ---------- */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  color: var(--text-faint);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ---------- Social button group (base layout) ---------- */
+.auth-social {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+
+/* ╔══════════════════════════════════════════════════════╗
+   ║                                                      ║
+   ║                   SIGN IN PAGE                       ║
+   ║              (pages/auth/signin.html)                ║
+   ║                                                      ║
+   ╚══════════════════════════════════════════════════════╝ */
+
+/* ---------- Brand header (plane circle + title + tagline) ---------- */
+.auth-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  text-align: center;
+}
+
+.auth-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-md);
+  display: grid;
+  place-items: center;
+}
+
+.auth-logo img {
+  width: 32px;
+  height: 32px;
+}
+
+.auth-title {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0;
+}
+
+.auth-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ---------- Footer row inside card ("Don't have an account?") ---------- */
+.auth-foot {
+  border-top: 1px solid var(--border);
+  padding-top: var(--s-5);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.auth-foot p {
+  margin: 0;
+}
+
+
+/* ╔══════════════════════════════════════════════════════╗
+   ║                                                      ║
+   ║                   SIGN UP PAGE                       ║
+   ║              (pages/auth/signup.html)                ║
+   ║                                                      ║
+   ╚══════════════════════════════════════════════════════╝ */
+
+/* ---------- Page centering modifier ---------- */
+.auth-page--center {
+  justify-content: center;
+  padding-top: var(--s-10);
+  max-width: 620px;
+}
+
+/* ---------- Minimal top bar (brand left + Sign In link right) ---------- */
+.auth-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s-3) var(--s-10);
+  width: 100%;
+}
+
+.auth-topbar__brand {
+  color: var(--green);
+  font-weight: 800;
+  font-size: 22px;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.auth-topbar__link {
+  color: var(--green);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.auth-topbar__link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Card internal header ("Create Account" title + subtitle) ---------- */
+.auth-card__head {
+  text-align: center;
+  margin-bottom: var(--s-4);
+}
+
+.auth-card__title {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 var(--s-2) 0;
+  letter-spacing: -0.02em;
+}
+
+.auth-card__subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ---------- Two-column row (password + confirm) ---------- */
+.auth-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-4);
+}
+
+/* ---------- Terms checkbox (custom round style) ---------- */
+.auth-check {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.auth-check input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.auth-check__box {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--bg-surface);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.auth-check input:checked + .auth-check__box {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.auth-check input:checked + .auth-check__box::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+/* ---------- Compact social buttons (icon-only, side-by-side) ---------- */
+.auth-social--compact {
+  flex-direction: row;
+  gap: var(--s-4);
+}
+
+.auth-social--compact .auth-btn--social {
+  background: var(--bg-soft);
+  padding: var(--s-4);
+}
+
+.auth-social--compact .auth-btn--social img {
+  width: 22px;
+  height: 22px;
+}
+
+
+/* ╔══════════════════════════════════════════════════════╗
+   ║                                                      ║
+   ║                FORGOT PASSWORD PAGE                  ║
+   ║          (pages/auth/forgot-password.html)           ║
+   ║                                                      ║
+   ╚══════════════════════════════════════════════════════╝ */
+
+/* ---------- Left-aligned card head variant ---------- */
+.auth-card__head--start {
+  text-align: center;
+}
+
+/* ---------- Smaller card title ---------- */
+.auth-card__title--sm {
+  font-size: 22px;
+}
+
+/* ---------- "Back to login" link ---------- */
+.auth-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  text-align: center;
+  padding-top: var(--s-2);
+}
+
+.auth-back:hover {
+  color: var(--text);
+}
+
+/* ---------- Microcopy text (below the card) ---------- */
+.auth-microcopy {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-ghost);
+  margin: 0;
+  text-align: center;
+}
+
+
+/* ╔══════════════════════════════════════════════════════╗
+   ║                                                      ║
+   ║                   RESPONSIVE                         ║
+   ║           (small screens — phones only)              ║
+   ║                                                      ║
+   ╚══════════════════════════════════════════════════════╝ */
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: var(--s-10) var(--s-4) var(--s-8);
+    gap: var(--s-6);
+  }
+  .auth-card {
+    padding: var(--s-6);
+  }
+  .auth-title {
+    font-size: 32px;
+  }
+  .auth-card__title {
+    font-size: 26px;
+  }
+  .auth-row {
+    grid-template-columns: 1fr;
+  }
+  .auth-topbar {
+    padding: var(--s-4) var(--s-5);
+  }
+}

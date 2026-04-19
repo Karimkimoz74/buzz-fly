@@ -18,6 +18,11 @@ main > section {
   gap: var(--s-12);
   align-items: center;
   padding-block: var(--s-16);
+  min-height: calc(100vh + var(--s-16));
+}
+
+.hero__content {
+  padding-left: var(--s-8);
 }
 
 .hero__eyebrow {
