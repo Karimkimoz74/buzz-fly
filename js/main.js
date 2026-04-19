@@ -1,61 +1,50 @@
-/* =====================================================
-   Buzz Fly — main.js
-   Global navbar behaviors (dropdown menus)
-   ===================================================== */
+/* Buzz Fly — main.js */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadPartials();
   initDropdownMenus();
+  highlightActiveNavLink();
 });
 
-/**
- * Any element with [data-menu] that contains [data-menu-trigger] + [data-menu-panel]
- * becomes a toggleable dropdown. Works for account menu, notifications, etc.
- */
+async function loadPartials() {
+  const parts = [
+    ["navbar-slot", "/partials/navbar.html"],
+    ["footer-slot", "/partials/footer.html"],
+  ];
+  for (const [slot, url] of parts) {
+    const el = document.getElementById(slot);
+    if (!el) continue;
+    const res = await fetch(url);
+    el.innerHTML = await res.text();
+  }
+}
+
+function highlightActiveNavLink() {
+  const path = window.location.pathname === "/" ? "/index.html" : window.location.pathname;
+  document.querySelectorAll(".navbar__link").forEach(link => {
+    link.classList.toggle("navbar__link--active", link.getAttribute("href") === path);
+  });
+}
+
 function initDropdownMenus() {
   const menus = document.querySelectorAll("[data-menu]");
   if (!menus.length) return;
 
-  menus.forEach((menu) => {
+  menus.forEach(menu => {
     const trigger = menu.querySelector("[data-menu-trigger]");
     if (!trigger) return;
-
-    trigger.addEventListener("click", (e) => {
+    trigger.addEventListener("click", e => {
       e.stopPropagation();
-
-      // Close other open menus first — only one open at a time
-      menus.forEach((other) => {
-        if (other !== menu) {
-          other.classList.remove("is-open");
-          const otherTrigger = other.querySelector("[data-menu-trigger]");
-          if (otherTrigger) otherTrigger.setAttribute("aria-expanded", "false");
-        }
-      });
-
-      // Toggle this one
-      const isOpen = menu.classList.toggle("is-open");
-      trigger.setAttribute("aria-expanded", isOpen);
+      menus.forEach(other => { if (other !== menu) other.classList.remove("is-open"); });
+      menu.classList.toggle("is-open");
     });
   });
 
-  // Click anywhere outside any menu → close all
-  document.addEventListener("click", (e) => {
-    menus.forEach((menu) => {
-      if (!menu.contains(e.target)) {
-        menu.classList.remove("is-open");
-        const trigger = menu.querySelector("[data-menu-trigger]");
-        if (trigger) trigger.setAttribute("aria-expanded", "false");
-      }
-    });
+  document.addEventListener("click", e => {
+    menus.forEach(menu => { if (!menu.contains(e.target)) menu.classList.remove("is-open"); });
   });
 
-  // Escape → close all
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      menus.forEach((menu) => {
-        menu.classList.remove("is-open");
-        const trigger = menu.querySelector("[data-menu-trigger]");
-        if (trigger) trigger.setAttribute("aria-expanded", "false");
-      });
-    }
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") menus.forEach(m => m.classList.remove("is-open"));
   });
 }
