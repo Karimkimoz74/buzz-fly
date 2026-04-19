@@ -1,0 +1,458 @@
+/*
+   Buzz Fly — contact.css
+   Contact page: form, info cards, map integration
+   Strictly uses base.css variables for coloring and sizing.
+*/
+
+/* --- BACKGROUND GLOW (Matches Image Gradient) --- */
+.page-background-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 600px;
+  background: radial-gradient(circle at 15% 10%, var(--bg-purple-tint) 0%, transparent 40%),
+              radial-gradient(circle at 85% 15%, var(--bg-mint) 0%, transparent 40%);
+  z-index: -1;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* PAGE LAYOUT  */
+.contact-page {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--s-10) var(--container-pad) var(--s-12);
+  position: relative;
+  z-index: 1;
+}
+
+/* HERO SECTION  */
+.contact__hero {
+  margin-bottom: var(--s-12);
+}
+
+.contact__overline {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: var(--s-2);
+  display: block;
+}
+
+.contact__title {
+  margin-bottom: var(--s-4);
+  color: var(--text);
+}
+
+.contact__subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  max-width: 55ch;
+  line-height: 1.6;
+}
+
+/* CONTENT GRID  */
+.contact__grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--s-8);
+  margin-bottom: var(--s-12);
+}
+
+/* FORM CARD  */
+.contact-form {
+  background: var(--bg-surface);
+  border-radius: var(--r-2xl);
+  padding: var(--s-10);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-5);
+  margin-bottom: var(--s-5);
+}
+
+.contact-form__group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--s-5);
+}
+
+.contact-form__group:last-child {
+  margin-bottom: 0;
+}
+
+.contact-form__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: var(--s-2);
+}
+
+.contact-form__input,
+.contact-form__textarea {
+  background: var(--bg-soft);
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  padding: var(--s-4);
+  font-size: 0.9375rem;
+  color: var(--text);
+  transition: all var(--t-fast) var(--ease);
+  font-family: inherit;
+}
+
+.contact-form__input::placeholder,
+.contact-form__textarea::placeholder {
+  color: var(--text-ghost);
+}
+
+.contact-form__input:hover,
+.contact-form__textarea:hover {
+  background: var(--bg-softer);
+}
+
+.contact-form__input:focus,
+.contact-form__textarea:focus {
+  outline: none;
+  background: var(--bg-surface);
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgba(1, 109, 51, 0.2); /* Used var(--green) rgb equivalent */
+}
+
+.contact-form__textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.contact-form__error {
+  color: #dc3545; 
+  font-size: 0.8125rem;
+  margin-top: var(--s-2);
+  display: none;
+  font-weight: 500;
+}
+
+.contact-form__input.error,
+.contact-form__textarea.error {
+  border-color: #dc3545;
+  background: #fff8f8;
+}
+
+.contact-form__input.error:focus,
+.contact-form__textarea.error:focus {
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2);
+}
+
+.contact-form__submit {
+  background: var(--grad-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-pill);
+  padding: var(--s-4) var(--s-6);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--s-2);
+  transition: transform var(--t-fast) var(--ease),
+              box-shadow var(--t-fast) var(--ease);
+  margin-top: var(--s-3);
+}
+
+.contact-form__submit:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.contact-form__submit-icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+/* INFO SECTION  */
+.contact__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+}
+
+.contact__info-card {
+  background: var(--bg-surface);
+  border-radius: var(--r-2xl);
+  padding: var(--s-8);
+  box-shadow: var(--shadow-xs);
+}
+
+.contact__info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-5);
+  padding-bottom: var(--s-6);
+  border-bottom: 1px solid var(--border-soft);
+  margin-bottom: var(--s-6);
+}
+
+.contact__info-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.contact__icon-box {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);
+}
+
+.contact__icon-box img,
+.contact__icon-box svg {
+  width: 22px;
+  height: 22px;
+}
+
+.contact__icon-box--green {
+  background: var(--bg-mint);
+  color: var(--green-700);
+}
+
+.contact__icon-box--purple {
+  background: var(--bg-purple-tint);
+  color: var(--purple);
+}
+
+.contact__info-text h3 {
+  margin-bottom: var(--s-1);
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+.contact__info-text p {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.contact__info-badge {
+  display: inline-block;
+  margin-top: var(--s-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--green);
+}
+
+/* MAP CARD  */
+.contact__map {
+  position: relative;
+  background: var(--text-ghost) url("../assets/icons/map-background.svg") center / cover no-repeat;
+  border-radius: var(--r-2xl);
+  height: 240px;
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+
+.contact__map-badge {
+  position: absolute;
+  bottom: var(--s-5);
+  left: var(--s-5);
+  background: var(--bg-surface);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--r-pill);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--green);
+  box-shadow: var(--shadow-xs);
+}
+
+.contact__map-icon {
+  position: absolute;
+  bottom: var(--s-5);
+  right: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  isolation: isolate;
+  width: 44px;
+  height: 44px;
+  background: var(--green-700);
+  border-radius: 9999px;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  transition: transform var(--t-fast) var(--ease);
+  color: #fff;
+}
+
+.contact__map-icon img {
+  width: 20px;
+  height: 20px;
+  filter: none;
+}
+
+.contact__map-icon:hover {
+  transform: scale(1.05);
+}
+
+/* RESPONSIVE  */
+@media (max-width: 992px) {
+  .contact__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-page {
+    padding: var(--s-6) var(--container-pad) var(--s-8);
+  }
+
+  .contact-form {
+    padding: var(--s-6);
+  }
+
+  .contact-form__row {
+    grid-template-columns: 1fr;
+    gap: var(--s-5);
+  }
+
+  .contact-form__submit {
+    width: 100%;
+  }
+
+  .contact__info-card {
+    padding: var(--s-6);
+  }
+}
+
+/* Page-specific footer overrides for contact layout */
+footer.footer {
+  align-items: start;
+}
+
+footer.footer .footer__brand-tag {
+  max-width: 20rem;
+}
+
+footer.footer .footer__social-col {
+  justify-content: flex-start;
+}
+
+footer.footer .footer__copyright {
+  margin-top: var(--s-6);
+}
+
+
+
+
+/* --- SUCCESS MODAL(suggested to be placed in components.css file for reusability) --- */
+.success-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(25, 28, 29, 0.60);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--t-med) var(--ease);
+}
+
+.success-modal.is-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.success-modal__content {
+    background: var(--bg-surface);
+    padding: var(--s-10) var(--s-8);
+    border-radius: var(--r-2xl);
+    box-shadow: var(--shadow-xl);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    transform: translateY(20px) scale(0.95);
+    transition: transform var(--t-med) var(--ease);
+}
+
+.success-modal.is-active .success-modal__content {
+    transform: translateY(0) scale(1);
+}
+
+.success-modal__icon {
+    width: 64px;
+    height: 64px;
+    background: var(--bg-mint);
+    color: var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--s-6);
+}
+
+.success-modal__icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+.success-modal__content h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: var(--s-2);
+    letter-spacing: -0.02em;
+}
+
+.success-modal__content p {
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+    margin-bottom: var(--s-8);
+    line-height: 1.55;
+}
+
+.success-modal__close {
+    background: var(--grad-primary);
+    color: #FFFFFF;
+    border: none;
+    padding: var(--s-3) var(--s-6);
+    border-radius: var(--r-pill);
+    font-weight: 700;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    width: 100%;
+    transition: filter var(--t-fast) var(--ease),
+                transform var(--t-fast) var(--ease),
+                box-shadow var(--t-fast) var(--ease);
+}
+
+.success-modal__close:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
