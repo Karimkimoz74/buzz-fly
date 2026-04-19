@@ -29,6 +29,7 @@
 
 /* HERO SECTION  */
 .contact__hero {
+  padding: var(--s-12) 0;
   margin-bottom: var(--s-12);
 }
 
