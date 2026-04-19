@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buzz Fly - Create Account</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/pages/auth.css" />
+</head>
+<body class="auth-body">
+
+  <!--   MINIMAL TOP BAR (brand + sign in link)   -->
+  <header class="auth-topbar">
+    <a href="/index.html" class="auth-topbar__brand">Buzz Fly</a>
+    <a href="/pages/auth/signin.html" class="auth-topbar__link">Sign In</a>
+  </header>
+
+  <main class="auth-page auth-page--center">
+
+    <!--   SIGN-UP CARD   -->
+    <section class="auth-card">
+      <form class="auth-form" id="signupForm" novalidate>
+
+        <!-- card title -->
+        <div class="auth-card__head">
+          <h1 class="auth-card__title">Create Account</h1>
+          <p class="auth-card__subtitle">Start your ethereal travel journey today.</p>
+        </div>
+
+        <!-- full name -->
+        <div class="auth-field">
+          <label for="fullName" class="auth-label">Full Name</label>
+          <div class="auth-input">
+            <img src="/assets/icons/user.svg" alt="" class="auth-input__icon" />
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              class="auth-input__control"
+              placeholder="Karim Mohamed"
+              autocomplete="name"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- email -->
+        <div class="auth-field">
+          <label for="email" class="auth-label">Email Address</label>
+          <div class="auth-input">
+            <img src="/assets/icons/email.svg" alt="" class="auth-input__icon" />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="auth-input__control"
+              placeholder="kimoz@example.com"
+              autocomplete="email"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- password + confirm (2-column) -->
+        <div class="auth-row">
+          <div class="auth-field">
+            <label for="password" class="auth-label">Password</label>
+            <div class="auth-input">
+              <img src="/assets/icons/lock.svg" alt="" class="auth-input__icon" />
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="auth-input__control"
+                placeholder="••••••••"
+                autocomplete="new-password"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="confirmPassword" class="auth-label">Confirm</label>
+            <div class="auth-input">
+              <img src="/assets/icons/re-enter-pass.svg" alt="" class="auth-input__icon" />
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                class="auth-input__control"
+                placeholder="••••••••"
+                autocomplete="new-password"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- terms checkbox -->
+        <label class="auth-check">
+          <input type="checkbox" id="agreeTerms" name="agreeTerms" required />
+          <span class="auth-check__box"></span>
+          <span class="auth-check__text">
+            I agree to the
+            <a href="#" class="auth-link">Terms of Service</a>
+            and
+            <a href="#" class="auth-link">Privacy Policy.</a>
+          </span>
+        </label>
+
+        <!-- primary submit -->
+        <button type="submit" class="auth-btn auth-btn--primary">
+          Create Account
+          <img src="/assets/icons/arrow-right.svg" alt="" />
+        </button>
+
+        <!-- OR divider -->
+        <div class="auth-divider">
+          <span>Or continue with</span>
+        </div>
+
+        <!-- social sign-in (compact, icon-only, side-by-side) -->
+        <div class="auth-social auth-social--compact">
+          <button type="button" class="auth-btn auth-btn--social" data-auth-provider="google" aria-label="Sign up with Google">
+            <img src="/assets/icons/google.svg" alt="" />
+          </button>
+          <button type="button" class="auth-btn auth-btn--social" data-auth-provider="apple" aria-label="Sign up with Apple">
+            <img src="/assets/icons/apple.svg" alt="" />
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+  </main>
+
+  <!--   FOOTER   -->
+  <div id="footer-slot"></div>
+
+  <script src="/js/main.js" defer></script>
+  <script src="/js/pages/auth.js" defer></script>
+</body>
+</html>
