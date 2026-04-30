@@ -1,0 +1,26 @@
+{
+  "name": "buzz-fly",
+  "version": "1.0.0",
+  "description": "Flight & hotel booking web application — Web Engineering Semester 8 final project.",
+  "homepage": "https://github.com/Karimkimoz74/buzz-fly#readme",
+  "bugs": {
+    "url": "https://github.com/Karimkimoz74/buzz-fly/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Karimkimoz74/buzz-fly.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8"
+  }
+}
