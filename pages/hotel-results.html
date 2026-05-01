@@ -5,31 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buzz Fly | Hotel Results</title>
   <link rel="stylesheet" href="../css/pages/hotel-results.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link href="../css/main.min.css" rel="stylesheet">   <!-- bootstrap -->
+
 </head>
 <body>
-  <script src=""></script>
-  <div class="page-shell">
-    <header class="topbar">
-      <div class="topbar-inner">
-        <div class="brand-wrap">
-          <a class="brand" href="../index.html">Buzz Fly</a>
-          <nav aria-label="Primary">
-            <a class="active" href="#">Explore</a>
-            <a href="#">Trips</a>
-            <a href="#">Support</a>
-          </nav>
-        </div>
+  
+  <div id="navbar-slot"></div>
 
-        <div class="topbar-actions">
-          <button class="icon-btn" aria-label="Notifications">
-            <img src="../assets/icons/Icon.svg" alt="">
-          </button>
-          <button class="icon-btn" aria-label="Profile">
-            <img src="../assets/icons/Icon-1.svg" alt="">
-          </button>
-        </div>
-      </div>
-    </header>
 
     <main class="content">
       <p class="eyebrow">Destinations / Europe / <span>Switzerland</span></p>
@@ -69,7 +53,7 @@
             <p class="location"><img src="../assets/icons/Icon-4.svg" alt="">Vitznau, Switzerland</p>
             <div class="price-row">
               <div class="price"><strong>$540</strong><span>/night</span></div>
-              <a class="deal-btn" href="#">View Deal</a>
+              <a class="btn shadow green-btn px-4" href="#">View Deal</a>
             </div>
           </div>
         </article>
@@ -89,7 +73,7 @@
             <p class="location"><img src="../assets/icons/Icon-4.svg" alt="">Lucerne City Center</p>
             <div class="price-row">
               <div class="price"><strong>$320</strong><span>/night</span></div>
-              <a class="deal-btn" href="#">View Deal</a>
+              <a class="btn shadow green-btn px-4" href="#">View Deal</a>
             </div>
           </div>
         </article>
@@ -109,7 +93,7 @@
             <p class="location"><img src="../assets/icons/Icon-4.svg" alt="">Weggis Waterfront</p>
             <div class="price-row">
               <div class="price"><strong>$610</strong><span>/night</span></div>
-              <a class="deal-btn" href="#">View Deal</a>
+              <a class="btn shadow green-btn px-4" href="#">View Deal</a>
             </div>
           </div>
         </article>
@@ -128,7 +112,7 @@
             <p class="location"><img src="../assets/icons/Icon-4.svg" alt="">Rigi Kaltbad, Switzerland</p>
             <div class="price-row">
               <div class="price"><strong>$285</strong><span>/night</span></div>
-              <a class="deal-btn" href="#">View Deal</a>
+              <a class="btn green-btn shadow px-4" href="#">View Deal</a>
             </div>
           </div>
         </article>
@@ -148,7 +132,7 @@
             <p class="location"><img src="../assets/icons/Icon-4.svg" alt="">Meggen, Switzerland</p>
             <div class="price-row">
               <div class="price"><strong>$415</strong><span>/night</span></div>
-              <a class="deal-btn" href="#">View Deal</a>
+              <a class="btn shadow green-btn px-4" href="#">View Deal</a>
             </div>
           </div>
         </article>
@@ -167,7 +151,7 @@
             <p class="location"><img src="../assets/icons/Icon-4.svg" alt="">Hergiswil, Switzerland</p>
             <div class="price-row">
               <div class="price"><strong>$780</strong><span>/night</span></div>
-              <a class="deal-btn" href="#">View Deal</a>
+              <a class="btn shadow green-btn px-4" href="#">View Deal</a>
             </div>
           </div>
         </article>
@@ -181,48 +165,11 @@
       </div>
     </main>
 
-    <footer class="footer">
-      <div class="footer-grid">
-        <div>
-          <div class="footer-brand">Buzz Fly</div>
-          <p class="footer-copy">Crafting extraordinary journeys for the digital nomad and high-altitude dreamer.</p>
-        </div>
-
-        <div>
-          <h2 class="footer-title">Company</h2>
-          <div class="footer-links">
-            <a href="#">About Us</a>
-            <a href="#">Careers</a>
-          </div>
-        </div>
-
-        <div>
-          <h2 class="footer-title">Support</h2>
-          <div class="footer-links">
-            <a href="#">Terms of Service</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Contact</a>
-          </div>
-        </div>
-
-        <div class="newsletter">
-          <h2 class="footer-title">Newsletter</h2>
-          <form class="newsletter-form">
-            <input type="email" placeholder="Your Email" aria-label="Email address">
-            <button class="newsletter-submit" type="submit" aria-label="Subscribe">
-              <img src="../assets/icons/Icon-6.svg" alt="">
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p class="copyright">&copy; 2024 Buzz Fly Travel. All Rights Reserved.</p>
-      </div>
-    </footer>
   </div>
+  <div id="footer-slot"></div>
 
   <script src="../js/pages/hotel-results.js"></script>
+  <script src="../js/main.js"></script>
 
 </body>
 </html>
