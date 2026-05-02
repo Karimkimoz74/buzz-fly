@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flight Details — Buzz Fly</title>
+
+  <link rel="stylesheet" href="/css/main.min.css" />
+</head>
+<body>
+
+  <div id="navbar-slot"></div>
+
+  <main class="container-xl py-4">
+
+    <!-- Breadcrumb -->
+    <nav class="d-flex align-items-center gap-2 mb-3" style="font-size:.8125rem;color:#71717a;">
+      <a href="/pages/my-trips.html" class="text-secondary text-decoration-none buzz-footer-link">Trips</a>
+      <span>›</span>
+      <a href="/pages/flight-search.html" class="text-secondary text-decoration-none buzz-footer-link">Search Results</a>
+      <span>›</span>
+      <span class="text-green fw-semibold">Flight Details</span>
+    </nav>
+
+    <!-- Page title -->
+    <h1 class="mb-1">London to Tokyo Narita</h1>
+    <p class="text-secondary mb-4">Business Class • One Way • Saturday, Oct 12</p>
+
+    <!-- Two-column layout -->
+    <div class="row g-4 align-items-start">
+
+      <!-- LEFT COLUMN -->
+      <div class="col-12 col-lg-8">
+
+        <!-- Full Itinerary card -->
+        <div class="bg-white border rounded-4 p-4 mb-4">
+
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center gap-2">
+              <img src="/assets/icons/plane-takeoff.svg" alt="" width="18" height="18" />
+              <h3 class="mb-0">Full Itinerary</h3>
+            </div>
+            <span class="badge rounded-pill bg-light-green text-green fw-semibold" style="font-size:.75rem;">12h 45m Total</span>
+          </div>
+
+          <!-- Leg 1 -->
+          <div class="d-flex gap-3 pt-3 border-top">
+            <div class="rounded-circle bg-dark-green flex-shrink-0 mt-1" style="width:12px;height:12px;"></div>
+            <div class="flex-fill">
+              <div class="d-flex justify-content-between align-items-start gap-3">
+                <div>
+                  <p class="fw-bolder mb-1" style="font-size:1.125rem;">09:15 <span class="fw-semibold text-secondary">• LHR</span></p>
+                  <p class="text-secondary mb-1" style="font-size:.875rem;">London Heathrow Terminal 5</p>
+                  <a href="#" class="text-green fw-semibold text-decoration-none" style="font-size:.8125rem;">British Airways BA005</a>
+                </div>
+                <div class="text-end flex-shrink-0">
+                  <div class="text-uppercase fw-bold mb-1" style="font-size:.6rem;color:#a1a1aa;letter-spacing:.1em;">Duration</div>
+                  <div class="fw-bolder" style="font-size:1rem;">11h 30m</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Layover -->
+          <div class="d-flex align-items-center gap-2 my-3 px-3 py-2 rounded-3 border-start border-3" style="background:#f4f4f5;border-color:#e7e8e9!important;font-size:.8125rem;color:#52525b;">
+            <img src="/assets/icons/map-direction.svg" alt="" width="14" height="14" />
+            <span>45m Layover in Helsinki (HEL)</span>
+          </div>
+
+          <!-- Leg 2 -->
+          <div class="d-flex gap-3 pt-3 border-top">
+            <div class="rounded-circle bg-dark-purple flex-shrink-0 mt-1" style="width:12px;height:12px;"></div>
+            <div class="flex-fill">
+              <div class="d-flex justify-content-between align-items-start gap-3">
+                <div>
+                  <p class="fw-bolder mb-1" style="font-size:1.125rem;">08:00 <sup class="text-secondary" style="font-size:.65rem;">+1</sup> <span class="fw-semibold text-secondary">• NRT</span></p>
+                  <p class="text-secondary mb-1" style="font-size:.875rem;">Tokyo Narita Terminal 2</p>
+                  <a href="#" class="text-purple fw-semibold text-decoration-none" style="font-size:.8125rem;">Japan Airlines JL006</a>
+                </div>
+                <div class="text-end flex-shrink-0">
+                  <div class="text-uppercase fw-bold mb-1" style="font-size:.6rem;color:#a1a1aa;letter-spacing:.1em;">Seat Class</div>
+                  <div class="fw-bolder text-green" style="font-size:1rem;">SkySuite Business</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Amenities -->
+        <div class="row g-3 mb-4">
+          <div class="col-4">
+            <div class="bg-white border rounded-3 p-4">
+              <img src="/assets/icons/bed.svg" alt="" width="22" height="22" class="mb-2" />
+              <p class="fw-bold mb-1" style="font-size:.9375rem;">Baggage</p>
+              <p class="text-secondary mb-0" style="font-size:.8125rem;">2 × 32kg Checked Bags included</p>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="bg-white border rounded-3 p-4">
+              <img src="/assets/icons/star.svg" alt="" width="22" height="22" class="mb-2" />
+              <p class="fw-bold mb-1" style="font-size:.9375rem;">In-flight</p>
+              <p class="text-secondary mb-0" style="font-size:.8125rem;">Multi-course meal &amp; spirits</p>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="bg-white border rounded-3 p-4">
+              <img src="/assets/icons/globe.svg" alt="" width="22" height="22" class="mb-2" />
+              <p class="fw-bold mb-1" style="font-size:.9375rem;">Connectivity</p>
+              <p class="text-secondary mb-0" style="font-size:.8125rem;">High-speed Wi-Fi &amp; Power</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map -->
+        <div class="rounded-4 overflow-hidden border" style="height:220px;">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d5000000!2d20!3d50!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e4!4m5!1s0x47d8a00baf21de75%3A0x52963a5addd52a99!2sLondon%20Heathrow%20Airport!3m2!1d51.4700223!2d-0.4542955!4m5!1s0x6018c993bdc01c77%3A0x9b89e2b8d6bef4dd!2sTokyo%20Narita%20Airport!3m2!1d35.7647561!2d140.3864527!5e0!3m2!1sen!2s!4v1700000000000"
+            width="100%" height="100%" style="border:0;display:block;"
+            allowfullscreen loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Route map">
+          </iframe>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="col-12 col-lg-4">
+
+        <!-- Fare Breakdown -->
+        <div class="bg-white border rounded-4 p-4 mb-4">
+          <h3 class="mb-4" style="font-size:1rem;">Fare Breakdown</h3>
+
+          <div class="d-flex flex-column gap-3 mb-4">
+            <div class="d-flex justify-content-between" style="font-size:.9rem;">
+              <span class="text-secondary">Base Fare</span><span>£2,450.00</span>
+            </div>
+            <div class="d-flex justify-content-between" style="font-size:.9rem;">
+              <span class="text-secondary">Taxes &amp; Fees</span><span>£342.10</span>
+            </div>
+            <div class="d-flex justify-content-between" style="font-size:.9rem;">
+              <span class="text-secondary">Fuel Surcharge</span><span>£120.00</span>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center pt-3 border-top mb-4">
+            <span class="fw-bold">Total Price</span>
+            <strong class="text-green" style="font-size:1.5rem;letter-spacing:-.02em;">£2,912.10</strong>
+          </div>
+
+          <button class="btn green-btn w-100 mb-2" style="font-size:1rem;" id="bookBtn">Book Now</button>
+          <p class="text-center text-uppercase fw-bold mb-0" style="font-size:.6rem;color:#a1a1aa;letter-spacing:.08em;">Price includes all mandatory fees</p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-slot"></div>
+
+  <a href="#" class="fab" aria-label="Chat">
+    <img src="/assets/icons/send-message.svg" alt="" />
+  </a>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/pages/flight-details.js"></script>
+</body>
+</html>
