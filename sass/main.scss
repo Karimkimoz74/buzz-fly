@@ -1,0 +1,340 @@
+// ╔══════════════════════════════════════════════════════╗
+// ║                                                      ║
+// ║         AUTHORED BY MALAK — Bootstrap setup,         ║
+// ║         color tokens, and button utilities           ║
+// ║                                                      ║
+// ╚══════════════════════════════════════════════════════╝
+
+// ===== Your colors (unchanged) =====
+$nav-green: #059669;
+$dark-green: #006D33;
+$gradient-green: #1FAF5A;
+$light-green: #D1FAE5;
+$purple: #4F00D0;
+$light-purple: #E8DEFF;
+
+// ===== Import Bootstrap =====
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+// ===== Custom classes =====
+
+// Text colors
+.text-nav-green {  // highlighted tab in a lighter shade of green
+  color: $nav-green;
+}
+
+.text-green {   // normal dark green text
+  color: $dark-green;
+}
+
+.text-purple {  // normal dark purple text
+  color: $purple;
+}
+
+// Background colors
+.bg-light-green {   // light green background for any component
+  background-color: $light-green;
+}
+
+.bg-light-purple {  // light purple background for any component
+  background-color: $light-purple;
+}
+
+.bg-dark-green {  // dark green background for any component
+  background-color: $dark-green;
+}
+
+.bg-dark-purple {      // dark purple background for any conponent
+  background-color: $purple;
+}
+
+// Buttons
+
+.btn {
+    border-radius: 9999px;
+    font-weight: 500;
+    transition: .2s;
+}
+
+.btn:hover{
+    transform: scale(1.06);
+}
+
+.btn:focus {
+    outline: none;
+    color: white;
+    border: none;
+}
+
+.green-btn {
+    background: linear-gradient(to right, $dark-green, $gradient-green);
+    color: #fff;
+}
+
+.green-btn:hover{
+    color: #fff;
+}
+
+.solid-green-btn {
+    background: $dark-green;
+    color: #fff;  
+}
+
+.solid-green-btn:hover {
+    background-color: $light-green;
+    color: $dark-green;
+}
+
+.light-green-btn {  // for settings side bar
+    color: $dark-green;
+    background: $light-green;
+}
+.light-green-btn:hover{
+    background-color: $light-green;
+    color: $dark-green;
+}
+
+.dark-purple-btn { // e.g., download receipt button
+    color: white;
+    background: $purple;
+}
+.dark-purple-btn:hover {
+    color: $purple;
+    background-color: $light-purple;
+}
+
+.light-purple-btn {
+    color: $purple;
+    background-color: $light-purple;
+}
+.light-purple-btn:hover {
+    color: $purple;
+    background-color: $light-purple;
+}
+
+
+// ╔══════════════════════════════════════════════════════╗
+// ║                                                      ║
+// ║         AUTHORED BY KARIM — Navbar, footer,          ║
+// ║         hero, trending, popular utilities            ║
+// ║                                                      ║
+// ╚══════════════════════════════════════════════════════╝
+
+// ===== Navbar =====
+// Uses Bootstrap navbar + dropdown. These are the only bits Bootstrap doesn't ship.
+
+// Active nav link with green gradient underline
+.buzz-nav-link {
+    position: relative;
+    transition: color .2s ease;
+}
+
+.buzz-nav-link.active {
+    color: $dark-green !important;
+    font-weight: 600;
+}
+
+.buzz-nav-link.active::after {
+    content: "";
+    position: absolute;
+    left: .75rem;
+    right: .75rem;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(to right, $dark-green, $gradient-green);
+    border-radius: 999px;
+}
+
+// Round 40x40 icon button (bell, user) — kept separate from .btn so it doesn't scale on hover
+.buzz-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 0;
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background .2s;
+}
+
+.buzz-icon-btn:hover,
+.buzz-icon-btn:focus {
+    background: $light-green;
+}
+
+.buzz-icon-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+// 36x36 round icon container (notif item icon)
+.buzz-notif-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+.buzz-notif-icon img {
+    width: 18px;
+    height: 18px;
+}
+
+// Wider scrollable dropdown panel for notifications
+.buzz-notif-menu {
+    width: 360px;
+    max-height: 480px;
+    overflow-y: auto;
+}
+
+
+// ===== Footer =====
+// Footer link — muted text that turns green on hover
+.buzz-footer-link {
+    transition: color .2s ease;
+}
+
+.buzz-footer-link:hover {
+    color: $dark-green !important;
+}
+
+
+// ===== Page layout offset for fixed-top navbar + soft off-white body bg =====
+body {
+    padding-top: 70px;
+    background-color: $light;
+}
+
+// Auth pages: soft mint→purple radial glow background + cancel the fixed-navbar offset
+.auth-body {
+    min-height: 100vh;
+    background:
+        radial-gradient(ellipse 60% 50% at 0% 0%, rgba($gradient-green, .10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 100% 100%, rgba($purple, .10) 0%, transparent 60%),
+        $light;
+    display: flex;
+    flex-direction: column;
+    padding-top: 0;
+}
+
+// Brand-green checkbox state (Bootstrap default uses primary blue)
+.form-check-input:checked {
+    background-color: $dark-green !important;
+    border-color: $dark-green !important;
+}
+
+// White-bg .btn override (e.g. Google/Apple sign-in on auth pages).
+// Malak's global .btn:focus { color: white } would otherwise turn the text invisible.
+.btn.bg-white:focus,
+.btn.bg-white:active {
+    color: inherit !important;
+}
+
+
+// ===== Hero (index.html) =====
+
+// Full-viewport hero so the search card sits below the fold
+.buzz-hero {
+    min-height: calc(100vh + 1rem);
+}
+
+// Eyebrow pill — letter spacing not covered by Bootstrap's text-uppercase
+.buzz-eyebrow {
+    letter-spacing: .14em;
+    font-size: .75rem;
+}
+
+
+// ===== "View all" link (Trending header) =====
+.buzz-view-all {
+    transition: background .2s ease;
+}
+
+.buzz-view-all:hover {
+    background: $light-green;
+    color: $dark-green !important;
+}
+
+
+// ===== Destination cards (Trending grid) =====
+// Image + dark-gradient overlay + lift on hover. Bootstrap's .card doesn't
+// support overlay layouts, so this needs custom rules.
+
+.buzz-dest-card {
+    text-decoration: none;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.buzz-dest-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(25, 28, 29, 0.10);
+}
+
+.buzz-dest-card__img {
+    transition: transform .35s ease;
+}
+
+.buzz-dest-card:hover .buzz-dest-card__img {
+    transform: scale(1.04);
+}
+
+// Dark gradient at bottom of card so overlaid white text stays readable.
+// padding-top extends the overlay div upward (since it's bottom-anchored),
+// giving the gradient room to fade in gradually over a taller area.
+.buzz-dest-card__overlay {
+    background: linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,0) 100%);
+    padding-top: 4rem !important;
+}
+
+// Bootstrap 5.3 headings use --bs-heading-color which can break
+// text-white inheritance. Force white explicitly inside the overlay.
+.buzz-dest-card__overlay h3,
+.buzz-dest-card__overlay p {
+    color: #fff !important;
+}
+
+
+// ===== Deal + Stay card hover (Popular section) =====
+.buzz-deal,
+.buzz-stay {
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.buzz-deal:hover,
+.buzz-stay:hover {
+    transform: translateY(-2px);
+    border-color: transparent !important;
+    box-shadow: 0 4px 12px rgba(25, 28, 29, 0.08);
+}
+
+.buzz-deal-details {
+    transition: color .2s ease;
+}
+
+.buzz-deal-details:hover {
+    color: $dark-green !important;
+}
+
+
+// ===== Search card tabs (Flights / Hotels) =====
+// Pill-shaped tab. Bootstrap's nav-pill default uses primary blue when .active —
+// override to use our brand green gradient.
+.buzz-tab {
+    color: $dark-green;
+    background: $light-green;
+    font-weight: 600;
+    font-size: .875rem;
+    border: 0;
+    border-radius: 999px;
+    padding: .5rem 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    transition: background .2s ease, color .2s ease;
+}
+
+.buzz-tab.active {
+    background: linear-gradient(to right, $dark-green, $gradient-green) !important;
+    color: #fff !important;
+}

@@ -1,31 +1,46 @@
-<!-- ==============  FOOTER  ==============
+<!-- ==============  FOOTER (Bootstrap)  ==============
      Shared across every page. Injected by js/main.js → loadPartials().
+     Built on Bootstrap 5 grid + utilities. Reuses .text-green from main.scss.
+     The only custom class is .buzz-footer-link (muted → green on hover).
      ============================================ -->
-<footer class="footer">
-  <div class="footer__brand">
-    <p class="footer__brand-name">Buzz Fly</p>
-    <p class="footer__brand-tag">Crafting your next legendary journey with digital precision.</p>
+<footer class="container py-5 mt-5 border-top">
+
+  <div class="row g-4 pb-4 border-bottom">
+
+    <!--   BRAND   -->
+    <div class="col-12 col-lg-6">
+      <p class="text-green fw-bold fs-5 mb-2">Buzz Fly</p>
+      <p class="text-muted small text-uppercase mb-0" style="letter-spacing: .08em; max-width: 28ch;">
+        Crafting your next legendary journey with digital precision.
+      </p>
+    </div>
+
+    <!--   EXPLORE   -->
+    <div class="col-6 col-lg-2">
+      <h4 class="text-uppercase small fw-bold mb-3" style="letter-spacing: .12em;">Explore</h4>
+      <a href="#" class="d-block py-1 small text-muted text-decoration-none buzz-footer-link">About Us</a>
+      <a href="#" class="d-block py-1 small text-muted text-decoration-none buzz-footer-link">Terms of Service</a>
+    </div>
+
+    <!--   LEGAL   -->
+    <div class="col-6 col-lg-2">
+      <h4 class="text-uppercase small fw-bold mb-3" style="letter-spacing: .12em;">Legal</h4>
+      <a href="#" class="d-block py-1 small text-muted text-decoration-none buzz-footer-link">Privacy Policy</a>
+      <a href="#" class="d-block py-1 small text-muted text-decoration-none buzz-footer-link">Cookie Policy</a>
+    </div>
+
+    <!--   CONNECT   -->
+    <div class="col-6 col-lg-2">
+      <h4 class="text-uppercase small fw-bold mb-3" style="letter-spacing: .12em;">Connect</h4>
+      <a href="/pages/contact.html" class="d-block py-1 small text-muted text-decoration-none buzz-footer-link">Contact Us</a>
+      <a href="#" class="d-block py-1 small text-muted text-decoration-none buzz-footer-link">Instagram</a>
+    </div>
+
   </div>
 
-  <div class="footer__col">
-    <h4 class="footer__col-title">Explore</h4>
-    <a href="#" class="footer__col-link">About Us</a>
-    <a href="#" class="footer__col-link">Terms of Service</a>
+  <!--   BOTTOM ROW   -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 pt-4">
+    <p class="m-0 small text-muted">&copy; 2026 Buzz Fly Travel. All rights reserved.</p>
   </div>
 
-  <div class="footer__col">
-    <h4 class="footer__col-title">Legal</h4>
-    <a href="#" class="footer__col-link">Privacy Policy</a>
-    <a href="#" class="footer__col-link">Cookie Policy</a>
-  </div>
-
-  <div class="footer__col">
-    <h4 class="footer__col-title">Connect</h4>
-    <a href="/pages/contact.html" class="footer__col-link">Contact Us</a>
-    <a href="#" class="footer__col-link">Instagram</a>
-  </div>
-
-  <div class="footer__bottom">
-    <p>&copy; 2026 Buzz Fly Travel. All rights reserved.</p>
-  </div>
 </footer>
