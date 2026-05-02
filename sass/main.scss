@@ -1,6 +1,6 @@
 // ===== Your colors (unchanged) =====
 $nav-green: #059669;
-$dark-green: #006D33;
+$dark-green: #006D33; 
 $gradient-green: #1FAF5A;
 $light-green: #D1FAE5;
 $purple: #4F00D0;
@@ -51,12 +51,6 @@ $light-purple: #E8DEFF;
 
 .btn:hover{
     transform: scale(1.06);
-}
-
-.btn:focus {
-    outline: none;
-    color: white;
-    border: none;
 }
 
 .green-btn {
