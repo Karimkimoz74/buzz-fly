@@ -2,7 +2,6 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadPartials();
-  initDropdownMenus();
   highlightActiveNavLink();
 });
 
@@ -19,32 +18,18 @@ async function loadPartials() {
   }
 }
 
+/* Highlight the current page's nav link.
+   Bootstrap navbar uses .nav-link.active for active state. */
 function highlightActiveNavLink() {
-  const path = window.location.pathname === "/" ? "/index.html" : window.location.pathname;
-  document.querySelectorAll(".navbar__link").forEach(link => {
-    link.classList.toggle("navbar__link--active", link.getAttribute("href") === path);
-  });
-}
-
-function initDropdownMenus() {
-  const menus = document.querySelectorAll("[data-menu]");
-  if (!menus.length) return;
-
-  menus.forEach(menu => {
-    const trigger = menu.querySelector("[data-menu-trigger]");
-    if (!trigger) return;
-    trigger.addEventListener("click", e => {
-      e.stopPropagation();
-      menus.forEach(other => { if (other !== menu) other.classList.remove("is-open"); });
-      menu.classList.toggle("is-open");
-    });
-  });
-
-  document.addEventListener("click", e => {
-    menus.forEach(menu => { if (!menu.contains(e.target)) menu.classList.remove("is-open"); });
-  });
-
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") menus.forEach(m => m.classList.remove("is-open"));
+  let path = window.location.pathname;
+  if (path === "/") {
+    path = "/index.html";
+  }
+  document.querySelectorAll(".buzz-nav-link").forEach(link => {
+    if (link.getAttribute("href") === path) {
+      link.classList.add("active");
+    } else {
+      link.classList.remove("active");
+    }
   });
 }
