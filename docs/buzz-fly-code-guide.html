@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Buzz Fly — Code Guide (Karim's pages)</title>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #191C1D;
+    background: #F8F9FA;
+    margin: 0;
+    line-height: 1.6;
+  }
+  main { max-width: 980px; margin: 0 auto; padding: 40px 28px 80px; }
+
+  /* Headings */
+  h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 .25rem; color: #006D33; }
+  h2 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; margin: 3rem 0 1rem; padding-top: 1rem; border-top: 2px solid #E7E8E9; color: #191C1D; page-break-before: always; }
+  h2:first-of-type { page-break-before: auto; border-top: 0; padding-top: 0; }
+  h3 { font-size: 1.25rem; font-weight: 700; margin: 2rem 0 .5rem; color: #006D33; }
+  h4 { font-size: 1rem; font-weight: 700; margin: 1.25rem 0 .4rem; color: #191C1D; }
+
+  p { margin: .5rem 0 1rem; }
+  .lead { font-size: 1.15rem; color: #52525B; max-width: 70ch; margin-bottom: 2rem; }
+
+  /* Code */
+  code, pre { font-family: "JetBrains Mono", Consolas, "Courier New", monospace; font-size: .9rem; }
+  code.inline { background: #ECFDF5; color: #006D33; padding: 1px 6px; border-radius: 4px; font-size: .85rem; }
+  pre {
+    background: #1F2525; color: #E7E8E9;
+    padding: 16px 20px; border-radius: 12px;
+    overflow-x: auto; line-height: 1.5;
+    margin: 1rem 0;
+  }
+  pre .c { color: #6c8a73; font-style: italic; }   /* comments */
+  pre .k { color: #f8a870; }                       /* keywords */
+  pre .s { color: #b6e5a4; }                       /* strings */
+  pre .a { color: #f8e286; }                       /* attributes / class names */
+  pre .v { color: #c4a4f8; }                       /* variables */
+  pre .t { color: #7fc4e0; }                       /* tags */
+
+  /* Class badges */
+  .badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    vertical-align: 1px;
+  }
+  .b-bs    { background: #d8eafe; color: #0c4ea1; }   /* Bootstrap */
+  .b-karim { background: #d1fae5; color: #006D33; }   /* Custom — Karim */
+  .b-malak { background: #fef3c7; color: #8a5400; }   /* Custom — Malak */
+  .b-html  { background: #ecedef; color: #4a4f55; }   /* HTML attribute */
+  .b-utility { background: #ede0ff; color: #4f00d0; } /* Bootstrap utility (subset of bs) */
+
+  /* Class table */
+  table.classes {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: .9rem;
+  }
+  table.classes th {
+    background: #006D33; color: #fff;
+    padding: 10px 14px; text-align: left;
+    font-size: .8rem; letter-spacing: .04em; text-transform: uppercase;
+  }
+  table.classes td {
+    padding: 10px 14px; vertical-align: top;
+    border-bottom: 1px solid #E7E8E9;
+    background: #fff;
+  }
+  table.classes td:first-child { font-family: "JetBrains Mono", Consolas, monospace; color: #006D33; font-weight: 600; white-space: nowrap; }
+  table.classes td:nth-child(2) { white-space: nowrap; }
+
+  /* TOC */
+  .toc {
+    background: #fff; border: 1px solid #E7E8E9; border-radius: 12px;
+    padding: 18px 24px; margin: 2rem 0 3rem;
+  }
+  .toc h3 { margin-top: 0; }
+  .toc ul { list-style: none; padding-left: 0; margin: 0; }
+  .toc li { padding: 6px 0; }
+  .toc a { color: #191C1D; text-decoration: none; font-weight: 500; }
+  .toc a:hover { color: #006D33; }
+  .toc .sub { padding-left: 1.2rem; font-size: .9rem; color: #52525B; }
+
+  /* Notes */
+  .note {
+    background: #ECFDF5; border-left: 3px solid #006D33;
+    padding: 14px 18px; margin: 1rem 0; border-radius: 0 8px 8px 0;
+    font-size: .92rem;
+  }
+  .note strong { color: #006D33; }
+  .warn {
+    background: #FEF3C7; border-left: 3px solid #B45309;
+    padding: 14px 18px; margin: 1rem 0; border-radius: 0 8px 8px 0;
+    font-size: .92rem;
+  }
+  .warn strong { color: #B45309; }
+
+  /* Visual reference box */
+  .visual {
+    background: #fff;
+    border: 1px solid #E7E8E9;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 1rem 0 1.5rem;
+  }
+  .visual-title {
+    font-size: .8rem;
+    font-weight: 700;
+    color: #006D33;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: .5rem;
+  }
+  .ascii {
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: .82rem;
+    line-height: 1.55;
+    color: #191C1D;
+    white-space: pre;
+    background: #F8F9FA;
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin: .25rem 0;
+    overflow-x: auto;
+  }
+  .ascii .hi { background: #D1FAE5; color: #006D33; padding: 0 4px; border-radius: 3px; }
+  .ascii .hi-purple { background: #E8DEFF; color: #4F00D0; padding: 0 4px; border-radius: 3px; }
+  .ascii .hi-blue { background: #d8eafe; color: #0c4ea1; padding: 0 4px; border-radius: 3px; }
+
+  /* Live demo blocks */
+  .demo {
+    background: #F8F9FA;
+    border: 1px dashed #c9ccd0;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: .5rem 0 1rem;
+  }
+  .demo-pill {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 600;
+  }
+  .demo-circle {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: #52525B;
+  }
+  .demo-circle:hover { background: #D1FAE5; }
+  .demo-link {
+    position: relative;
+    display: inline-block;
+    padding: 6px 12px;
+    color: #006D33;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .demo-link::after {
+    content: "";
+    position: absolute;
+    left: 12px; right: 12px; bottom: 0;
+    height: 2px;
+    background: linear-gradient(to right, #006D33, #1FAF5A);
+    border-radius: 999px;
+  }
+  .demo-checkbox {
+    width: 18px; height: 18px;
+    background: #006D33;
+    border: 1.5px solid #006D33;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: .8rem;
+    vertical-align: -3px;
+  }
+  .demo-gradient-btn {
+    display: inline-block;
+    padding: 8px 24px;
+    border-radius: 999px;
+    background: linear-gradient(to right, #006D33, #1FAF5A);
+    color: #fff;
+    font-weight: 600;
+    border: 0;
+  }
+
+  /* Print */
+  @media print {
+    body { background: #fff; }
+    main { max-width: none; padding: 16px; }
+    .toc { page-break-after: always; }
+    pre { background: #f3f4f5; color: #191C1D; border: 1px solid #E7E8E9; }
+    pre .c { color: #6b7d70; }
+    pre .k { color: #c0500a; }
+    pre .s { color: #1b6c1b; }
+    pre .a { color: #8a5400; }
+    pre .v { color: #5a3da6; }
+    pre .t { color: #1c5e7d; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Buzz Fly — Code Guide</h1>
+<p class="lead">
+  Line-by-line walkthrough of every file Karim wrote: the navbar &amp; footer partials, the three auth pages, their JavaScript, and the custom <code class="inline">main.scss</code> rules. Every HTML class is tagged so you can tell at a glance whether it comes from Bootstrap or from our own code.
+</p>
+
+<div class="toc">
+  <h3>Contents</h3>
+  <ul>
+    <li><a href="#legend">1. Class colour legend</a></li>
+    <li><a href="#structure">2. Project structure</a></li>
+    <li><a href="#navbar">3. partials/navbar.html</a></li>
+    <li><a href="#footer">4. partials/footer.html</a></li>
+    <li><a href="#index">5. index.html (home page)</a></li>
+    <li><a href="#signin">6. pages/auth/signin.html</a></li>
+    <li><a href="#signup">7. pages/auth/signup.html</a></li>
+    <li><a href="#forgot">8. pages/auth/forgot-password.html</a></li>
+    <li><a href="#main-js">9. js/main.js</a></li>
+    <li><a href="#auth-js">10. js/pages/auth.js</a></li>
+    <li><a href="#home-js">11. js/pages/home.js</a></li>
+    <li><a href="#scss">12. sass/main.scss (Karim's section)</a></li>
+  </ul>
+</div>
+
+
+<!-- ============================================================ -->
+<h2 id="legend">1. Class colour legend</h2>
+<p>Every class on every HTML element falls into one of these categories. Throughout the doc, look at the badge after each class name.</p>
+<p>
+  <span class="badge b-bs">Bootstrap</span> — a class that ships with Bootstrap 5.3. You did not write it; it lives inside <code class="inline">node_modules/bootstrap</code> and is included in <code class="inline">main.min.css</code> after the SCSS compile. Examples: <code class="inline">.row</code>, <code class="inline">.col-lg-6</code>, <code class="inline">.d-flex</code>, <code class="inline">.btn</code>, <code class="inline">.card</code>.
+</p>
+<p>
+  <span class="badge b-karim">Custom — Karim</span> — a class Karim wrote inside the bottom half of <code class="inline">sass/main.scss</code> (the section marked <em>"AUTHORED BY KARIM"</em>). Always begins with the <code class="inline">buzz-</code> prefix so you know it's project-specific. Examples: <code class="inline">.buzz-nav-link</code>, <code class="inline">.buzz-icon-btn</code>, <code class="inline">.auth-body</code>.
+</p>
+<p>
+  <span class="badge b-malak">Custom — Malak</span> — a class Malak wrote inside the top half of <code class="inline">sass/main.scss</code> (the section marked <em>"AUTHORED BY MALAK"</em>) when she introduced Bootstrap. Examples: <code class="inline">.text-green</code>, <code class="inline">.bg-light-purple</code>, <code class="inline">.green-btn</code>, <code class="inline">.solid-green-btn</code>.
+</p>
+<p>
+  <span class="badge b-html">HTML attribute</span> — not a CSS class, just a standard HTML attribute (<code class="inline">type</code>, <code class="inline">id</code>, <code class="inline">data-*</code>, <code class="inline">aria-*</code>, etc.).
+</p>
+
+
+<!-- ============================================================ -->
+<h2 id="structure">2. Project structure (the parts you care about)</h2>
+<pre><span class="c">// File tree (relevant files only)</span>
+buzz-fly/
+├── partials/
+│   ├── navbar.html         <span class="c">← Karim, Bootstrap navbar + dropdowns</span>
+│   ├── footer.html         <span class="c">← Karim, Bootstrap grid</span>
+│   └── sidebar.html        <span class="c">← Rawan (separate, profile pages)</span>
+├── pages/auth/
+│   ├── signin.html         <span class="c">← Karim</span>
+│   ├── signup.html         <span class="c">← Karim</span>
+│   └── forgot-password.html <span class="c">← Karim</span>
+├── js/
+│   ├── main.js             <span class="c">← Karim, partial loader + active link</span>
+│   └── pages/auth.js       <span class="c">← Karim, password toggle + form submit</span>
+├── sass/
+│   └── main.scss           <span class="c">← Malak (top) + Karim (bottom)</span>
+└── css/
+    └── main.min.css        <span class="c">← compiled output (don't edit by hand)</span>
+</pre>
+
+<div class="note">
+<strong>The compile pipeline:</strong> you edit <code class="inline">sass/main.scss</code> → the <code class="inline">sass --watch</code> command compiles it to <code class="inline">css/main.min.css</code> → every HTML page links <code class="inline">css/main.min.css</code> → the browser reads it. You do <strong>not</strong> edit <code class="inline">main.min.css</code> directly because the next save of <code class="inline">main.scss</code> overwrites it.
+</div>
+
+
+<!-- ============================================================ -->
+<h2 id="navbar">3. partials/navbar.html</h2>
+<p>The shared top navbar, fetched and injected into every page that has a <code class="inline">&lt;div id="navbar-slot"&gt;&lt;/div&gt;</code>. It contains the Buzz Fly brand, four nav links (Explore / Trips / Support / Contact Us), a notifications bell with a dropdown panel, and a user-account button with a sign-in dropdown.</p>
+
+<div class="visual">
+  <div class="visual-title">Where it sits on the page</div>
+  <div class="ascii">┌─────────────────────────────────────────────────────────────────────┐
+│ <span class="hi">Buzz Fly</span>      <span class="hi">Explore</span>  Trips  Support  Contact Us         🔔 👤 │  ← navbar (fixed)
+└─────────────────────────────────────────────────────────────────────┘
+   page content goes here, navbar floats on top
+</div>
+  <p style="margin: .5rem 0 0; font-size: .9rem;">Pinned to the top of the viewport (<code class="inline">.fixed-top</code>). Brand on the left, four nav links centered, two icon buttons on the right. Active link gets a green-gradient underline.</p>
+</div>
+
+<h3 id="nav-outer">3.1 Outer header</h3>
+<pre>&lt;<span class="t">header</span> <span class="a">class</span>=<span class="s">"navbar navbar-expand-lg fixed-top bg-white shadow-sm"</span>&gt;
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"container-fluid px-4"</span>&gt;
+    &lt;<span class="t">a</span> <span class="a">href</span>=<span class="s">"/index.html"</span> <span class="a">class</span>=<span class="s">"navbar-brand fw-bold text-green"</span>&gt;Buzz Fly&lt;/<span class="t">a</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.navbar</td><td><span class="badge b-bs">Bootstrap</span></td><td>Base navbar component — flexbox container, padding, vertical alignment.</td></tr>
+  <tr><td>.navbar-expand-lg</td><td><span class="badge b-bs">Bootstrap</span></td><td>Show full nav at <code>≥992px</code>; collapse into a hamburger menu below that.</td></tr>
+  <tr><td>.fixed-top</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>position: fixed; top: 0;</code> — pins navbar to the top of the viewport.</td></tr>
+  <tr><td>.bg-white</td><td><span class="badge b-bs">Bootstrap</span></td><td>White background.</td></tr>
+  <tr><td>.shadow-sm</td><td><span class="badge b-bs">Bootstrap</span></td><td>Subtle drop shadow underneath the navbar.</td></tr>
+  <tr><td>.container-fluid</td><td><span class="badge b-bs">Bootstrap</span></td><td>100% width container with horizontal padding (gutter). No max-width.</td></tr>
+  <tr><td>.px-4</td><td><span class="badge b-bs">Bootstrap</span></td><td>Horizontal padding of <code>1.5rem</code> on left and right.</td></tr>
+  <tr><td>.navbar-brand</td><td><span class="badge b-bs">Bootstrap</span></td><td>Styles the brand link inside a navbar — larger font, no underline, slight margin.</td></tr>
+  <tr><td>.fw-bold</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>font-weight: 700</code>.</td></tr>
+  <tr><td>.text-green</td><td><span class="badge b-malak">Malak</span></td><td><code>color: #006D33</code>. Brand dark green.</td></tr>
+</table>
+
+<h3>The toggle button (mobile hamburger)</h3>
+<pre>&lt;<span class="t">button</span> <span class="a">class</span>=<span class="s">"navbar-toggler"</span> <span class="a">type</span>=<span class="s">"button"</span>
+        <span class="a">data-bs-toggle</span>=<span class="s">"collapse"</span>
+        <span class="a">data-bs-target</span>=<span class="s">"#buzzNavContent"</span>&gt;
+  &lt;<span class="t">span</span> <span class="a">class</span>=<span class="s">"navbar-toggler-icon"</span>&gt;&lt;/<span class="t">span</span>&gt;
+&lt;/<span class="t">button</span>&gt;</pre>
+<p>This button is invisible on desktop and only appears below 992px width (because of <code class="inline">navbar-expand-lg</code>). Clicking it toggles the collapse panel.</p>
+
+<table class="classes">
+  <tr><th>Class / attr</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.navbar-toggler</td><td><span class="badge b-bs">Bootstrap</span></td><td>Styles the hamburger button — border, padding, focus ring.</td></tr>
+  <tr><td>.navbar-toggler-icon</td><td><span class="badge b-bs">Bootstrap</span></td><td>The three-line hamburger icon drawn as a CSS background image.</td></tr>
+  <tr><td>data-bs-toggle="collapse"</td><td><span class="badge b-html">HTML attr</span></td><td>Tells Bootstrap's JS that this button toggles a collapse element.</td></tr>
+  <tr><td>data-bs-target="#buzzNavContent"</td><td><span class="badge b-html">HTML attr</span></td><td>Selects which collapse to toggle — the <code>div</code> with that id.</td></tr>
+</table>
+
+<h3>The collapsing nav links (centered)</h3>
+<pre>&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"collapse navbar-collapse"</span> <span class="a">id</span>=<span class="s">"buzzNavContent"</span>&gt;
+
+  &lt;<span class="t">ul</span> <span class="a">class</span>=<span class="s">"navbar-nav mx-auto"</span>&gt;
+    &lt;<span class="t">li</span> <span class="a">class</span>=<span class="s">"nav-item"</span>&gt;
+      &lt;<span class="t">a</span> <span class="a">class</span>=<span class="s">"nav-link buzz-nav-link"</span> <span class="a">href</span>=<span class="s">"/index.html"</span>&gt;Explore&lt;/<span class="t">a</span>&gt;
+    &lt;/<span class="t">li</span>&gt;
+    <span class="c">&lt;!-- ...3 more nav-items: Trips / Support / Contact Us --&gt;</span>
+  &lt;/<span class="t">ul</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.collapse</td><td><span class="badge b-bs">Bootstrap</span></td><td>Hidden by default until JS toggles it.</td></tr>
+  <tr><td>.navbar-collapse</td><td><span class="badge b-bs">Bootstrap</span></td><td>Variant of collapse that integrates with navbar-expand-* breakpoints.</td></tr>
+  <tr><td>.navbar-nav</td><td><span class="badge b-bs">Bootstrap</span></td><td>Reset list styles + flex direction for navbar links.</td></tr>
+  <tr><td>.mx-auto</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>margin-left: auto; margin-right: auto;</code> — centers the ul horizontally inside the navbar.</td></tr>
+  <tr><td>.nav-item</td><td><span class="badge b-bs">Bootstrap</span></td><td>Each li wrapper. Removes default list bullets and gives it the right structure.</td></tr>
+  <tr><td>.nav-link</td><td><span class="badge b-bs">Bootstrap</span></td><td>Padding, hover color, no underline.</td></tr>
+  <tr><td>.buzz-nav-link</td><td><span class="badge b-karim">Karim</span></td><td>Adds <code>position: relative</code> + a <code>::after</code> green-gradient underline that appears when <code>.active</code> is also present. Set by <code>highlightActiveNavLink()</code> in main.js.</td></tr>
+</table>
+
+<h3>The notifications dropdown</h3>
+
+<div class="visual">
+  <div class="visual-title">What it looks like</div>
+  <div class="ascii">                                                  click 🔔
+                                                       ↓
+                                       ┌──────────────────────────────────┐
+                                       │ Notifications                    │ ← header
+                                       ├──────────────────────────────────┤
+                                       │ ✈ Flash deal: 40% off Bali       │  unread
+                                       │   Expires in 2 days · 15m ago    │  (light green bg)
+                                       ├──────────────────────────────────┤
+                                       │ 🛏 Booking confirmed              │
+                                       │   Amaya Resort · 1d ago          │
+                                       ├──────────────────────────────────┤
+                                       │      View all notifications      │ ← footer
+                                       └──────────────────────────────────┘
+                                       360px wide · scrolls if more</div>
+</div>
+
+<pre>&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"dropdown"</span>&gt;
+  &lt;<span class="t">button</span> <span class="a">class</span>=<span class="s">"buzz-icon-btn"</span> <span class="a">data-bs-toggle</span>=<span class="s">"dropdown"</span>&gt;
+    &lt;<span class="t">img</span> <span class="a">src</span>=<span class="s">"/assets/icons/bell.svg"</span>&gt;
+  &lt;/<span class="t">button</span>&gt;
+
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"dropdown-menu dropdown-menu-end p-0 buzz-notif-menu"</span>&gt;
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"px-4 py-3 border-bottom"</span>&gt;
+      &lt;<span class="t">h6</span> <span class="a">class</span>=<span class="s">"m-0 fw-bold"</span>&gt;Notifications&lt;/<span class="t">h6</span>&gt;
+    &lt;/<span class="t">div</span>&gt;
+
+    &lt;<span class="t">ul</span> <span class="a">class</span>=<span class="s">"list-unstyled m-0"</span>&gt;
+      &lt;<span class="t">li</span>&gt;&lt;<span class="t">a</span> <span class="a">class</span>=<span class="s">"dropdown-item d-flex gap-3 px-4 py-3 border-bottom bg-light-green"</span>&gt;
+        ...one notification row...
+      &lt;/<span class="t">a</span>&gt;&lt;/<span class="t">li</span>&gt;
+    &lt;/<span class="t">ul</span>&gt;
+  &lt;/<span class="t">div</span>&gt;
+&lt;/<span class="t">div</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class / attr</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.dropdown</td><td><span class="badge b-bs">Bootstrap</span></td><td>Wrapper that gives <code>position: relative</code> so the dropdown menu can position itself.</td></tr>
+  <tr><td>.buzz-icon-btn</td><td><span class="badge b-karim">Karim</span></td><td>40x40 round transparent button. Hover background turns light green. Used for bell &amp; user icons.</td></tr>
+  <tr><td>data-bs-toggle="dropdown"</td><td><span class="badge b-html">HTML attr</span></td><td>Tells Bootstrap to open/close the next sibling <code>.dropdown-menu</code> on click.</td></tr>
+  <tr><td>.dropdown-menu</td><td><span class="badge b-bs">Bootstrap</span></td><td>The hidden panel. Bootstrap handles show/hide via JS.</td></tr>
+  <tr><td>.dropdown-menu-end</td><td><span class="badge b-bs">Bootstrap</span></td><td>Aligns the panel to the right edge of its parent (so it doesn't overflow off-screen).</td></tr>
+  <tr><td>.p-0</td><td><span class="badge b-bs">Bootstrap</span></td><td>Removes default <code>padding: 0.5rem 0</code> on dropdown-menu so we can put our own headers/footers flush with the edges.</td></tr>
+  <tr><td>.buzz-notif-menu</td><td><span class="badge b-karim">Karim</span></td><td>Sets fixed <code>width: 360px</code>, <code>max-height: 480px</code>, <code>overflow-y: auto</code> for a scrollable feed.</td></tr>
+  <tr><td>.px-4 / .py-3</td><td><span class="badge b-bs">Bootstrap</span></td><td>Horizontal/vertical padding utilities (<code>1.5rem</code> / <code>1rem</code>).</td></tr>
+  <tr><td>.border-bottom</td><td><span class="badge b-bs">Bootstrap</span></td><td>Adds a 1px gray bottom border.</td></tr>
+  <tr><td>.m-0</td><td><span class="badge b-bs">Bootstrap</span></td><td>Removes all margin.</td></tr>
+  <tr><td>.list-unstyled</td><td><span class="badge b-bs">Bootstrap</span></td><td>Strips bullet points and left padding from a <code>ul</code>.</td></tr>
+  <tr><td>.dropdown-item</td><td><span class="badge b-bs">Bootstrap</span></td><td>Default dropdown row — display block, hover background, color. We override the layout with <code>.d-flex .gap-3</code>.</td></tr>
+  <tr><td>.d-flex</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>display: flex</code>.</td></tr>
+  <tr><td>.gap-3</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>gap: 1rem</code> between flex children.</td></tr>
+  <tr><td>.bg-light-green</td><td><span class="badge b-malak">Malak</span></td><td><code>background-color: #D1FAE5</code>. Used to highlight unread notifications.</td></tr>
+</table>
+
+<h3>One notification row (inside the ul)</h3>
+<pre>&lt;<span class="t">a</span> <span class="a">class</span>=<span class="s">"dropdown-item d-flex gap-3 px-4 py-3 border-bottom bg-light-green"</span>&gt;
+  &lt;<span class="t">span</span> <span class="a">class</span>=<span class="s">"buzz-notif-icon rounded-circle border bg-white d-inline-flex align-items-center justify-content-center"</span>&gt;
+    &lt;<span class="t">img</span> <span class="a">src</span>=<span class="s">"/assets/icons/plane-takeoff.svg"</span>&gt;
+  &lt;/<span class="t">span</span>&gt;
+  &lt;<span class="t">span</span> <span class="a">class</span>=<span class="s">"flex-grow-1"</span>&gt;
+    &lt;<span class="t">span</span> <span class="a">class</span>=<span class="s">"d-block fw-semibold small"</span>&gt;Flash deal: 40% off Bali flights&lt;/<span class="t">span</span>&gt;
+    &lt;<span class="t">span</span> <span class="a">class</span>=<span class="s">"d-block text-muted small"</span>&gt;Expires in 2 days · 15m ago&lt;/<span class="t">span</span>&gt;
+  &lt;/<span class="t">span</span>&gt;
+&lt;/<span class="t">a</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.buzz-notif-icon</td><td><span class="badge b-karim">Karim</span></td><td>Sets the icon container to <code>36x36</code> with <code>flex-shrink: 0</code> so it doesn't squish.</td></tr>
+  <tr><td>.rounded-circle</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>border-radius: 50%</code>.</td></tr>
+  <tr><td>.border</td><td><span class="badge b-bs">Bootstrap</span></td><td>1px solid border, default light gray color.</td></tr>
+  <tr><td>.d-inline-flex</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>display: inline-flex</code>.</td></tr>
+  <tr><td>.align-items-center</td><td><span class="badge b-bs">Bootstrap</span></td><td>Vertically centers flex children.</td></tr>
+  <tr><td>.justify-content-center</td><td><span class="badge b-bs">Bootstrap</span></td><td>Horizontally centers flex children.</td></tr>
+  <tr><td>.flex-grow-1</td><td><span class="badge b-bs">Bootstrap</span></td><td>Lets the text column take up all remaining horizontal space.</td></tr>
+  <tr><td>.d-block</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>display: block</code> — forces each line of text onto its own line even though parent is flex.</td></tr>
+  <tr><td>.fw-semibold</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>font-weight: 600</code>.</td></tr>
+  <tr><td>.small</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>font-size: 0.875em</code>.</td></tr>
+  <tr><td>.text-muted</td><td><span class="badge b-bs">Bootstrap</span></td><td>Gray-ish secondary text color.</td></tr>
+</table>
+
+<h3>The account dropdown (Sign In/Up)</h3>
+
+<div class="visual">
+  <div class="visual-title">What it looks like</div>
+  <div class="ascii">                                                       click 👤
+                                                              ↓
+                                                ┌──────────────────────────┐
+                                                │ Welcome User!            │ ← header
+                                                │ Sign in to unlock trips  │
+                                                ├──────────────────────────┤
+                                                │  ┌────────────────────┐  │
+                                                │  │   <span class="hi">Sign In/Up →</span>     │  │ ← green gradient btn
+                                                │  └────────────────────┘  │
+                                                └──────────────────────────┘
+                                                240px min-width</div>
+</div>
+
+<pre>&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"dropdown"</span>&gt;
+  &lt;<span class="t">button</span> <span class="a">class</span>=<span class="s">"buzz-icon-btn"</span> <span class="a">data-bs-toggle</span>=<span class="s">"dropdown"</span>&gt;
+    &lt;<span class="t">img</span> <span class="a">src</span>=<span class="s">"/assets/icons/user.svg"</span>&gt;
+  &lt;/<span class="t">button</span>&gt;
+
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"dropdown-menu dropdown-menu-end p-0"</span>&gt;
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"px-4 py-3 border-bottom"</span> <span class="a">style</span>=<span class="s">"min-width: 240px;"</span>&gt;
+      &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"m-0 fw-bold"</span>&gt;Welcome User!&lt;/<span class="t">p</span>&gt;
+      &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"m-0 text-muted small"</span>&gt;Sign in to unlock your trips&lt;/<span class="t">p</span>&gt;
+    &lt;/<span class="t">div</span>&gt;
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"p-2"</span>&gt;
+      &lt;<span class="t">a</span> <span class="a">href</span>=<span class="s">"/pages/auth/signin.html"</span> <span class="a">class</span>=<span class="s">"btn green-btn w-100"</span>&gt;Sign In/Up&lt;/<span class="t">a</span>&gt;
+    &lt;/<span class="t">div</span>&gt;
+  &lt;/<span class="t">div</span>&gt;
+&lt;/<span class="t">div</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class / attr</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>style="min-width: 240px"</td><td><span class="badge b-html">inline</span></td><td>Forces the dropdown panel to be at least 240px wide regardless of content.</td></tr>
+  <tr><td>.btn</td><td><span class="badge b-malak">Malak override</span></td><td>Bootstrap's <code>.btn</code> base, but Malak overrode it to <code>border-radius: 9999px</code> + scale-on-hover.</td></tr>
+  <tr><td>.green-btn</td><td><span class="badge b-malak">Malak</span></td><td>Green gradient background (<code>#006D33 → #1FAF5A</code>) + white text.</td></tr>
+  <tr><td>.w-100</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>width: 100%</code>.</td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<h2 id="footer">4. partials/footer.html</h2>
+<p>The shared site footer with brand block + 3 link columns + bottom copyright row. Loaded into <code class="inline">&lt;div id="footer-slot"&gt;&lt;/div&gt;</code>.</p>
+
+<div class="visual">
+  <div class="visual-title">Layout (desktop ≥992px)</div>
+  <div class="ascii">─────────────────────────────────────────────────────────────────────────  ← top border
+<span class="hi">Buzz Fly</span>                       <span class="hi">EXPLORE</span>      <span class="hi">LEGAL</span>          <span class="hi">CONNECT</span>
+CRAFTING YOUR NEXT             About Us     Privacy Policy  Contact Us
+LEGENDARY JOURNEY...           Terms        Cookie Policy   Instagram
+─────────────────────────────────────────────────────────────────────────  ← divider
+                © 2026 Buzz Fly Travel. All rights reserved.
+─────────────────────────────────────────────────────────────────────────
+   col-lg-6 (brand)         col-lg-2     col-lg-2        col-lg-2
+   = 6 + 2 + 2 + 2 = 12 Bootstrap columns
+
+Tablet (≥768px, &lt;992px) → brand stacks above, three link cols sit in a row
+Mobile (&lt;768px)         → everything stacks vertically</div>
+</div>
+
+<h3>Outer container</h3>
+<pre>&lt;<span class="t">footer</span> <span class="a">class</span>=<span class="s">"container py-5 mt-5 border-top"</span>&gt;
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"row g-4 pb-4 border-bottom"</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.container</td><td><span class="badge b-bs">Bootstrap</span></td><td>Centered, max-width grows with breakpoint (540 / 720 / 960 / 1140 / 1320px).</td></tr>
+  <tr><td>.py-5</td><td><span class="badge b-bs">Bootstrap</span></td><td>Vertical padding <code>3rem</code> top + bottom.</td></tr>
+  <tr><td>.mt-5</td><td><span class="badge b-bs">Bootstrap</span></td><td>Top margin <code>3rem</code> separating footer from page content.</td></tr>
+  <tr><td>.border-top / .border-bottom</td><td><span class="badge b-bs">Bootstrap</span></td><td>1px gray top/bottom borders.</td></tr>
+  <tr><td>.row</td><td><span class="badge b-bs">Bootstrap</span></td><td>Bootstrap grid row — flex container for columns.</td></tr>
+  <tr><td>.g-4</td><td><span class="badge b-bs">Bootstrap</span></td><td>Gutter (gap) of <code>1.5rem</code> between columns.</td></tr>
+  <tr><td>.pb-4</td><td><span class="badge b-bs">Bootstrap</span></td><td>Bottom padding <code>1.5rem</code> before the divider.</td></tr>
+</table>
+
+<h3>Brand column</h3>
+<pre>&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"col-12 col-lg-6"</span>&gt;
+  &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"text-green fw-bold fs-5 mb-2"</span>&gt;Buzz Fly&lt;/<span class="t">p</span>&gt;
+  &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"text-muted small text-uppercase mb-0"</span>
+     <span class="a">style</span>=<span class="s">"letter-spacing: .08em; max-width: 28ch;"</span>&gt;
+    Crafting your next legendary journey with digital precision.
+  &lt;/<span class="t">p</span>&gt;
+&lt;/<span class="t">div</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.col-12</td><td><span class="badge b-bs">Bootstrap</span></td><td>Takes 12 of 12 columns (full width) on extra-small/mobile.</td></tr>
+  <tr><td>.col-lg-6</td><td><span class="badge b-bs">Bootstrap</span></td><td>Takes 6 of 12 (half width) at <code>≥992px</code>.</td></tr>
+  <tr><td>.fs-5</td><td><span class="badge b-bs">Bootstrap</span></td><td>Font size 5 — <code>1.25rem</code>.</td></tr>
+  <tr><td>.mb-2 / .mb-0</td><td><span class="badge b-bs">Bootstrap</span></td><td>Margin-bottom of <code>0.5rem</code> / <code>0</code>.</td></tr>
+  <tr><td>.text-uppercase</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>text-transform: uppercase</code>.</td></tr>
+</table>
+
+<h3>One link column (Explore / Legal / Connect)</h3>
+<pre>&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"col-6 col-lg-2"</span>&gt;
+  &lt;<span class="t">h4</span> <span class="a">class</span>=<span class="s">"text-uppercase small fw-bold mb-3"</span>
+      <span class="a">style</span>=<span class="s">"letter-spacing: .12em;"</span>&gt;Explore&lt;/<span class="t">h4</span>&gt;
+  &lt;<span class="t">a</span> <span class="a">href</span>=<span class="s">"/pages/about-us.html"</span>
+     <span class="a">class</span>=<span class="s">"d-block py-1 small text-muted text-decoration-none buzz-footer-link"</span>&gt;
+     About Us
+  &lt;/<span class="t">a</span>&gt;
+&lt;/<span class="t">div</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.col-6</td><td><span class="badge b-bs">Bootstrap</span></td><td>Half-width on small screens — two link columns sit side by side per row.</td></tr>
+  <tr><td>.col-lg-2</td><td><span class="badge b-bs">Bootstrap</span></td><td>2 of 12 (1/6 width) on desktop — 6 + 2 + 2 + 2 = 12.</td></tr>
+  <tr><td>.py-1</td><td><span class="badge b-bs">Bootstrap</span></td><td>Vertical padding <code>0.25rem</code> for clickable spacing between links.</td></tr>
+  <tr><td>.text-decoration-none</td><td><span class="badge b-bs">Bootstrap</span></td><td>Removes the default underline on <code>&lt;a&gt;</code>.</td></tr>
+  <tr><td>.buzz-footer-link</td><td><span class="badge b-karim">Karim</span></td><td>Adds <code>transition: color .2s ease</code> and <code>:hover { color: #006D33 }</code>.</td></tr>
+</table>
+
+<h3>Bottom copyright row</h3>
+<pre>&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 pt-4"</span>&gt;
+  &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"m-0 small text-muted"</span>&gt;© 2026 Buzz Fly Travel...&lt;/<span class="t">p</span>&gt;
+&lt;/<span class="t">div</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.flex-column</td><td><span class="badge b-bs">Bootstrap</span></td><td>Stacks children vertically on mobile.</td></tr>
+  <tr><td>.flex-md-row</td><td><span class="badge b-bs">Bootstrap</span></td><td>Switches to horizontal at <code>≥768px</code>.</td></tr>
+  <tr><td>.justify-content-between</td><td><span class="badge b-bs">Bootstrap</span></td><td>Pushes children to opposite ends of the flex axis.</td></tr>
+  <tr><td>.pt-4</td><td><span class="badge b-bs">Bootstrap</span></td><td>Padding-top <code>1.5rem</code> separating from the link row.</td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<h2 id="index">5. index.html (home page)</h2>
+<p>The site's landing page. Has four major sections inside <code class="inline">&lt;main&gt;</code>: the <strong>hero</strong>, the <strong>search card</strong> (with Flights/Hotels tabs), <strong>Trending Destinations</strong> (a 3-column card grid), and <strong>Popular This Week</strong> (flight deals + featured stays).</p>
+
+<div class="visual">
+  <div class="visual-title">Page layout (top to bottom)</div>
+  <div class="ascii">┌────────────────────────────────────────────────────────────┐
+│  navbar (loaded from partials/navbar.html)                 │
+├────────────────────────────────────────────────────────────┤
+│                                                            │
+│   <span class="hi-purple">NEW DESTINATIONS AWAIT</span>            ┌─────────────┐    │
+│                                       │             │    │
+│   To Infinity And Beyond.             │   image     │    │  ← hero (5.1)
+│                                       │   with      │    │
+│   Experience luxury travel...         │   badge     │    │
+│                                       └─────────────┘    │
+│                                                            │
+├────────────────────────────────────────────────────────────┤
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │ <span class="hi">[Flights]</span>  Hotels                                │  │  ← search card (5.2)
+│  │ ┌──────┬──────┬──────┬──────┬──────┐                  │  │     overlaps hero
+│  │ │ From │ To   │ In   │ Out  │  🔍  │                  │  │     by -3rem
+│  │ └──────┴──────┴──────┴──────┴──────┘                  │  │
+│  └──────────────────────────────────────────────────────┘  │
+├────────────────────────────────────────────────────────────┤
+│   Trending Destinations                       View all →   │  ← trending (5.3)
+│   ┌──────────┐  ┌──────────┐  ┌─────────┐                  │
+│   │  Ubud    │  │  Kyoto   │  │ Zermatt │                  │
+│   │ (large)  │  │  (tall)  │  ├─────────┤                  │
+│   │          │  │          │  │  Paris  │                  │
+│   └──────────┘  └──────────┘  └─────────┘                  │
+├────────────────────────────────────────────────────────────┤
+│   Popular This Week                                        │  ← popular (5.4)
+│   ✈ Top Flight Deals          🛏 Featured Stays            │
+│   ┌──────────────┐            ┌──────┐ ┌──────┐            │
+│   │ LHR  London  │            │stay 1│ │stay 2│            │
+│   └──────────────┘            └──────┘ └──────┘            │
+├────────────────────────────────────────────────────────────┤
+│  footer (loaded from partials/footer.html)                 │
+└────────────────────────────────────────────────────────────┘</div>
+</div>
+
+<h3>5.1 Hero — text on left, image with floating badge on right</h3>
+<pre>&lt;<span class="t">section</span> <span class="a">class</span>=<span class="s">"container buzz-hero"</span>&gt;
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"row align-items-center g-5 py-5 h-100"</span>&gt;
+
+    <span class="c">&lt;!-- Left: text --&gt;</span>
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"col-lg-6 ps-lg-4"</span>&gt;
+      &lt;<span class="t">span</span> <span class="a">class</span>=<span class="s">"badge rounded-pill bg-light-purple text-purple text-uppercase fw-bold px-3 py-2 mb-4 buzz-eyebrow"</span>&gt;
+        New destinations await
+      &lt;/<span class="t">span</span>&gt;
+      &lt;<span class="t">h1</span> <span class="a">class</span>=<span class="s">"display-3 fw-bold mb-4"</span>&gt;To Infinity And Beyond.&lt;/<span class="t">h1</span>&gt;
+      &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"lead text-muted"</span>&gt;Experience luxury travel...&lt;/<span class="t">p</span>&gt;
+    &lt;/<span class="t">div</span>&gt;
+
+    <span class="c">&lt;!-- Right: image with floating badge --&gt;</span>
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"col-lg-6"</span>&gt;
+      &lt;<span class="t">figure</span> <span class="a">class</span>=<span class="s">"position-relative rounded-4 overflow-hidden shadow-lg m-0 mx-auto"</span>
+              <span class="a">style</span>=<span class="s">"aspect-ratio: 4 / 5; max-height: 540px;"</span>&gt;
+        &lt;<span class="t">img</span> <span class="a">class</span>=<span class="s">"w-100 h-100"</span> <span class="a">style</span>=<span class="s">"object-fit: cover;"</span>&gt;
+        &lt;<span class="t">figcaption</span> <span class="a">class</span>=<span class="s">"position-absolute start-50 translate-middle-x bg-white rounded-pill shadow d-inline-flex align-items-center gap-2 px-4 py-2 small fw-semibold text-nowrap"</span>
+                    <span class="a">style</span>=<span class="s">"bottom: 1.25rem;"</span>&gt;
+          🛡 Top Rated Concierge 2024
+        &lt;/<span class="t">figcaption</span>&gt;
+      &lt;/<span class="t">figure</span>&gt;
+    &lt;/<span class="t">div</span>&gt;
+
+  &lt;/<span class="t">div</span>&gt;
+&lt;/<span class="t">section</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.container</td><td><span class="badge b-bs">Bootstrap</span></td><td>Centered, max-width container.</td></tr>
+  <tr><td>.buzz-hero</td><td><span class="badge b-karim">Karim</span></td><td><code>min-height: calc(100vh + 1rem)</code> so the search card sits below the fold on first load.</td></tr>
+  <tr><td>.row .g-5 .py-5 .h-100</td><td><span class="badge b-bs">Bootstrap</span></td><td>Bootstrap row with gutter <code>3rem</code>, vertical padding <code>3rem</code>, full height to align center.</td></tr>
+  <tr><td>.align-items-center</td><td><span class="badge b-bs">Bootstrap</span></td><td>Vertically centers text column with image column.</td></tr>
+  <tr><td>.col-lg-6</td><td><span class="badge b-bs">Bootstrap</span></td><td>Half width on desktop, stacks on mobile.</td></tr>
+  <tr><td>.ps-lg-4</td><td><span class="badge b-bs">Bootstrap</span></td><td>Padding-start (left) <code>1.5rem</code> on desktop only — pushes the text slightly inward.</td></tr>
+  <tr><td>.badge .rounded-pill</td><td><span class="badge b-bs">Bootstrap</span></td><td>Bootstrap badge component made into a fully rounded pill.</td></tr>
+  <tr><td>.bg-light-purple .text-purple</td><td><span class="badge b-malak">Malak</span></td><td>Light purple background with purple text — the eyebrow's brand colors.</td></tr>
+  <tr><td>.buzz-eyebrow</td><td><span class="badge b-karim">Karim</span></td><td><code>letter-spacing: .14em; font-size: .75rem</code> — Bootstrap doesn't ship letter-spacing utilities.</td></tr>
+  <tr><td>.display-3</td><td><span class="badge b-bs">Bootstrap</span></td><td>Big display heading size — <code>4rem</code> on desktop.</td></tr>
+  <tr><td>.lead</td><td><span class="badge b-bs">Bootstrap</span></td><td>Larger and lighter "lead" paragraph style.</td></tr>
+  <tr><td>.position-relative / .position-absolute</td><td><span class="badge b-bs">Bootstrap</span></td><td>Positioning context for the floating badge over the image.</td></tr>
+  <tr><td>.rounded-4</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>border-radius: 1rem</code>.</td></tr>
+  <tr><td>.overflow-hidden</td><td><span class="badge b-bs">Bootstrap</span></td><td>Clips the image to the rounded corners.</td></tr>
+  <tr><td>.shadow-lg</td><td><span class="badge b-bs">Bootstrap</span></td><td>Large drop shadow under the image.</td></tr>
+  <tr><td>.start-50 .translate-middle-x</td><td><span class="badge b-bs">Bootstrap</span></td><td>Sets the badge's left edge to 50% then shifts it back by 50% of its own width — perfect horizontal centering.</td></tr>
+</table>
+
+<h3>5.2 Search card with Bootstrap pill tabs (Flights / Hotels)</h3>
+<p>Sits visually overlapping the bottom of the hero (negative margin). Uses Bootstrap's native pill-tab system so clicking a tab swaps the visible form pane.</p>
+
+<pre>&lt;<span class="t">section</span> <span class="a">class</span>=<span class="s">"container position-relative mb-5"</span>
+         <span class="a">style</span>=<span class="s">"margin-top: -3rem; z-index: 2;"</span>&gt;
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"card shadow-lg border-0 rounded-4 p-4"</span>&gt;
+    &lt;<span class="t">form</span>&gt;
+
+      <span class="c">&lt;!-- Tabs --&gt;</span>
+      &lt;<span class="t">ul</span> <span class="a">class</span>=<span class="s">"nav nav-pills mb-3"</span> <span class="a">role</span>=<span class="s">"tablist"</span>&gt;
+        &lt;<span class="t">li</span> <span class="a">class</span>=<span class="s">"nav-item me-2"</span>&gt;
+          &lt;<span class="t">button</span> <span class="a">class</span>=<span class="s">"nav-link buzz-tab active"</span>
+                  <span class="a">data-bs-toggle</span>=<span class="s">"pill"</span>
+                  <span class="a">data-bs-target</span>=<span class="s">"#flights-pane"</span>&gt;
+            ✈ Flights
+          &lt;/<span class="t">button</span>&gt;
+        &lt;/<span class="t">li</span>&gt;
+        &lt;<span class="t">li</span> <span class="a">class</span>=<span class="s">"nav-item"</span>&gt;
+          &lt;<span class="t">button</span> <span class="a">class</span>=<span class="s">"nav-link buzz-tab"</span> <span class="a">data-bs-toggle</span>=<span class="s">"pill"</span> <span class="a">data-bs-target</span>=<span class="s">"#hotels-pane"</span>&gt;
+            🛏 Hotels
+          &lt;/<span class="t">button</span>&gt;
+        &lt;/<span class="t">li</span>&gt;
+      &lt;/<span class="t">ul</span>&gt;
+
+      <span class="c">&lt;!-- Tab panes --&gt;</span>
+      &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"tab-content"</span>&gt;
+        &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"tab-pane fade show active"</span> <span class="a">id</span>=<span class="s">"flights-pane"</span>&gt;
+          ...flights form...
+        &lt;/<span class="t">div</span>&gt;
+        &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"tab-pane fade"</span> <span class="a">id</span>=<span class="s">"hotels-pane"</span>&gt;
+          ...hotels form...
+        &lt;/<span class="t">div</span>&gt;
+      &lt;/<span class="t">div</span>&gt;
+
+    &lt;/<span class="t">form</span>&gt;
+  &lt;/<span class="t">div</span>&gt;
+&lt;/<span class="t">section</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class / attr</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>style="margin-top: -3rem; z-index: 2"</td><td><span class="badge b-html">inline</span></td><td>Pulls the card upward by <code>3rem</code> so it overlaps the hero, and lifts it above the hero with z-index.</td></tr>
+  <tr><td>.card</td><td><span class="badge b-bs">Bootstrap</span></td><td>White rounded card.</td></tr>
+  <tr><td>.shadow-lg .border-0 .rounded-4 .p-4</td><td><span class="badge b-bs">Bootstrap</span></td><td>Card visual style — large shadow, no border, big radius, padding.</td></tr>
+  <tr><td>.nav .nav-pills</td><td><span class="badge b-bs">Bootstrap</span></td><td>Nav component in pill style. Bootstrap JS hooks into <code>data-bs-toggle="pill"</code>.</td></tr>
+  <tr><td>.nav-item</td><td><span class="badge b-bs">Bootstrap</span></td><td>Each <code>&lt;li&gt;</code> wrapper.</td></tr>
+  <tr><td>.nav-link</td><td><span class="badge b-bs">Bootstrap</span></td><td>The clickable tab button. Bootstrap toggles <code>.active</code> on click.</td></tr>
+  <tr><td>.buzz-tab</td><td><span class="badge b-karim">Karim</span></td><td>Overrides Bootstrap's nav-pill blue active state with our brand green gradient. Default state: light-green background, dark-green text.</td></tr>
+  <tr><td>data-bs-toggle="pill"</td><td><span class="badge b-html">HTML attr</span></td><td>Tells Bootstrap to swap visible tab panes when this button is clicked.</td></tr>
+  <tr><td>data-bs-target="#flights-pane"</td><td><span class="badge b-html">HTML attr</span></td><td>The id of the pane to show when this tab is active.</td></tr>
+  <tr><td>.tab-content</td><td><span class="badge b-bs">Bootstrap</span></td><td>Wrapper for the tab panes.</td></tr>
+  <tr><td>.tab-pane</td><td><span class="badge b-bs">Bootstrap</span></td><td>Each pane — hidden by default unless <code>.active</code> is also set.</td></tr>
+  <tr><td>.fade .show</td><td><span class="badge b-bs">Bootstrap</span></td><td>Adds a fade transition. <code>.show</code> means start visible (only on the initial active pane).</td></tr>
+</table>
+
+<h4>The fields inside each pane</h4>
+<pre>&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"row g-3 align-items-end"</span>&gt;
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"col-md-3"</span>&gt;
+    &lt;<span class="t">label</span> <span class="a">class</span>=<span class="s">"form-label small fw-bold text-uppercase text-muted mb-1"</span>&gt;
+      Departure
+    &lt;/<span class="t">label</span>&gt;
+    &lt;<span class="t">input</span> <span class="a">type</span>=<span class="s">"text"</span> <span class="a">class</span>=<span class="s">"form-control"</span>&gt;
+  &lt;/<span class="t">div</span>&gt;
+  ...3 more cols + Search button...
+&lt;/<span class="t">div</span>&gt;</pre>
+<p>Each input lives in a Bootstrap grid column (<code class="inline">.col-md-3</code> for short fields, <code class="inline">.col-md-2</code> for the date and the Search button). On mobile they all stack vertically.</p>
+
+<h4>The Search button (data-search-target)</h4>
+<pre>&lt;<span class="t">button</span> <span class="a">type</span>=<span class="s">"button"</span>
+        <span class="a">class</span>=<span class="s">"btn green-btn w-100 d-inline-flex align-items-center justify-content-center gap-2"</span>
+        <span class="a">data-search-target</span>=<span class="s">"pages/flight-search.html"</span>&gt;
+  🔍 Search
+&lt;/<span class="t">button</span>&gt;</pre>
+<table class="classes">
+  <tr><th>Attr</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>data-search-target</td><td><span class="badge b-html">HTML attr</span></td><td>Custom data attribute read by <code>js/pages/home.js</code>. On click, JS navigates to this URL. Hotels button uses <code>"pages/hotel-results.html"</code>.</td></tr>
+</table>
+
+<h3>5.3 Trending Destinations — image grid with overlay text</h3>
+<p>Header row with title + "View all →" link, then a 3-column grid: featured Ubud (left, taller), Kyoto (middle, taller), and a vertical stack of Zermatt + Paris on the right.</p>
+
+<pre>&lt;<span class="t">section</span> <span class="a">class</span>=<span class="s">"container mb-5"</span>&gt;
+
+  <span class="c">&lt;!-- Section header --&gt;</span>
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"d-flex justify-content-between align-items-end gap-3 mb-4"</span>&gt;
+    &lt;<span class="t">div</span>&gt;
+      &lt;<span class="t">h2</span> <span class="a">class</span>=<span class="s">"fw-bold mb-1"</span>&gt;Trending Destinations&lt;/<span class="t">h2</span>&gt;
+      &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"text-muted mb-0"</span>&gt;Curated spots that are defining travel...&lt;/<span class="t">p</span>&gt;
+    &lt;/<span class="t">div</span>&gt;
+    &lt;<span class="t">a</span> <span class="a">class</span>=<span class="s">"d-inline-flex align-items-center gap-2 px-3 py-2 text-green text-decoration-none fw-semibold rounded-pill buzz-view-all"</span>&gt;
+      View all →
+    &lt;/<span class="t">a</span>&gt;
+  &lt;/<span class="t">div</span>&gt;
+
+  <span class="c">&lt;!-- Cards grid --&gt;</span>
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"row g-4"</span> <span class="a">style</span>=<span class="s">"min-height: 460px;"</span>&gt;
+
+    <span class="c">&lt;!-- Featured: Ubud --&gt;</span>
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"col-lg-5"</span>&gt;
+      &lt;<span class="t">a</span> <span class="a">class</span>=<span class="s">"buzz-dest-card d-block position-relative rounded-4 overflow-hidden shadow-sm h-100"</span>&gt;
+        &lt;<span class="t">img</span> <span class="a">class</span>=<span class="s">"w-100 h-100 buzz-dest-card__img"</span> <span class="a">style</span>=<span class="s">"object-fit: cover;"</span>&gt;
+        &lt;<span class="t">span</span> <span class="a">class</span>=<span class="s">"position-absolute top-0 start-0 m-3 badge rounded-pill bg-white text-purple text-uppercase fw-bold px-3 py-1 buzz-eyebrow"</span>&gt;
+          Editor's Choice
+        &lt;/<span class="t">span</span>&gt;
+        &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"position-absolute bottom-0 start-0 end-0 p-4 text-white buzz-dest-card__overlay"</span>&gt;
+          &lt;<span class="t">h3</span> <span class="a">class</span>=<span class="s">"fw-bold mb-1"</span>&gt;Ubud, Bali&lt;/<span class="t">h3</span>&gt;
+          &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"small mb-0 opacity-75"</span>&gt;Spiritual retreats...&lt;/<span class="t">p</span>&gt;
+        &lt;/<span class="t">div</span>&gt;
+      &lt;/<span class="t">a</span>&gt;
+    &lt;/<span class="t">div</span>&gt;
+    ...Kyoto col-lg-4 + (Zermatt + Paris) col-lg-3 stack...
+  &lt;/<span class="t">div</span>&gt;
+&lt;/<span class="t">section</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.col-lg-5 / .col-lg-4 / .col-lg-3</td><td><span class="badge b-bs">Bootstrap</span></td><td>5 + 4 + 3 = 12 — splits the row into three uneven columns on desktop. Featured Ubud takes the most width.</td></tr>
+  <tr><td>.buzz-view-all</td><td><span class="badge b-karim">Karim</span></td><td>Pill link with light-green hover background.</td></tr>
+  <tr><td>.buzz-dest-card</td><td><span class="badge b-karim">Karim</span></td><td>The destination link wrapper. On hover: lifts up <code>3px</code> and increases shadow.</td></tr>
+  <tr><td>.buzz-dest-card__img</td><td><span class="badge b-karim">Karim</span></td><td>The image inside. On parent's hover: scales up <code>1.04</code>.</td></tr>
+  <tr><td>.buzz-dest-card__overlay</td><td><span class="badge b-karim">Karim</span></td><td>The bottom text strip with a black-fading-to-transparent gradient so white text is readable. Forces white text on inner h3/p with <code>!important</code>.</td></tr>
+  <tr><td>.top-0 .start-0 .end-0 .bottom-0</td><td><span class="badge b-bs">Bootstrap</span></td><td>Position offsets — pin the badge to top-left, the overlay to bottom-spanning-full-width.</td></tr>
+  <tr><td>.m-3</td><td><span class="badge b-bs">Bootstrap</span></td><td>Margin <code>1rem</code> on all sides (insets the badge from the edge).</td></tr>
+  <tr><td>.opacity-75</td><td><span class="badge b-bs">Bootstrap</span></td><td>Description text at 75% opacity for a subtle look.</td></tr>
+</table>
+
+<h3>5.4 Popular This Week — Flight deals + Featured stays (2-column)</h3>
+<pre>&lt;<span class="t">section</span> <span class="a">class</span>=<span class="s">"container mb-5"</span>&gt;
+  &lt;<span class="t">h2</span> <span class="a">class</span>=<span class="s">"fw-bold mb-4"</span>&gt;Popular This Week&lt;/<span class="t">h2</span>&gt;
+
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"row g-4"</span>&gt;
+
+    <span class="c">&lt;!-- Flight deals (5/12) --&gt;</span>
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"col-lg-5"</span>&gt;
+      &lt;<span class="t">h3</span>&gt;✈ Top Flight Deals&lt;/<span class="t">h3</span>&gt;
+
+      &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"d-flex align-items-center gap-3 p-3 mb-3 bg-white border rounded-3 buzz-deal"</span>&gt;
+        &lt;<span class="t">span</span> <span class="a">class</span>=<span class="s">"bg-light-green text-green fw-bold rounded-3 d-inline-flex align-items-center justify-content-center"</span>
+              <span class="a">style</span>=<span class="s">"width: 48px; height: 48px;"</span>&gt;
+          LHR
+        &lt;/<span class="t">span</span>&gt;
+        &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"flex-grow-1"</span>&gt;
+          &lt;<span class="t">p</span>&gt;London to New York&lt;/<span class="t">p</span>&gt;
+          &lt;<span class="t">p</span>&gt;Round trip · Economy&lt;/<span class="t">p</span>&gt;
+        &lt;/<span class="t">div</span>&gt;
+        &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"text-end"</span>&gt;
+          &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"fw-bold text-green"</span>&gt;$452&lt;/<span class="t">p</span>&gt;
+          &lt;<span class="t">a</span> <span class="a">class</span>=<span class="s">"buzz-deal-details"</span>&gt;Details&lt;/<span class="t">a</span>&gt;
+        &lt;/<span class="t">div</span>&gt;
+      &lt;/<span class="t">div</span>&gt;
+    &lt;/<span class="t">div</span>&gt;
+
+    <span class="c">&lt;!-- Featured stays (7/12) — Bootstrap card grid --&gt;</span>
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"col-lg-7"</span>&gt;
+      &lt;<span class="t">h3</span>&gt;🛏 Featured Stays&lt;/<span class="t">h3</span>&gt;
+      &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"row g-3"</span>&gt;
+        &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"col-md-6"</span>&gt;
+          &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"card h-100 border buzz-stay"</span>&gt;
+            &lt;<span class="t">img</span> <span class="a">class</span>=<span class="s">"card-img-top"</span>&gt;
+            &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"card-body p-3"</span>&gt;
+              &lt;<span class="t">h4</span>&gt;Amaya Resort and Spa&lt;/<span class="t">h4</span>&gt;
+              &lt;<span class="t">p</span>&gt;⭐ 4.9&lt;/<span class="t">p</span>&gt;
+              &lt;<span class="t">p</span>&gt;Maldives&lt;/<span class="t">p</span>&gt;
+              &lt;<span class="t">p</span>&gt;$320 / night&lt;/<span class="t">p</span>&gt;
+            &lt;/<span class="t">div</span>&gt;
+          &lt;/<span class="t">div</span>&gt;
+        &lt;/<span class="t">div</span>&gt;
+      &lt;/<span class="t">div</span>&gt;
+    &lt;/<span class="t">div</span>&gt;
+  &lt;/<span class="t">div</span>&gt;
+&lt;/<span class="t">section</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.col-lg-5 / .col-lg-7</td><td><span class="badge b-bs">Bootstrap</span></td><td>5 + 7 = 12. Flight deals get the narrower column, featured stays get the wider one.</td></tr>
+  <tr><td>.buzz-deal</td><td><span class="badge b-karim">Karim</span></td><td>Subtle hover lift effect on the deal card.</td></tr>
+  <tr><td>.buzz-deal-details</td><td><span class="badge b-karim">Karim</span></td><td>Small "Details" link — gray default, brand-green on hover.</td></tr>
+  <tr><td>.bg-light-green .text-green</td><td><span class="badge b-malak">Malak</span></td><td>The 48×48 airport-code badge on the left of each deal row.</td></tr>
+  <tr><td>.card .card-img-top .card-body</td><td><span class="badge b-bs">Bootstrap</span></td><td>Standard Bootstrap card components — a bordered white box with image at top and body below.</td></tr>
+  <tr><td>.h-100</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>height: 100%</code> so both stay cards in the row are the same tall.</td></tr>
+  <tr><td>.buzz-stay</td><td><span class="badge b-karim">Karim</span></td><td>Hover lift effect on stay card (same family of behavior as <code>.buzz-deal</code>).</td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<h2 id="signin">6. pages/auth/signin.html</h2>
+<p>The Sign In page. Two stylesheets are loaded: just <code class="inline">main.min.css</code> (Bootstrap + all the <code class="inline">main.scss</code> utilities). The <code class="inline">.auth-body</code> class on <code class="inline">&lt;body&gt;</code> applies the soft green→purple radial-gradient background.</p>
+
+<div class="visual">
+  <div class="visual-title">Page layout</div>
+  <div class="ascii"><span class="hi">Buzz Fly</span>                                                                ← top bar (text only, no nav)
+═════════════════════════════════════════════════════════════════════
+                            🛫
+                        Buzz Fly                                       ← brand header
+                  Your journey begins here.                            (centered)
+
+                    ┌──────────────────────────┐
+                    │ EMAIL ADDRESS            │
+                    │ ✉ kimoz@example.com      │ ← gray pill input
+                    │                          │
+                    │ PASSWORD   Forgot Pass?  │
+                    │ 🔒 ••••••••           👁 │ ← eye toggle
+                    │                          │
+                    │ ┌──────────────────────┐ │
+                    │ │     <span class="hi">Sign In →</span>        │ │ ← green gradient
+                    │ └──────────────────────┘ │
+                    │                          │
+                    │ ─── Or continue with ─── │
+                    │                          │
+                    │  G  Sign in with Google  │
+                    │  🍎 Sign in with Apple    │
+                    │                          │
+                    │ Don't have an account?   │
+                    │      <span class="hi">Create Account</span>      │
+                    └──────────────────────────┘
+                          520px wide card
+═════════════════════════════════════════════════════════════════════
+                       footer (column links)
+
+Background: soft <span class="hi">green glow</span> top-left + <span class="hi-purple">purple glow</span> bottom-right (.auth-body)</div>
+</div>
+
+<h3>Page wrapper</h3>
+<pre>&lt;<span class="t">body</span> <span class="a">class</span>=<span class="s">"auth-body"</span>&gt;
+
+  &lt;<span class="t">header</span> <span class="a">class</span>=<span class="s">"d-flex justify-content-between align-items-center px-4 py-3"</span>&gt;
+    &lt;<span class="t">a</span> <span class="a">href</span>=<span class="s">"/index.html"</span> <span class="a">class</span>=<span class="s">"text-decoration-none fw-bold fs-5 text-green"</span>&gt;
+      Buzz Fly
+    &lt;/<span class="t">a</span>&gt;
+  &lt;/<span class="t">header</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.auth-body</td><td><span class="badge b-karim">Karim</span></td><td>Applies the green→purple radial gradient background, full <code>min-height: 100vh</code>, cancels the global navbar offset (<code>padding-top: 0</code>).</td></tr>
+  <tr><td>.d-flex .justify-content-between .align-items-center</td><td><span class="badge b-bs">Bootstrap</span></td><td>Top bar with brand on the left edge and any actions on the right (none on signin currently).</td></tr>
+  <tr><td>.px-4 .py-3</td><td><span class="badge b-bs">Bootstrap</span></td><td>Horizontal padding <code>1.5rem</code>, vertical padding <code>1rem</code>.</td></tr>
+  <tr><td>.fs-5</td><td><span class="badge b-bs">Bootstrap</span></td><td>Brand font size <code>1.25rem</code>.</td></tr>
+</table>
+
+<h3>Centred content + brand header</h3>
+<pre>&lt;<span class="t">main</span> <span class="a">class</span>=<span class="s">"container d-flex flex-column align-items-center pb-5"</span>
+       <span class="a">style</span>=<span class="s">"max-width: 520px;"</span>&gt;
+
+  &lt;<span class="t">header</span> <span class="a">class</span>=<span class="s">"d-flex flex-column align-items-center text-center gap-2 mb-4"</span>&gt;
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"bg-white rounded-circle shadow d-flex align-items-center justify-content-center"</span>
+         <span class="a">style</span>=<span class="s">"width: 64px; height: 64px;"</span>&gt;
+      &lt;<span class="t">img</span> <span class="a">src</span>=<span class="s">"/assets/icons/plane-takeoff.svg"</span> <span class="a">style</span>=<span class="s">"width: 32px; height: 32px;"</span>&gt;
+    &lt;/<span class="t">div</span>&gt;
+    &lt;<span class="t">h1</span> <span class="a">class</span>=<span class="s">"display-5 fw-bold mb-0"</span>&gt;Buzz Fly&lt;/<span class="t">h1</span>&gt;
+    &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"text-muted mb-0"</span>&gt;Your journey begins here.&lt;/<span class="t">p</span>&gt;
+  &lt;/<span class="t">header</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.container</td><td><span class="badge b-bs">Bootstrap</span></td><td>Bootstrap centered container — but with <code>style="max-width: 520px"</code> we cap it tighter than Bootstrap's default for the auth card.</td></tr>
+  <tr><td>.flex-column</td><td><span class="badge b-bs">Bootstrap</span></td><td>Stacks brand header above the card.</td></tr>
+  <tr><td>.pb-5</td><td><span class="badge b-bs">Bootstrap</span></td><td>Bottom padding so the card isn't flush against the page bottom.</td></tr>
+  <tr><td>.gap-2</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>0.5rem</code> spacing between the logo circle, title, subtitle.</td></tr>
+  <tr><td>.shadow</td><td><span class="badge b-bs">Bootstrap</span></td><td>Default drop shadow on the white logo circle.</td></tr>
+  <tr><td>.display-5</td><td><span class="badge b-bs">Bootstrap</span></td><td>Bootstrap's display-size 5 — large, lighter weight; we override weight with <code>.fw-bold</code>.</td></tr>
+</table>
+
+<h3>The card + email field</h3>
+<pre>&lt;<span class="t">section</span> <span class="a">class</span>=<span class="s">"card border-0 shadow-lg rounded-4 p-4 w-100"</span>&gt;
+  &lt;<span class="t">form</span> <span class="a">id</span>=<span class="s">"signinForm"</span> <span class="a">novalidate</span>&gt;
+
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"mb-3"</span>&gt;
+      &lt;<span class="t">label</span> <span class="a">for</span>=<span class="s">"email"</span>
+             <span class="a">class</span>=<span class="s">"form-label small fw-bold text-uppercase text-muted mb-1"</span>
+             <span class="a">style</span>=<span class="s">"letter-spacing: .08em; font-size: .6875rem;"</span>&gt;
+        Email Address
+      &lt;/<span class="t">label</span>&gt;
+
+      &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"input-group"</span>&gt;
+        &lt;<span class="t">span</span> <span class="a">class</span>=<span class="s">"input-group-text bg-light border-0"</span>&gt;
+          &lt;<span class="t">img</span> <span class="a">src</span>=<span class="s">"/assets/icons/email.svg"</span>&gt;
+        &lt;/<span class="t">span</span>&gt;
+        &lt;<span class="t">input</span> <span class="a">type</span>=<span class="s">"email"</span> <span class="a">id</span>=<span class="s">"email"</span>
+               <span class="a">class</span>=<span class="s">"form-control bg-light border-0"</span>
+               <span class="a">placeholder</span>=<span class="s">"kimoz@example.com"</span>&gt;
+      &lt;/<span class="t">div</span>&gt;
+    &lt;/<span class="t">div</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class / attr</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.card</td><td><span class="badge b-bs">Bootstrap</span></td><td>Standard Bootstrap card — white background, subtle border-radius and border by default.</td></tr>
+  <tr><td>.border-0</td><td><span class="badge b-bs">Bootstrap</span></td><td>Removes Bootstrap's default border so the shadow does the visual lift.</td></tr>
+  <tr><td>.shadow-lg</td><td><span class="badge b-bs">Bootstrap</span></td><td>Large drop shadow.</td></tr>
+  <tr><td>.rounded-4</td><td><span class="badge b-bs">Bootstrap</span></td><td>Border-radius level 4 — <code>1rem</code>.</td></tr>
+  <tr><td>.p-4</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>padding: 1.5rem</code>.</td></tr>
+  <tr><td>novalidate</td><td><span class="badge b-html">HTML attr</span></td><td>Disables the browser's built-in form validation popups; we handle validation in JS.</td></tr>
+  <tr><td>.form-label</td><td><span class="badge b-bs">Bootstrap</span></td><td>Spacing between the label and its input.</td></tr>
+  <tr><td>.input-group</td><td><span class="badge b-bs">Bootstrap</span></td><td>Joins the icon span and the input visually with no gap, shared border, etc.</td></tr>
+  <tr><td>.input-group-text</td><td><span class="badge b-bs">Bootstrap</span></td><td>The "addon" element inside an input-group that holds an icon or label.</td></tr>
+  <tr><td>.bg-light</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>background: #f8f9fa</code>.</td></tr>
+  <tr><td>.form-control</td><td><span class="badge b-bs">Bootstrap</span></td><td>Styles the actual <code>&lt;input&gt;</code>: full width, padding, focus state.</td></tr>
+</table>
+
+<h3>Password field with eye toggle</h3>
+<pre>&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"d-flex justify-content-between align-items-center mb-1"</span>&gt;
+  &lt;<span class="t">label</span> ...&gt;Password&lt;/<span class="t">label</span>&gt;
+  &lt;<span class="t">a</span> <span class="a">href</span>=<span class="s">"/pages/auth/forgot-password.html"</span>
+     <span class="a">class</span>=<span class="s">"small text-purple text-decoration-none fw-semibold"</span>&gt;
+    Forgot Password?
+  &lt;/<span class="t">a</span>&gt;
+&lt;/<span class="t">div</span>&gt;
+
+&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"input-group"</span>&gt;
+  &lt;<span class="t">span</span> <span class="a">class</span>=<span class="s">"input-group-text bg-light border-0"</span>&gt;
+    &lt;<span class="t">img</span> <span class="a">src</span>=<span class="s">"/assets/icons/lock.svg"</span>&gt;
+  &lt;/<span class="t">span</span>&gt;
+  &lt;<span class="t">input</span> <span class="a">type</span>=<span class="s">"password"</span> <span class="a">id</span>=<span class="s">"password"</span>
+         <span class="a">class</span>=<span class="s">"form-control bg-light border-0"</span>&gt;
+  &lt;<span class="t">button</span> <span class="a">type</span>=<span class="s">"button"</span>
+          <span class="a">class</span>=<span class="s">"input-group-text bg-light border-0"</span>
+          <span class="a">aria-label</span>=<span class="s">"Show password"</span>
+          <span class="a">data-toggle-password</span>&gt;
+    &lt;<span class="t">img</span> <span class="a">src</span>=<span class="s">"/assets/icons/pass-show.svg"</span>&gt;
+  &lt;/<span class="t">button</span>&gt;
+&lt;/<span class="t">div</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class / attr</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.text-purple</td><td><span class="badge b-malak">Malak</span></td><td>Purple text color (<code>#4F00D0</code>) for the "Forgot Password?" link.</td></tr>
+  <tr><td>data-toggle-password</td><td><span class="badge b-html">HTML attr</span></td><td>Custom data attribute that <code>auth.js</code>'s <code>initPasswordToggle()</code> looks for to wire up the eye-button click handler.</td></tr>
+  <tr><td>aria-label</td><td><span class="badge b-html">HTML attr</span></td><td>Accessible label for screen readers (since the button has only an icon).</td></tr>
+</table>
+
+<h3>Sign In button + divider + social buttons</h3>
+<pre>&lt;<span class="t">button</span> <span class="a">type</span>=<span class="s">"submit"</span>
+        <span class="a">class</span>=<span class="s">"btn green-btn w-100 d-flex align-items-center justify-content-center gap-2 mb-3"</span>&gt;
+  Sign In
+  &lt;<span class="t">img</span> <span class="a">src</span>=<span class="s">"/assets/icons/arrow-right.svg"</span>&gt;
+&lt;/<span class="t">button</span>&gt;
+
+<span class="c">&lt;!-- Divider with "Or continue with" text --&gt;</span>
+&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"d-flex align-items-center my-3"</span>&gt;
+  &lt;<span class="t">hr</span> <span class="a">class</span>=<span class="s">"flex-grow-1 m-0"</span>&gt;
+  &lt;<span class="t">span</span> <span class="a">class</span>=<span class="s">"mx-3 small text-uppercase text-muted"</span>&gt;Or continue with&lt;/<span class="t">span</span>&gt;
+  &lt;<span class="t">hr</span> <span class="a">class</span>=<span class="s">"flex-grow-1 m-0"</span>&gt;
+&lt;/<span class="t">div</span>&gt;
+
+<span class="c">&lt;!-- Google + Apple white-bg buttons --&gt;</span>
+&lt;<span class="t">button</span> <span class="a">type</span>=<span class="s">"button"</span>
+        <span class="a">class</span>=<span class="s">"btn d-flex align-items-center justify-content-center gap-2 w-100 bg-white border fw-semibold"</span>
+        <span class="a">data-auth-provider</span>=<span class="s">"google"</span>&gt;
+  &lt;<span class="t">img</span> <span class="a">src</span>=<span class="s">"/assets/icons/google.svg"</span>&gt;
+  Sign in with Google
+&lt;/<span class="t">button</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class / attr</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.btn .green-btn</td><td><span class="badge b-malak">Malak</span></td><td>Pill-shaped green-gradient submit button with white text. Hover scales up 6%.</td></tr>
+  <tr><td>.my-3</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>margin-top &amp; bottom: 1rem</code> on the divider.</td></tr>
+  <tr><td>hr.flex-grow-1</td><td><span class="badge b-bs">Bootstrap</span></td><td>Each <code>&lt;hr&gt;</code> grows to fill the remaining flex space — together with the centered span this creates the "—— Or continue with ——" pattern.</td></tr>
+  <tr><td>.bg-white .border</td><td><span class="badge b-bs">Bootstrap</span></td><td>White button with a thin gray border for the social options.</td></tr>
+  <tr><td>data-auth-provider="google"</td><td><span class="badge b-html">HTML attr</span></td><td>Read by <code>auth.js</code>'s <code>initSocialButtons()</code> — when clicked it logs the provider name (placeholder until OAuth is wired in).</td></tr>
+</table>
+
+<div class="warn">
+<strong>Why the social buttons need a special override:</strong> Malak wrote a global <code>.btn:focus { color: white }</code> rule. Without an override, clicking a white-background social button would turn its text white-on-white (invisible). Karim added <code>.btn.bg-white:focus { color: inherit !important }</code> in the bottom of <code>main.scss</code> to fix this.
+</div>
+
+
+<!-- ============================================================ -->
+<h2 id="signup">7. pages/auth/signup.html</h2>
+<p>The Create Account page. Same general structure as Sign In but with extra fields and slight visual changes.</p>
+
+<div class="visual">
+  <div class="visual-title">Page layout</div>
+  <div class="ascii"><span class="hi">Buzz Fly</span>                                                  <span class="hi">Sign In</span>     ← top bar (two links)
+═════════════════════════════════════════════════════════════════════
+                  ┌─────────────────────────────────────┐
+                  │           Create Account            │
+                  │  Start your ethereal journey today  │
+                  │                                     │
+                  │  FULL NAME                          │
+                  │  👤 Karim Mohamed                    │
+                  │                                     │
+                  │  EMAIL ADDRESS                      │
+                  │  ✉ kimoz@example.com                │
+                  │                                     │
+                  │  PASSWORD          CONFIRM          │
+                  │  🔒 ••••••••       🔒 ••••••••       │ ← 2-col row
+                  │                                     │
+                  │  <span class="demo-checkbox">✓</span> I agree to the Terms and Privacy │ ← green check
+                  │                                     │
+                  │  ┌───────────────────────────────┐  │
+                  │  │       <span class="hi">Create Account →</span>       │  │
+                  │  └───────────────────────────────┘  │
+                  │                                     │
+                  │  ──── Or continue with ────         │
+                  │                                     │
+                  │  ┌─────────┐  ┌─────────┐           │
+                  │  │   G     │  │   🍎    │           │ ← compact
+                  │  └─────────┘  └─────────┘           │   icon-only
+                  └─────────────────────────────────────┘
+                            620px wide card</div>
+</div>
+
+<h3>Top bar with two links</h3>
+<pre>&lt;<span class="t">header</span> <span class="a">class</span>=<span class="s">"d-flex justify-content-between align-items-center px-4 py-3"</span>&gt;
+  &lt;<span class="t">a</span> <span class="a">href</span>=<span class="s">"/index.html"</span> <span class="a">class</span>=<span class="s">"text-decoration-none fw-bold fs-5 text-green"</span>&gt;Buzz Fly&lt;/<span class="t">a</span>&gt;
+  &lt;<span class="t">a</span> <span class="a">href</span>=<span class="s">"/pages/auth/signin.html"</span> <span class="a">class</span>=<span class="s">"text-decoration-none fw-semibold text-green"</span>&gt;Sign In&lt;/<span class="t">a</span>&gt;
+&lt;/<span class="t">header</span>&gt;</pre>
+<p>Same flex layout as Sign In but the right side now holds a "Sign In" link so logged-out users can swap forms.</p>
+
+<h3>Wider container, card with internal title</h3>
+<pre>&lt;<span class="t">main</span> <span class="a">class</span>=<span class="s">"container d-flex flex-column align-items-center justify-content-center pb-5"</span>
+       <span class="a">style</span>=<span class="s">"max-width: 620px;"</span>&gt;
+
+  &lt;<span class="t">section</span> <span class="a">class</span>=<span class="s">"card border-0 shadow-lg rounded-4 p-4 p-md-5 w-100 mt-3"</span>&gt;
+    &lt;<span class="t">form</span> <span class="a">id</span>=<span class="s">"signupForm"</span> <span class="a">novalidate</span>&gt;
+      &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"text-center mb-4"</span>&gt;
+        &lt;<span class="t">h1</span> <span class="a">class</span>=<span class="s">"fw-bold mb-2"</span>&gt;Create Account&lt;/<span class="t">h1</span>&gt;
+        &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"text-muted mb-0"</span>&gt;Start your ethereal travel journey today.&lt;/<span class="t">p</span>&gt;
+      &lt;/<span class="t">div</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>style="max-width: 620px"</td><td><span class="badge b-html">inline</span></td><td>Wider than signin (520px) because signup has a 2-column password row.</td></tr>
+  <tr><td>.p-4 .p-md-5</td><td><span class="badge b-bs">Bootstrap</span></td><td>Padding <code>1.5rem</code> on mobile, <code>3rem</code> from <code>≥768px</code>.</td></tr>
+  <tr><td>.text-center</td><td><span class="badge b-bs">Bootstrap</span></td><td>Centers the title block.</td></tr>
+</table>
+
+<h3>Two-column password row</h3>
+<pre>&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"row g-3 mb-3"</span>&gt;
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"col-12 col-md-6"</span>&gt;
+    &lt;<span class="t">label</span>&gt;Password&lt;/<span class="t">label</span>&gt;
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"input-group"</span>&gt; ... lock + input ... &lt;/<span class="t">div</span>&gt;
+  &lt;/<span class="t">div</span>&gt;
+  &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"col-12 col-md-6"</span>&gt;
+    &lt;<span class="t">label</span>&gt;Confirm&lt;/<span class="t">label</span>&gt;
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"input-group"</span>&gt; ... re-enter-pass + input ... &lt;/<span class="t">div</span>&gt;
+  &lt;/<span class="t">div</span>&gt;
+&lt;/<span class="t">div</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.col-12</td><td><span class="badge b-bs">Bootstrap</span></td><td>Stacks vertically on phones.</td></tr>
+  <tr><td>.col-md-6</td><td><span class="badge b-bs">Bootstrap</span></td><td>Side-by-side at <code>≥768px</code>.</td></tr>
+  <tr><td>.g-3</td><td><span class="badge b-bs">Bootstrap</span></td><td>Gutter <code>1rem</code> between the two password fields.</td></tr>
+</table>
+
+<h3>Custom checkbox + Create Account button + compact social row</h3>
+<pre>&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"form-check mb-3"</span>&gt;
+  &lt;<span class="t">input</span> <span class="a">class</span>=<span class="s">"form-check-input"</span> <span class="a">type</span>=<span class="s">"checkbox"</span> <span class="a">id</span>=<span class="s">"agreeTerms"</span>&gt;
+  &lt;<span class="t">label</span> <span class="a">class</span>=<span class="s">"form-check-label small text-muted"</span> <span class="a">for</span>=<span class="s">"agreeTerms"</span>&gt;
+    I agree to the
+    &lt;<span class="t">a</span> <span class="a">class</span>=<span class="s">"text-green text-decoration-none fw-semibold"</span>&gt;Terms of Service&lt;/<span class="t">a</span>&gt;
+    and
+    &lt;<span class="t">a</span> <span class="a">class</span>=<span class="s">"text-green text-decoration-none fw-semibold"</span>&gt;Privacy Policy.&lt;/<span class="t">a</span>&gt;
+  &lt;/<span class="t">label</span>&gt;
+&lt;/<span class="t">div</span>&gt;
+
+<span class="c">&lt;!-- Compact social row: side-by-side icon-only --&gt;</span>
+&lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"d-flex gap-3"</span>&gt;
+  &lt;<span class="t">button</span> <span class="a">class</span>=<span class="s">"btn flex-grow-1 d-flex align-items-center justify-content-center bg-white border py-2"</span>
+          <span class="a">data-auth-provider</span>=<span class="s">"google"</span>&gt;
+    &lt;<span class="t">img</span> <span class="a">src</span>=<span class="s">"/assets/icons/google.svg"</span>&gt;
+  &lt;/<span class="t">button</span>&gt;
+&lt;/<span class="t">div</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>.form-check</td><td><span class="badge b-bs">Bootstrap</span></td><td>Wraps a single checkbox + label so they line up correctly.</td></tr>
+  <tr><td>.form-check-input</td><td><span class="badge b-bs">Bootstrap</span></td><td>Styles the checkbox itself. Karim overrode the checked state to use brand green instead of default blue (<code>.form-check-input:checked</code> rule in main.scss).</td></tr>
+  <tr><td>.form-check-label</td><td><span class="badge b-bs">Bootstrap</span></td><td>Aligns the label text next to the checkbox.</td></tr>
+  <tr><td>.flex-grow-1</td><td><span class="badge b-bs">Bootstrap</span></td><td>Each social button expands to fill half of the row.</td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<h2 id="forgot">8. pages/auth/forgot-password.html</h2>
+<p>Simplest of the three. Single email field + Reset Password button + "Back to login" link, plus a small copyright microcopy below the card.</p>
+
+<div class="visual">
+  <div class="visual-title">Page layout</div>
+  <div class="ascii"><span class="hi">Buzz Fly</span>
+═════════════════════════════════════════════════════════════════════
+                            🛫
+                        Buzz Fly
+                     Forgot Password
+
+                ┌──────────────────────────────┐
+                │ Reset your journey           │ ← left-aligned
+                │ Enter your email address     │   title (smaller)
+                │ and we'll send you a link... │
+                │                              │
+                │ EMAIL ADDRESS                │
+                │ ✉ traveler@example.com       │
+                │                              │
+                │ ┌──────────────────────────┐ │
+                │ │   <span class="hi">Reset Password →</span>       │ │
+                │ └──────────────────────────┘ │
+                │                              │
+                │      ← Back to login         │ ← centered, gray
+                └──────────────────────────────┘
+
+         © 2026 BUZZ FLY TRAVEL. SECURE CONCIERGE ACCESS    ← microcopy
+                                                              (uppercase, gray)</div>
+</div>
+
+<h3>Brand header + card body</h3>
+<pre>&lt;<span class="t">header</span> <span class="a">class</span>=<span class="s">"d-flex flex-column align-items-center text-center gap-2 mb-4"</span>&gt;
+  <span class="c">&lt;!-- white circle + plane icon, "Buzz Fly", "Forgot Password" --&gt;</span>
+&lt;/<span class="t">header</span>&gt;
+
+&lt;<span class="t">section</span> <span class="a">class</span>=<span class="s">"card border-0 shadow-lg rounded-4 p-4 w-100"</span>&gt;
+  &lt;<span class="t">form</span> <span class="a">id</span>=<span class="s">"forgotForm"</span> <span class="a">novalidate</span>&gt;
+
+    &lt;<span class="t">div</span> <span class="a">class</span>=<span class="s">"mb-4"</span>&gt;
+      &lt;<span class="t">h2</span> <span class="a">class</span>=<span class="s">"fw-bold mb-2 fs-4"</span>&gt;Reset your journey&lt;/<span class="t">h2</span>&gt;
+      &lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"text-muted mb-0 small"</span>&gt;Enter your email...&lt;/<span class="t">p</span>&gt;
+    &lt;/<span class="t">div</span>&gt;
+
+    <span class="c">&lt;!-- Email field with input-group --&gt;</span>
+
+    &lt;<span class="t">button</span> <span class="a">class</span>=<span class="s">"btn green-btn w-100 d-flex align-items-center justify-content-center gap-2 mb-3"</span>&gt;
+      Reset Password &lt;<span class="t">img</span>&gt;
+    &lt;/<span class="t">button</span>&gt;
+
+    &lt;<span class="t">a</span> <span class="a">href</span>=<span class="s">"/pages/auth/signin.html"</span>
+       <span class="a">class</span>=<span class="s">"d-flex align-items-center justify-content-center gap-2 text-muted text-decoration-none small fw-medium"</span>&gt;
+      &lt;<span class="t">span</span> <span class="a">aria-hidden</span>=<span class="s">"true"</span>&gt;←&lt;/<span class="t">span</span>&gt;
+      Back to login
+    &lt;/<span class="t">a</span>&gt;
+  &lt;/<span class="t">form</span>&gt;
+&lt;/<span class="t">section</span>&gt;
+
+&lt;<span class="t">p</span> <span class="a">class</span>=<span class="s">"mt-4 mb-0 small text-uppercase text-center text-secondary"</span>
+   <span class="a">style</span>=<span class="s">"letter-spacing: .08em;"</span>&gt;
+  © 2026 Buzz Fly Travel. Secure Concierge Access.
+&lt;/<span class="t">p</span>&gt;</pre>
+
+<table class="classes">
+  <tr><th>Class / attr</th><th>Source</th><th>What it does</th></tr>
+  <tr><td>aria-hidden="true"</td><td><span class="badge b-html">HTML attr</span></td><td>Hides the back-arrow span from screen readers (the "Back to login" text already conveys the meaning).</td></tr>
+  <tr><td>.fw-medium</td><td><span class="badge b-bs">Bootstrap</span></td><td><code>font-weight: 500</code>.</td></tr>
+  <tr><td>.text-secondary</td><td><span class="badge b-bs">Bootstrap</span></td><td>Bootstrap's secondary text color, faded gray.</td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<h2 id="main-js">9. js/main.js</h2>
+<p>Runs on every page. Loads the navbar/sidebar/footer partials, then highlights the active nav link based on URL.</p>
+
+<h3>Entry point</h3>
+<pre><span class="k">document</span>.<span class="k">addEventListener</span>(<span class="s">"DOMContentLoaded"</span>, <span class="k">async</span> () =&gt; {
+  <span class="k">await</span> loadPartials();
+  highlightActiveNavLink();
+  highlightActiveSidebarLink();
+});</pre>
+<p>Three things happen in order:</p>
+<ol>
+  <li><strong>loadPartials()</strong> — fetches the HTML of navbar/sidebar/footer and injects them into their slots.</li>
+  <li><strong>highlightActiveNavLink()</strong> — adds the <code class="inline">.active</code> class to the navbar link matching the current page.</li>
+  <li><strong>highlightActiveSidebarLink()</strong> — same idea for sidebar links (Rawan added this for profile pages).</li>
+</ol>
+<div class="note">
+<strong>Why <code>await loadPartials()</code> first?</strong> Because the navbar HTML doesn't exist in the DOM until after fetch finishes. If we ran <code>highlightActiveNavLink()</code> immediately, it would query for <code>.buzz-nav-link</code> elements that haven't been injected yet and find nothing.
+</div>
+
+<h3>loadPartials()</h3>
+<pre><span class="k">async function</span> loadPartials() {
+  <span class="k">const</span> parts = [
+    [<span class="s">"navbar-slot"</span>,  <span class="s">"/partials/navbar.html"</span>],
+    [<span class="s">"sidebar-slot"</span>, <span class="s">"/partials/sidebar.html"</span>],
+    [<span class="s">"footer-slot"</span>,  <span class="s">"/partials/footer.html"</span>],
+  ];
+  <span class="k">for</span> (<span class="k">const</span> [slot, url] <span class="k">of</span> parts) {
+    <span class="k">const</span> el = <span class="k">document</span>.getElementById(slot);
+    <span class="k">if</span> (!el) <span class="k">continue</span>;
+    <span class="k">const</span> res = <span class="k">await</span> <span class="k">fetch</span>(url);
+    el.innerHTML = <span class="k">await</span> res.text();
+  }
+}</pre>
+
+<p>Walk-through:</p>
+<ul>
+  <li><strong><code class="inline">parts</code></strong> — an array of <code class="inline">[slotId, fetchUrl]</code> pairs. Listing them in order means navbar loads before sidebar before footer.</li>
+  <li><strong><code class="inline">for...of</code></strong> — iterate through each pair. <code class="inline">slot</code> takes the first element, <code class="inline">url</code> the second.</li>
+  <li><strong><code class="inline">document.getElementById(slot)</code></strong> — look up the empty placeholder div on the current page (e.g. <code class="inline">&lt;div id="navbar-slot"&gt;&lt;/div&gt;</code>).</li>
+  <li><strong><code class="inline">if (!el) continue;</code></strong> — skip if a page doesn't have this slot. The auth pages don't have a navbar slot, for example.</li>
+  <li><strong><code class="inline">await fetch(url)</code></strong> — download the partial's HTML text.</li>
+  <li><strong><code class="inline">el.innerHTML = ...</code></strong> — drop the HTML into the empty div, which now becomes the rendered navbar/footer.</li>
+</ul>
+
+<h3>highlightActiveNavLink()</h3>
+<pre><span class="k">function</span> highlightActiveNavLink() {
+  <span class="k">let</span> path = <span class="k">window</span>.location.pathname;
+  <span class="k">if</span> (path === <span class="s">"/"</span>) {
+    path = <span class="s">"/index.html"</span>;
+  }
+  <span class="k">document</span>.querySelectorAll(<span class="s">".buzz-nav-link"</span>).forEach(link =&gt; {
+    <span class="k">if</span> (link.getAttribute(<span class="s">"href"</span>) === path) {
+      link.classList.add(<span class="s">"active"</span>);
+    } <span class="k">else</span> {
+      link.classList.remove(<span class="s">"active"</span>);
+    }
+  });
+}</pre>
+<ul>
+  <li><strong><code class="inline">window.location.pathname</code></strong> — the URL path without origin (e.g. <code class="inline">/pages/contact.html</code>). The root URL <code class="inline">/</code> is normalized to <code class="inline">/index.html</code> so the home link still highlights when you're at the root.</li>
+  <li><strong><code class="inline">querySelectorAll(".buzz-nav-link")</code></strong> — find all four nav links injected by the navbar partial.</li>
+  <li><strong>If/else</strong> — if a link's <code class="inline">href</code> matches the current path, add the <code class="inline">.active</code> class (CSS draws the green underline). Otherwise remove it. This explicit two-way handling is important when JS adds <code class="inline">.active</code> after a re-render.</li>
+</ul>
+
+<h3>highlightActiveSidebarLink() <em>(Rawan's addition)</em></h3>
+<pre><span class="k">function</span> highlightActiveSidebarLink() {
+  <span class="k">const</span> path = <span class="k">window</span>.location.pathname;
+  <span class="k">document</span>.querySelectorAll(<span class="s">".buzz-sidebar-link"</span>).forEach(link =&gt; {
+    <span class="k">if</span> (link.getAttribute(<span class="s">"href"</span>) === path) {
+      link.classList.add(<span class="s">"active"</span>);
+    }
+  });
+}</pre>
+<p>Same shape as the navbar version, but only <strong>adds</strong> the <code class="inline">.active</code> class — it never removes it. That's fine for full-page navigation (each click reloads the page, classes start fresh) but would need an else-branch if you ever switch to a single-page-app pattern.</p>
+
+
+<!-- ============================================================ -->
+<h2 id="auth-js">10. js/pages/auth.js</h2>
+<p>Loaded only by the three auth pages. Three independent behaviours: password show/hide, Google/Apple stub buttons, and form submit handlers.</p>
+
+<h3>Entry point</h3>
+<pre><span class="k">document</span>.<span class="k">addEventListener</span>(<span class="s">"DOMContentLoaded"</span>, () =&gt; {
+  initPasswordToggle();
+  initSocialButtons();
+  initAuthForm();
+});</pre>
+
+<h3>initPasswordToggle()</h3>
+<pre><span class="k">function</span> initPasswordToggle() {
+  <span class="k">const</span> toggles = <span class="k">document</span>.querySelectorAll(<span class="s">"[data-toggle-password]"</span>);
+
+  toggles.forEach(<span class="k">function</span> (btn) {
+    btn.addEventListener(<span class="s">"click"</span>, <span class="k">function</span> () {
+      <span class="k">const</span> input = btn.parentElement.querySelector(<span class="s">"input"</span>);
+      <span class="k">if</span> (!input) <span class="k">return</span>;
+
+      <span class="k">if</span> (input.type === <span class="s">"password"</span>) {
+        input.type = <span class="s">"text"</span>;
+      } <span class="k">else</span> {
+        input.type = <span class="s">"password"</span>;
+      }
+    });
+  });
+}</pre>
+<ul>
+  <li><strong><code class="inline">[data-toggle-password]</code></strong> attribute selector — finds every eye-icon button on the page (currently only on signin).</li>
+  <li><strong><code class="inline">btn.parentElement.querySelector("input")</code></strong> — finds the input inside the same <code class="inline">.input-group</code> wrapper as the eye button.</li>
+  <li><strong>Type swap</strong> — flipping <code class="inline">type</code> between <code class="inline">"password"</code> (bullets) and <code class="inline">"text"</code> (visible) is a one-line way to toggle visibility without rebuilding the input.</li>
+</ul>
+
+<h3>initSocialButtons()</h3>
+<pre><span class="k">function</span> initSocialButtons() {
+  <span class="k">const</span> buttons = <span class="k">document</span>.querySelectorAll(<span class="s">"[data-auth-provider]"</span>);
+
+  buttons.forEach(<span class="k">function</span> (btn) {
+    btn.addEventListener(<span class="s">"click"</span>, <span class="k">function</span> () {
+      <span class="k">const</span> provider = btn.dataset.authProvider;
+      <span class="k">console</span>.log(<span class="s">"[auth] "</span> + provider + <span class="s">" sign-in clicked — backend not wired yet."</span>);
+    });
+  });
+}</pre>
+<p>The buttons each carry <code class="inline">data-auth-provider="google"</code> or <code class="inline">data-auth-provider="apple"</code>. <code class="inline">btn.dataset.authProvider</code> reads that into a string. Today it just logs to the dev console; once the OAuth backend exists, this line will be replaced with a redirect like <code class="inline">window.location.href = "https://accounts.google.com/o/oauth2/..."</code>.</p>
+
+<h3>initAuthForm()</h3>
+<pre><span class="k">function</span> initAuthForm() {
+  <span class="k">const</span> signinForm = <span class="k">document</span>.getElementById(<span class="s">"signinForm"</span>);
+  <span class="k">const</span> signupForm = <span class="k">document</span>.getElementById(<span class="s">"signupForm"</span>);
+  <span class="k">const</span> forgotForm = <span class="k">document</span>.getElementById(<span class="s">"forgotForm"</span>);
+
+  <span class="k">if</span> (forgotForm) {
+    forgotForm.addEventListener(<span class="s">"submit"</span>, <span class="k">function</span> (e) {
+      e.preventDefault();
+      <span class="k">const</span> data = { email: <span class="k">document</span>.getElementById(<span class="s">"email"</span>).value };
+      <span class="k">console</span>.log(<span class="s">"[auth] reset-password submitted (dummy):"</span>, data);
+    });
+  }
+
+  <span class="k">if</span> (signinForm) { ... two fields: email + password ... }
+  <span class="k">if</span> (signupForm) { ... five fields + matching-password and agreed-to-terms checks ... }
+}</pre>
+<p>Three independent <code class="inline">if</code> blocks — only one runs because each page only contains one of the three forms. The shape is the same:</p>
+<ol>
+  <li><strong><code class="inline">e.preventDefault()</code></strong> — stops the browser from doing its default form-submit (which would reload the page or send to a server).</li>
+  <li><strong>Read values by ID</strong> — explicit list of inputs we care about.</li>
+  <li><strong>For signup only:</strong> guard against mismatched passwords and not-agreed terms before logging the data.</li>
+  <li><strong><code class="inline">console.log("...")</code></strong> — placeholder for the future <code class="inline">fetch("/api/...")</code> call.</li>
+</ol>
+
+
+<!-- ============================================================ -->
+<h2 id="home-js">11. js/pages/home.js</h2>
+<p>Tiny script that runs only on <code class="inline">index.html</code>. Wires up the <strong>Search button click handler</strong> for the Flights/Hotels search card. Tab switching itself is handled natively by Bootstrap's pill JS — no code needed for that.</p>
+
+<pre><span class="k">document</span>.<span class="k">addEventListener</span>(<span class="s">"DOMContentLoaded"</span>, () =&gt; {
+  initSearchButtons();
+});
+
+<span class="c">/* Search buttons (Flights / Hotels tabs).
+   For now: each button has data-search-target="..." pointing to the page
+   to open on click. Later, this will read the form fields, validate them,
+   and either redirect with query params or fetch results from the backend. */</span>
+<span class="k">function</span> initSearchButtons() {
+  <span class="k">const</span> buttons = <span class="k">document</span>.querySelectorAll(<span class="s">"[data-search-target]"</span>);
+
+  buttons.forEach(<span class="k">function</span> (btn) {
+    btn.addEventListener(<span class="s">"click"</span>, <span class="k">function</span> () {
+      <span class="k">const</span> target = btn.dataset.searchTarget;
+      <span class="k">if</span> (target) {
+        <span class="k">window</span>.location.href = target;
+      }
+    });
+  });
+}</pre>
+
+<table class="classes">
+  <tr><th>Piece</th><th>What it does</th></tr>
+  <tr><td>querySelectorAll("[data-search-target]")</td><td>Finds every button on the page with a <code>data-search-target</code> attribute (the two Search buttons in the Flights and Hotels tab panes).</td></tr>
+  <tr><td>btn.dataset.searchTarget</td><td>Reads the URL the button should navigate to (e.g. <code>"pages/flight-search.html"</code>).</td></tr>
+  <tr><td>window.location.href = target</td><td>Tells the browser to load that URL — same as the user clicking a regular link.</td></tr>
+</table>
+<div class="note">
+<strong>Why a <code>&lt;button&gt;</code> with JS instead of just an <code>&lt;a&gt;</code>?</strong> Today they're functionally identical. But this structure (real button + JS handler) is the foundation for the eventual real search behavior — once the backend exists, we'll replace <code>window.location.href = target</code> with form-data reading + validation + a fetch call to the search API. The HTML stays the same.
+</div>
+
+
+<!-- ============================================================ -->
+<h2 id="scss">12. sass/main.scss — Karim's section</h2>
+<p>The bottom half of <code class="inline">main.scss</code>, marked with the banner <em>"AUTHORED BY KARIM"</em>. Every rule here is a tiny utility that fills in something Bootstrap doesn't ship for our specific design.</p>
+
+<h3>Page layout (body)</h3>
+<pre><span class="c">// Push every page below the fixed-top navbar (~70px tall)</span>
+<span class="a">body</span> {
+  <span class="k">padding-top</span>: <span class="v">70px</span>;
+  <span class="k">background-color</span>: <span class="v">$light</span>;   <span class="c">// $light is Bootstrap's #f8f9fa</span>
+}</pre>
+<p>Without the <code class="inline">padding-top</code>, the fixed navbar would overlap the top of every page's content. <code class="inline">$light</code> is a SCSS variable Bootstrap defines (<code class="inline">#f8f9fa</code>) — using it instead of hardcoding the hex keeps the project on Bootstrap's tokens.</p>
+
+<h3>Auth page background</h3>
+<pre><span class="a">.auth-body</span> {
+  <span class="k">min-height</span>: <span class="v">100vh</span>;
+  <span class="k">background</span>:
+    radial-gradient(ellipse <span class="v">60%</span> <span class="v">50%</span> at <span class="v">0%</span> <span class="v">0%</span>,    rgba($gradient-green, .10) <span class="v">0%</span>, transparent <span class="v">60%</span>),
+    radial-gradient(ellipse <span class="v">60%</span> <span class="v">50%</span> at <span class="v">100%</span> <span class="v">100%</span>, rgba($purple, .10) <span class="v">0%</span>, transparent <span class="v">60%</span>),
+    <span class="v">$light</span>;
+  <span class="k">display</span>: flex;
+  <span class="k">flex-direction</span>: column;
+  <span class="k">padding-top</span>: <span class="v">0</span>;          <span class="c">// cancel the fixed-navbar offset; auth pages use a topbar instead</span>
+}</pre>
+<p>Two stacked radial gradients give the soft mint glow in the top-left and soft purple glow in the bottom-right. The <code class="inline">.10</code> alpha keeps them subtle. Sass interpolates <code class="inline">rgba($gradient-green, .10)</code> as <code class="inline">rgba(31, 175, 90, .10)</code> at compile time — using the variables means a brand-color change automatically updates the gradient.</p>
+
+<h3>Active nav link with green-gradient underline</h3>
+
+<div class="visual">
+  <div class="visual-title">What it looks like (live demo)</div>
+  <div class="demo">
+    <a class="demo-link" href="#">Explore</a>
+    &nbsp;&nbsp;
+    <span style="color: #52525B; padding: 6px 12px;">Trips</span>
+    &nbsp;&nbsp;
+    <span style="color: #52525B; padding: 6px 12px;">Support</span>
+    <p style="margin: .75rem 0 0; font-size: .85rem; color: #52525B;">The active link gets a small green-gradient pill underneath. Inactive links are just gray.</p>
+  </div>
+</div>
+<pre><span class="a">.buzz-nav-link</span> { <span class="k">position</span>: relative; <span class="k">transition</span>: color <span class="v">.2s</span> ease; }
+
+<span class="a">.buzz-nav-link.active</span> {
+  <span class="k">color</span>: <span class="v">$dark-green</span> <span class="k">!important</span>;
+  <span class="k">font-weight</span>: <span class="v">600</span>;
+}
+
+<span class="a">.buzz-nav-link.active::after</span> {
+  <span class="k">content</span>: <span class="s">""</span>;
+  <span class="k">position</span>: absolute;
+  <span class="k">left</span>: <span class="v">.75rem</span>; <span class="k">right</span>: <span class="v">.75rem</span>; <span class="k">bottom</span>: <span class="v">0</span>;
+  <span class="k">height</span>: <span class="v">2px</span>;
+  <span class="k">background</span>: linear-gradient(to right, <span class="v">$dark-green</span>, <span class="v">$gradient-green</span>);
+  <span class="k">border-radius</span>: <span class="v">999px</span>;
+}</pre>
+<p>The <code class="inline">::after</code> pseudo-element is a tiny green pill underneath the link. <code class="inline">left/right: .75rem</code> insets it slightly so the underline doesn't run the full width of the link's padding. Only appears when the JS adds the <code class="inline">.active</code> class — combining the rules on <code class="inline">.buzz-nav-link.active::after</code>.</p>
+
+<h3>Round 40×40 icon button (bell, user)</h3>
+
+<div class="visual">
+  <div class="visual-title">What it looks like (hover the circle)</div>
+  <div class="demo">
+    <span class="demo-circle">🔔</span>
+    <span style="color: #52525B; margin-left: .5rem;">← transparent by default, light-green background on hover/focus</span>
+  </div>
+</div>
+<pre><span class="a">.buzz-icon-btn</span> {
+  <span class="k">width</span>: <span class="v">40px</span>; <span class="k">height</span>: <span class="v">40px</span>;
+  <span class="k">border-radius</span>: <span class="v">999px</span>;
+  <span class="k">border</span>: <span class="v">0</span>;
+  <span class="k">background</span>: transparent;
+  <span class="k">display</span>: inline-flex;
+  <span class="k">align-items</span>: center;
+  <span class="k">justify-content</span>: center;
+  <span class="k">padding</span>: <span class="v">0</span>;
+  <span class="k">transition</span>: background <span class="v">.2s</span>;
+}
+<span class="a">.buzz-icon-btn:hover, .buzz-icon-btn:focus</span> {
+  <span class="k">background</span>: <span class="v">$light-green</span>;
+}</pre>
+<p>Deliberately <strong>not</strong> using <code class="inline">.btn</code> from Bootstrap. Malak's <code class="inline">.btn:hover</code> rule scales the element 1.06x — fine for primary CTAs, but distracting on the bell/user icons in the navbar.</p>
+
+<h3>Notifications panel sizing</h3>
+<pre><span class="a">.buzz-notif-icon</span> { <span class="k">width</span>: <span class="v">36px</span>; <span class="k">height</span>: <span class="v">36px</span>; <span class="k">flex-shrink</span>: <span class="v">0</span>; }
+<span class="a">.buzz-notif-icon img</span> { <span class="k">width</span>: <span class="v">18px</span>; <span class="k">height</span>: <span class="v">18px</span>; }
+
+<span class="a">.buzz-notif-menu</span> {
+  <span class="k">width</span>: <span class="v">360px</span>;
+  <span class="k">max-height</span>: <span class="v">480px</span>;
+  <span class="k">overflow-y</span>: auto;
+}</pre>
+<p>Bootstrap's <code class="inline">.dropdown-menu</code> default is auto-width (snug to content). For the notifications feed we want a fixed wider panel that scrolls if more items appear.</p>
+
+<h3>Footer link hover</h3>
+<pre><span class="a">.buzz-footer-link</span> { <span class="k">transition</span>: color <span class="v">.2s</span> ease; }
+<span class="a">.buzz-footer-link:hover</span> { <span class="k">color</span>: <span class="v">$dark-green</span> <span class="k">!important</span>; }</pre>
+<p>Footer links default to <code class="inline">.text-muted</code> (gray); on hover we shift them to brand green.</p>
+
+<h3>Bootstrap overrides</h3>
+
+<div class="visual">
+  <div class="visual-title">Visual examples</div>
+  <div class="demo">
+    <p style="margin: 0 0 .5rem;"><span class="demo-checkbox">✓</span> &nbsp; Checked checkbox — overridden to brand green (Bootstrap's default is primary blue)</p>
+    <p style="margin: 0;"><button class="demo-gradient-btn" type="button">Primary button</button> &nbsp; <button class="demo-pill" style="background: #fff; border: 1px solid #E7E8E9; color: #191C1D;">White button</button> &nbsp;<span style="color: #52525B; font-size: .85rem;">— white-bg button keeps dark text on focus thanks to the override</span></p>
+  </div>
+</div>
+<pre><span class="c">// Brand-green checkbox state (Bootstrap default uses primary blue)</span>
+<span class="a">.form-check-input:checked</span> {
+  <span class="k">background-color</span>: <span class="v">$dark-green</span> <span class="k">!important</span>;
+  <span class="k">border-color</span>: <span class="v">$dark-green</span> <span class="k">!important</span>;
+}
+
+<span class="c">// Fix Malak's .btn:focus { color: white } turning text invisible on white-bg buttons</span>
+<span class="a">.btn.bg-white:focus, .btn.bg-white:active</span> {
+  <span class="k">color</span>: inherit <span class="k">!important</span>;
+}</pre>
+<p>Two surgical fixes. The first changes the checked-state colour of every Bootstrap checkbox in the project to brand green. The second prevents the text on Google/Apple white-background buttons from disappearing on click.</p>
+
+<div class="note">
+<strong>Variables you can reuse anywhere in <code>main.scss</code>:</strong>
+<br>From Malak's section — <code class="inline">$nav-green</code>, <code class="inline">$dark-green</code>, <code class="inline">$gradient-green</code>, <code class="inline">$light-green</code>, <code class="inline">$purple</code>, <code class="inline">$light-purple</code>.
+<br>From Bootstrap (after <code class="inline">@import</code>) — <code class="inline">$light</code>, <code class="inline">$dark</code>, <code class="inline">$primary</code>, <code class="inline">$secondary</code>, <code class="inline">$body-bg</code>, plus the breakpoint and spacing maps.
+</div>
+
+
+<p style="text-align:center; margin-top: 4rem; color: #71717A; font-size: .9rem;">
+  End of guide — open this file in a browser and press <strong>Ctrl+P</strong> → <strong>Save as PDF</strong> to export.
+</p>
+
+</main>
+</body>
+</html>
