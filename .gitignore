@@ -40,3 +40,6 @@ config.local.*
 
 # Claude / agent tooling
 .claude/
+
+# Internal/personal docs (kept local only)
+docs/buzz-fly-code-guide.html
