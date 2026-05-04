@@ -3,12 +3,14 @@
 document.addEventListener("DOMContentLoaded", async () => {
   await loadPartials();
   highlightActiveNavLink();
+  highlightActiveSidebarLink();
 });
 
 async function loadPartials() {
   const parts = [
-    ["navbar-slot", "/partials/navbar.html"],
-    ["footer-slot", "/partials/footer.html"],
+    ["navbar-slot",  "/partials/navbar.html"],
+    ["sidebar-slot", "/partials/sidebar.html"], /* authored by rawan */
+    ["footer-slot",  "/partials/footer.html"],
   ];
   for (const [slot, url] of parts) {
     const el = document.getElementById(slot);
@@ -18,8 +20,7 @@ async function loadPartials() {
   }
 }
 
-/* Highlight the current page's nav link.
-   Bootstrap navbar uses .nav-link.active for active state. */
+/* Highlight the current page's nav link in the top navbar. */
 function highlightActiveNavLink() {
   let path = window.location.pathname;
   if (path === "/") {
@@ -30,6 +31,17 @@ function highlightActiveNavLink() {
       link.classList.add("active");
     } else {
       link.classList.remove("active");
+    }
+  });
+}
+
+/* authored by rawan */
+/* Highlight the current page's link in the profile sidebar. */
+function highlightActiveSidebarLink() {
+  const path = window.location.pathname;
+  document.querySelectorAll(".buzz-sidebar-link").forEach(link => {
+    if (link.getAttribute("href") === path) {
+      link.classList.add("active");
     }
   });
 }

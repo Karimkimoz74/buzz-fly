@@ -181,9 +181,11 @@ $light-purple: #E8DEFF;
     height: 18px;
 }
 
-// Wider scrollable dropdown panel for notifications
+// Wider scrollable dropdown panel for notifications.
+// Uses min() so it caps at 360px on desktop but shrinks to fit
+// the viewport on phones (with 1rem of breathing room on each side).
 .buzz-notif-menu {
-    width: 360px;
+    width: min(360px, calc(100vw - 2rem));
     max-height: 480px;
     overflow-y: auto;
 }
