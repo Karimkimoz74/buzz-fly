@@ -1,0 +1,22 @@
+.glass-badge {
+  background: rgba(255, 255, 255, 0.6); 
+  backdrop-filter: blur(3px);         
+}
+.filter:after{
+    color: black;
+}
+
+.filter,
+.filter:hover,
+.filter:focus,
+.filter:active {
+  color: #000 !important;
+  border: 1.5px solid transparent;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.filter.active {
+  background-color: #f0f0f0 !important;
+  color: #000 !important;
+  border-color: #000;
+}
