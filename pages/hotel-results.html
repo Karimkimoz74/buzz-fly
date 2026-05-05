@@ -10,15 +10,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <link href="../css/main.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/pages/hotels-results.css">
 </head>
 <body>
 
   <!-- Navbar partial -->
   <div id="navbar-slot"></div>
 
-  <main class="container py-5">
+  <main class="container py-4">
 
-    <!-- Breadcrumb eyebrow -->
     <p class="text-uppercase fw-bold small text-muted mb-3" style="letter-spacing: .18em; font-size: .72rem;">
       Destinations / Europe / <span class="text-green">Switzerland</span>
     </p>
@@ -32,199 +32,22 @@
         </p>
       </div>
       <div class="d-flex gap-2 flex-shrink-0">
-        <button class="btn d-inline-flex align-items-center gap-2 px-4 py-2 bg-light fw-medium" type="button">
+        <button class="btn filter d-inline-flex align-items-center gap-2 px-4 py-2 bg-light fw-medium" type="button">
           <img src="../assets/icons/filter.svg" alt="" style="width: 16px; height: 16px;" />
           Filters
         </button>
-        <button class="btn d-inline-flex align-items-center gap-2 px-4 py-2 bg-light fw-medium" type="button">
-          <img src="../assets/icons/sort.svg" alt="" style="width: 16px; height: 16px;" />
+        <button class="btn filter d-inline-flex align-items-center gap-2 px-4 py-2 bg-light fw-medium" type="button">
+          <img src="../assets/icons/sort.svg" alt="" style="width: 16px; height: 16px;"/>
           Sort by: Popularity
         </button>
       </div>
     </section>
 
     <!-- Hotel cards grid -->
-    <section class="row g-4 mb-5" aria-label="Hotel listings">
+    <!--used js function -->
 
-      <div class="col-md-6 col-lg-4">
-        <article class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm">
-          <div class="position-relative" style="height: 255px; background-image: url('../assets/images/dest-kyoto.png'); background-size: cover; background-position: center;">
-            <span class="position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill text-uppercase fw-bold" style="background: rgba(227,248,246,.7); color: #256564; backdrop-filter: blur(15px); font-size: .7rem; letter-spacing: .03em;">Eco-Luxe</span>
-            <button class="fav-btn position-absolute top-0 end-0 m-3 rounded-circle border-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background: rgba(255,255,255,.5); backdrop-filter: blur(10px); box-shadow: 0 10px 20px rgba(27,48,40,.12);" aria-label="Save The Emerald Peak Resort">
-              <img src="../assets/icons/favorite_outline.svg" alt="" style="width: 16px; height: 16px;" />
-            </button>
-          </div>
-          <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-              <h2 class="m-0 fw-bold" style="font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.04em;">The Emerald Peak Resort</h2>
-              <span class="d-inline-flex align-items-center gap-1 px-2 py-1 rounded fw-bold small bg-light-green text-green text-nowrap">
-                <img src="../assets/icons/star.svg" alt="" style="width: 12px; height: 12px;" />4.9
-              </span>
-            </div>
-            <p class="d-flex align-items-center gap-1 text-muted small mb-3">
-              <img src="../assets/icons/Icon-4.svg" alt="" style="width: 8px; height: 10px;" />
-              Vitznau, Switzerland
-            </p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-baseline gap-1">
-                <strong style="font-size: 1.5rem; letter-spacing: -0.04em;">$540</strong>
-                <span class="text-muted small">/night</span>
-              </div>
-              <a class="btn green-btn px-4" href="hotel-details.html">View Deal</a>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <article class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm">
-          <div class="position-relative" style="height: 255px; background-image: url('../assets/images/dest-paris.png'); background-size: cover; background-position: center;">
-            <span class="position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill text-uppercase fw-bold" style="background: rgba(227,248,246,.7); color: #256564; backdrop-filter: blur(15px); font-size: .7rem; letter-spacing: .03em;">Design Member</span>
-            <button class="fav-btn position-absolute top-0 end-0 m-3 rounded-circle border-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background: rgba(255,255,255,.5); backdrop-filter: blur(10px); box-shadow: 0 10px 20px rgba(27,48,40,.12);" aria-label="Save Haus of Glass">
-              <img src="../assets/icons/favorite_outline.svg" alt="" style="width: 16px; height: 16px;" />
-            </button>
-          </div>
-          <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-              <h2 class="m-0 fw-bold" style="font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.04em;">Haus of Glass</h2>
-              <span class="d-inline-flex align-items-center gap-1 px-2 py-1 rounded fw-bold small bg-light-green text-green text-nowrap">
-                <img src="../assets/icons/star.svg" alt="" style="width: 12px; height: 12px;" />4.8
-              </span>
-            </div>
-            <p class="d-flex align-items-center gap-1 text-muted small mb-3">
-              <img src="../assets/icons/Icon-4.svg" alt="" style="width: 8px; height: 10px;" />
-              Lucerne City Center
-            </p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-baseline gap-1">
-                <strong style="font-size: 1.5rem; letter-spacing: -0.04em;">$320</strong>
-                <span class="text-muted small">/night</span>
-              </div>
-              <a class="btn green-btn px-4" href="hotel-details.html">View Deal</a>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <article class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm">
-          <div class="position-relative" style="height: 255px; background-image: url('../assets/images/dest-ubud.png'); background-size: cover; background-position: center;">
-            <span class="position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill text-uppercase fw-bold" style="background: rgba(227,248,246,.7); color: #256564; backdrop-filter: blur(15px); font-size: .7rem; letter-spacing: .03em;">Top Rated</span>
-            <button class="fav-btn position-absolute top-0 end-0 m-3 rounded-circle border-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background: rgba(255,255,255,.5); backdrop-filter: blur(10px); box-shadow: 0 10px 20px rgba(27,48,40,.12);" aria-label="Save The Heritage Grand">
-              <img src="../assets/icons/favorite_outline.svg" alt="" style="width: 16px; height: 16px;" />
-            </button>
-          </div>
-          <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-              <h2 class="m-0 fw-bold" style="font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.04em;">The Heritage Grand</h2>
-              <span class="d-inline-flex align-items-center gap-1 px-2 py-1 rounded fw-bold small bg-light-green text-green text-nowrap">
-                <img src="../assets/icons/star.svg" alt="" style="width: 12px; height: 12px;" />5.0
-              </span>
-            </div>
-            <p class="d-flex align-items-center gap-1 text-muted small mb-3">
-              <img src="../assets/icons/Icon-4.svg" alt="" style="width: 8px; height: 10px;" />
-              Weggis Waterfront
-            </p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-baseline gap-1">
-                <strong style="font-size: 1.5rem; letter-spacing: -0.04em;">$610</strong>
-                <span class="text-muted small">/night</span>
-              </div>
-              <a class="btn green-btn px-4" href="hotel-details.html">View Deal</a>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <article class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm">
-          <div class="position-relative" style="height: 255px; background-image: url('../assets/images/dest-zermatt.png'); background-size: cover; background-position: center;">
-            <button class="fav-btn position-absolute top-0 end-0 m-3 rounded-circle border-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background: rgba(255,255,255,.5); backdrop-filter: blur(10px); box-shadow: 0 10px 20px rgba(27,48,40,.12);" aria-label="Save Alpine Wellness Spa">
-              <img src="../assets/icons/favorite_outline.svg" alt="" style="width: 16px; height: 16px;" />
-            </button>
-          </div>
-          <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-              <h2 class="m-0 fw-bold" style="font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.04em;">Alpine Wellness Spa</h2>
-              <span class="d-inline-flex align-items-center gap-1 px-2 py-1 rounded fw-bold small bg-light-green text-green text-nowrap">
-                <img src="../assets/icons/star.svg" alt="" style="width: 12px; height: 12px;" />4.7
-              </span>
-            </div>
-            <p class="d-flex align-items-center gap-1 text-muted small mb-3">
-              <img src="../assets/icons/Icon-4.svg" alt="" style="width: 8px; height: 10px;" />
-              Rigi Kaltbad, Switzerland
-            </p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-baseline gap-1">
-                <strong style="font-size: 1.5rem; letter-spacing: -0.04em;">$285</strong>
-                <span class="text-muted small">/night</span>
-              </div>
-              <a class="btn green-btn px-4" href="hotel-details.html">View Deal</a>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <article class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm">
-          <div class="position-relative" style="height: 255px; background-image: url('../assets/images/hero-islands.png'); background-size: cover; background-position: center;">
-            <span class="position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill text-uppercase fw-bold" style="background: rgba(227,248,246,.7); color: #256564; backdrop-filter: blur(15px); font-size: .7rem; letter-spacing: .03em;">Hidden Gem</span>
-            <button class="fav-btn position-absolute top-0 end-0 m-3 rounded-circle border-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background: rgba(255,255,255,.5); backdrop-filter: blur(10px); box-shadow: 0 10px 20px rgba(27,48,40,.12);" aria-label="Save Lakeside Atelier">
-              <img src="../assets/icons/favorite_outline.svg" alt="" style="width: 16px; height: 16px;" />
-            </button>
-          </div>
-          <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-              <h2 class="m-0 fw-bold" style="font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.04em;">Lakeside Atelier</h2>
-              <span class="d-inline-flex align-items-center gap-1 px-2 py-1 rounded fw-bold small bg-light-green text-green text-nowrap">
-                <img src="../assets/icons/star.svg" alt="" style="width: 12px; height: 12px;" />4.9
-              </span>
-            </div>
-            <p class="d-flex align-items-center gap-1 text-muted small mb-3">
-              <img src="../assets/icons/Icon-4.svg" alt="" style="width: 8px; height: 10px;" />
-              Meggen, Switzerland
-            </p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-baseline gap-1">
-                <strong style="font-size: 1.5rem; letter-spacing: -0.04em;">$415</strong>
-                <span class="text-muted small">/night</span>
-              </div>
-              <a class="btn green-btn px-4" href="hotel-details.html">View Deal</a>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-md-6 col-lg-4">
-        <article class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm">
-          <div class="position-relative" style="height: 255px; background-image: url('../assets/images/stay-amaya.png'); background-size: cover; background-position: center;">
-            <button class="fav-btn position-absolute top-0 end-0 m-3 rounded-circle border-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background: rgba(255,255,255,.5); backdrop-filter: blur(10px); box-shadow: 0 10px 20px rgba(27,48,40,.12);" aria-label="Save Villa Azure Lucerne">
-              <img src="../assets/icons/favorite_outline.svg" alt="" style="width: 16px; height: 16px;" />
-            </button>
-          </div>
-          <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-              <h2 class="m-0 fw-bold" style="font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.04em;">Villa Azure Lucerne</h2>
-              <span class="d-inline-flex align-items-center gap-1 px-2 py-1 rounded fw-bold small bg-light-green text-green text-nowrap">
-                <img src="../assets/icons/star.svg" alt="" style="width: 12px; height: 12px;" />4.6
-              </span>
-            </div>
-            <p class="d-flex align-items-center gap-1 text-muted small mb-3">
-              <img src="../assets/icons/Icon-4.svg" alt="" style="width: 8px; height: 10px;" />
-              Hergiswil, Switzerland
-            </p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-baseline gap-1">
-                <strong style="font-size: 1.5rem; letter-spacing: -0.04em;">$780</strong>
-                <span class="text-muted small">/night</span>
-              </div>
-              <a class="btn green-btn px-4" href="hotel-details.html">View Deal</a>
-            </div>
-          </div>
-        </article>
-      </div>
-
-    </section>
+    <section id="cards-container" class="row g-4 mb-5"></section>
+ 
 
     <!-- Discover More -->
     <div class="d-flex justify-content-center pb-3">
