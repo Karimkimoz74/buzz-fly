@@ -15,68 +15,88 @@
   <main class="container py-4 py-lg-5">
 
     <!-- ===== IMAGE GALLERY ===== -->
-    <div class="mb-4 rounded-4 overflow-hidden"
-         style="display: grid;
-                grid-template-columns: 7fr 2.5fr 2.5fr;
-                grid-template-rows: 166px 166px;
-                gap: 8px;">
+    <div class="container py-4 py-lg-5">
 
-      <!-- Main: 340px tall (spans both rows). Background fills the cell, overlay sits on top -->
-      <div style="grid-row: 1 / 3;
-                  background: url('../assets/images/dest-ubud.png') center / cover no-repeat;
-                  position: relative;">
-        <div style="position: absolute; inset: 0;
-                    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%);
-                    pointer-events: none;">
+      <div class="row g-2">
+
+        <!-- LEFT BIG IMAGE -->
+        <div class="col-12 col-md-7" style="height: 340px;">
+          <div class="rounded-start-4 rounded-sm overflow-hidden position-relative w-100 h-100">
+            <img src="../assets/images/dest-ubud.png"
+                class="w-100 h-100 object-fit-cover"> <!-- fit-cover -> no distortion, just croops the image-->
+
+            <!-- Overlay -->
+            <div class="position-absolute top-0 start-0 w-100 h-100"
+                style="background: linear-gradient(to top, rgba(0,0,0,0.65), transparent 55%);">
+            </div>
+
+            <!-- Text -->
+            <div class="position-absolute bottom-0 start-0 p-3 p-md-4">
+              <span class="text-white text-uppercase fw-bold px-2 py-1 mb-2 d-inline-block bg-dark-green rounded-5" style="font-size: 0.6rem;"> <!-- smallest font isn't small enough-->
+                Featured Sanctuary
+              </span>
+              <h1 class="text-white fw-bold mb-0 fs-2">
+                The Emerald Canopy Retreat
+              </h1>
+            </div>
+          </div>
         </div>
-        <div class="position-absolute bottom-0 start-0 p-3 p-md-4">
-          <span class="text-white text-uppercase fw-bold d-inline-block px-2 py-1 mb-2 rounded-1"
-                style="font-size: 0.6rem; letter-spacing: 2px; background-color: #059669;">
-            Featured Sanctuary
-          </span>
-          <h1 class="text-white fw-bold mb-0"
-              style="font-size: clamp(1.1rem, 2.2vw, 1.75rem); text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-            The Emerald Canopy Retreat
-          </h1>
+
+        <!-- RIGHT SIDE -->
+        <div class="col-12 col-md-5 d-flex flex-column gap-2">
+
+          <!-- TOP -->
+          <div style="height: 166px; ">
+            <img src="../assets/images/stay-skyline.png"
+                class="w-100 h-100 object-fit-cover rounded-top-left" style="border-top-right-radius: 1.1rem;">
+          </div>
+
+          <!-- BOTTOM -->
+          <div class="row g-2">
+            <div class="col-6" style="height: 166px;">
+              <img src="../assets/images/stay-amaya.png"
+                  class="rounded-bottom-left w-100 h-100 object-fit-cover">
+            </div>
+
+            <div class="col-6" style="height: 166px;">
+              <img src="../assets/images/dest-zermatt.png"
+                  class="w-100 h-100 object-fit-cover" style="border-bottom-right-radius: 1.1rem">
+            </div>
+          </div>
+
         </div>
-      </div>
 
-      <!-- Top-right: spans columns 2–3, 166px tall -->
-      <div style="grid-column: 2 / 4;
-                  background: url('../assets/images/stay-skyline.png') center / cover no-repeat;">
-      </div>
-
-      <!-- Bottom-left: 166px tall -->
-      <div style="background: url('../assets/images/stay-amaya.png') center / cover no-repeat;">
-      </div>
-
-      <!-- Bottom-right: 166px tall -->
-      <div style="background: url('../assets/images/dest-zermatt.png') center / cover no-repeat;">
       </div>
 
     </div>
 
+
+
+    
     <!-- ===== RATING ROW ===== -->
     <div class="d-flex align-items-center gap-3 mb-4">
-      <span class="d-flex align-items-center gap-1 fw-semibold small">
-        <img src="../assets/icons/star.svg" alt="" style="width: 15px; height: 15px;">
-        4.9
+      <div class="d-flex align-items-center gap-1 fw-semibold small">
+        <img src="../assets/icons/star.svg" style="width: 15px; height: 15px;">
+        4.9 
         <span class="fw-normal text-muted">(128 reviews)</span>
-      </span>
+      </div>
       <span class="d-flex align-items-center gap-1 text-muted small">
-        <img src="../assets/icons/map-direction.svg" alt="" style="width: 14px; height: 14px;">
+        <img src="../assets/icons/location.svg" style="width: 14px; height: 14px;">
         Bali, Indonesia
       </span>
     </div>
+
+
+
 
     <!-- ===== MAIN TWO-COLUMN LAYOUT ===== -->
     <div class="row g-4 g-lg-5">
 
       <!-- LEFT COLUMN: Description, Amenities, Map -->
-      <div class="col-lg-7">
+      <div class="col-lg-7"> <!-- only separates into 2 col when on lg screen-->
 
         <h2 class="fw-bold mb-2">Experience Unrivaled Serenity</h2>
-        <p class="text-muted lh-lg">
+        <p class="text-muted lh-lg"> <!-- line height large spacing between text lines-->
           Nestled within the heart of the Ubud highlands, The Emerald Canopy Retreat offers an
           editorial escape from the mundane. Designed with a philosophy of "Integrated Nature,"
           every corner of this sanctuary blurs the line between high-end architecture and the wild
@@ -86,7 +106,7 @@
 
         <!-- Premium Amenities -->
         <h3 class="fw-semibold mt-4 mb-3">Premium Amenities</h3>
-        <div class="row row-cols-4 g-3">
+        <div class="row row-cols-4 g-3"> <!-- create 4 equal columns-->
 
           <div class="col">
             <div class="border rounded-3 p-3 text-center h-100">
@@ -149,11 +169,9 @@
         <!-- Location -->
         <h3 class="fw-semibold mt-4 mb-3">Location</h3>
         <div class="position-relative rounded-3 overflow-hidden border" style="height: 220px;">
-          <img src="../assets/icons/map-background.svg"
-               alt="Hotel location map"
-               class="w-100 h-100 object-fit-cover">
+          <img src="../assets/icons/map-background.svg" alt="Hotel location map" class="w-100 h-100 object-fit-cover">
           <div class="position-absolute bottom-0 start-0 m-3 bg-white rounded-3 shadow-sm d-flex align-items-center gap-2 px-3 py-2">
-            <img src="../assets/icons/map-direction.svg" alt="" style="width: 20px; height: 20px;">
+            <img src="../assets/icons/location.svg" alt="" style="width: 20px; height: 20px;">
             <div>
               <p class="mb-0 fw-semibold small">Jalan Raya Sanggingan</p>
               <p class="mb-0 text-muted" style="font-size: 0.7rem;">15 min from Town Center</p>
@@ -165,7 +183,7 @@
 
       <!-- RIGHT COLUMN: Booking Card -->
       <div class="col-lg-5">
-        <div class="card border-0 shadow rounded-4 p-4 sticky-top" style="top: 1.5rem;">
+        <div class="card border-0 shadow rounded-4 p-4 sticky-top" style="top: 86px;">
 
           <!-- Price + Rare Find badge -->
           <div class="d-flex justify-content-between align-items-start mb-3">
@@ -173,6 +191,7 @@
               <span class="fw-bold fs-1">$450</span>
               <span class="text-muted ms-1 small">/ night</span>
             </div>
+            
             <div class="text-end">
               <span class="fw-bold px-3 py-1 rounded-pill d-inline-block small bg-light-purple text-purple"
                     style="font-size: 0.65rem; letter-spacing: 0.5px;">
@@ -215,7 +234,7 @@
 
           <!-- Price breakdown -->
           <div class="d-flex justify-content-between small mb-2">
-            <span class="text-muted">5 nights &times; $450</span>
+            <span class="text-muted">5 nights &times; $450</span>  <!-- &times; == multiplication sign-->
             <span>$2,250</span>
           </div>
           <div class="d-flex justify-content-between small mb-2">
@@ -234,7 +253,7 @@
 
           <!-- Price guarantee -->
           <div class="d-flex align-items-center justify-content-center gap-2 border-top mt-3 pt-3">
-            <img src="../assets/icons/badge-verified.svg" alt="" style="width: 15px; height: 15px;">
+            <img src="../assets/icons/badge-verified.svg" style="width: 15px; height: 15px;">
             <small class="text-muted">Lowest Price Guarantee by Buzz Fly</small>
           </div>
 
