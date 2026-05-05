@@ -1,15 +1,13 @@
-/* settings.js — toggle state + theme selection */
+/* settings.js — toggle state snapshot + save/cancel */
 
 (function () {
   const TOGGLES = [
-    { id: 'profile-two-factor-auth', key: 'twoFactor'      },
-    { id: 'public-profile-switch',   key: 'publicProfile'  },
-    { id: 'notification-switch',     key: 'notifications'  },
+    { id: 'public-profile-switch', key: 'publicProfile' },
+    { id: 'notification-switch',   key: 'notifications' },
   ];
 
   const saveBtn   = document.querySelector('[data-settings-save]');
   const cancelBtn = document.querySelector('[data-settings-cancel]');
-  const themeBtns = document.querySelectorAll('[data-theme]');
 
   // snapshot toggle states on load so Cancel can revert
   const initial = {};
@@ -17,17 +15,6 @@
     const el = document.getElementById(id);
     if (!el) return;
     initial[key] = el.checked;
-  });
-
-  let currentTheme = null;
-
-  // theme card click
-  themeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      themeBtns.forEach(b => applyThemeActive(b, false));
-      applyThemeActive(btn, true);
-      currentTheme = btn.dataset.theme;
-    });
   });
 
   // save — just show toast (no persistence)
@@ -45,22 +32,7 @@
         if (!el) return;
         el.checked = initial[key];
       });
-
-      themeBtns.forEach(b => applyThemeActive(b, false));
-      currentTheme = null;
     });
-  }
-
-  // ── helpers ──────────────────────────────────────────────────────────────
-
-  function applyThemeActive(btn, active) {
-    if (active) {
-      btn.classList.add('border-2');
-      btn.style.borderColor = '#0F7A45';
-    } else {
-      btn.classList.remove('border-2');
-      btn.style.borderColor = '';
-    }
   }
 
   function showToast(msg) {
