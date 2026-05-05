@@ -14,15 +14,15 @@
 <body class="auth-body">
 
   <!--   MINIMAL TOP BAR (brand + sign in link)   -->
-  <header class="d-flex justify-content-between align-items-center px-4 py-3">
+  <header class="d-flex justify-content-between  px-4 py-3">
     <a href="/index.html" class="text-decoration-none fw-bold fs-5 text-green">Buzz Fly</a>
     <a href="/pages/auth/signin.html" class="text-decoration-none fw-semibold text-green">Sign In</a>
   </header>
 
-  <main class="container d-flex flex-column align-items-center justify-content-center pb-5" style="max-width: 620px;">
+  <main class="container d-flex flex-column justify-content-center pb-5" style="max-width: 620px;">
 
     <!--   SIGN-UP CARD   -->
-    <section class="card border-0 shadow-lg rounded-4 p-4 p-md-5 w-100 mt-3">
+    <section class="card border-0 shadow-lg rounded-4 p-4 p-md-5 w-100 ">
       <form id="signupForm" novalidate>
 
         <!-- Card title -->
@@ -54,7 +54,7 @@
         </div>
 
         <!-- Password + Confirm (2-col on md+) -->
-        <div class="row g-3 mb-3">
+        <div class="row g-4 mb-3">
           <div class="col-12 col-md-6">
             <label for="password" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Password</label>
             <div class="input-group">
@@ -80,9 +80,9 @@
           <input class="form-check-input" type="checkbox" id="agreeTerms" name="agreeTerms" required />
           <label class="form-check-label small text-muted" for="agreeTerms">
             I agree to the
-            <a href="#" class="text-green text-decoration-none fw-semibold">Terms of Service</a>
+            <a href="/pages/term-of-services.html" class="text-green text-decoration-none fw-semibold">Terms of Service</a>
             and
-            <a href="#" class="text-green text-decoration-none fw-semibold">Privacy Policy.</a>
+            <a href="/pages/privacy-policy.html" class="text-green text-decoration-none fw-semibold">Privacy Policy.</a>
           </label>
         </div>
 
@@ -100,7 +100,7 @@
         </div>
 
         <!-- Social buttons (compact icon-only, side-by-side) -->
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-4">
           <button type="button" class="btn flex-grow-1 d-flex align-items-center justify-content-center bg-white border py-2" data-auth-provider="google" aria-label="Sign up with Google">
             <img src="/assets/icons/google.svg" alt="" style="width: 22px; height: 22px;" />
           </button>
