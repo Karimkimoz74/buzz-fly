@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Perf: warm the TLS handshake to Firebase + Bootstrap origins during
+       HTML parse, and start downloading the Firebase SDK in parallel so
+       page scripts don't block waiting for the SDK to arrive. -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js" crossorigin>
   <title>Buzz Fly - Create Account</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -99,13 +110,11 @@
           <hr class="flex-grow-1 m-0" />
         </div>
 
-        <!-- Social buttons (compact icon-only, side-by-side) -->
-        <div class="d-flex gap-4">
-          <button type="button" class="btn flex-grow-1 d-flex align-items-center justify-content-center bg-white border py-2" data-auth-provider="google" aria-label="Sign up with Google">
+        <!-- Social button (Google only — Apple sign-in is not enabled) -->
+        <div class="d-flex">
+          <button type="button" class="btn flex-grow-1 d-flex align-items-center justify-content-center gap-2 bg-white border py-2 fw-semibold" data-auth-provider="google">
             <img src="/assets/icons/google.svg" alt="" style="width: 22px; height: 22px;" />
-          </button>
-          <button type="button" class="btn flex-grow-1 d-flex align-items-center justify-content-center bg-white border py-2" data-auth-provider="apple" aria-label="Sign up with Apple">
-            <img src="/assets/icons/apple.svg" alt="" style="width: 22px; height: 22px;" />
+            Sign up with Google
           </button>
         </div>
 
@@ -119,6 +128,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="/js/main.js" defer></script>
-  <script src="/js/pages/auth.js" defer></script>
+  <script type="module" src="/js/pages/auth.js"></script>
 </body>
 </html>

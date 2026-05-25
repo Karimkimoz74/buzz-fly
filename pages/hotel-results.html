@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Perf: warm the TLS handshake to Firebase + Bootstrap origins during
+       HTML parse, and start downloading the Firebase SDK in parallel so
+       page scripts don't block waiting for the SDK to arrive. -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js" crossorigin>
   <title>Buzz Fly | Hotel Results</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,42 +30,45 @@
 
   <main class="container py-4">
 
-    <p class="text-uppercase fw-bold small text-muted mb-3" style="letter-spacing: .18em; font-size: .72rem;">
-      Destinations / Europe / <span class="text-green">Switzerland</span>
+    <p class="text-uppercase fw-bold small text-muted mb-3" style="letter-spacing: .18em; font-size: .72rem;" id="breadcrumb">
+      Hotels / <span class="text-green" id="breadcrumb-loc">All destinations</span>
     </p>
 
     <!-- Hero -->
     <section class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-4 mb-5">
       <div>
-        <h1 class="display-3 fw-bold mb-3" style="letter-spacing: -0.04em;">Stays in Lake Lucerne</h1>
-        <p class="lead text-muted mb-0" style="max-width: 620px;">
-          Discover 124 curated properties blending alpine majesty with contemporary luxury.
+        <h1 class="display-3 fw-bold mb-3" style="letter-spacing: -0.04em;" id="hero-title">Hotels &amp; Stays</h1>
+        <p class="lead text-muted mb-0" style="max-width: 620px;" id="hero-subtitle">
+          Discover curated properties handpicked for your next escape.
         </p>
       </div>
-      <div class="d-flex gap-2 flex-shrink-0">
-        <button class="btn filter d-inline-flex align-items-center gap-2 px-4 py-2 bg-light fw-medium" type="button">
+      <!-- Filter chips (one active at a time). data-filter is read by hotel-results.js -->
+      <div id="filter-chips" class="d-flex gap-2 flex-shrink-0 flex-wrap">
+        <button class="btn filter d-inline-flex align-items-center gap-2 px-4 py-2 bg-light-green text-green fw-medium" type="button" data-filter="default" aria-pressed="true">
           <img src="../assets/icons/filter.svg" alt="" style="width: 16px; height: 16px;" />
           Filters
         </button>
-        <button class="btn filter d-inline-flex align-items-center gap-2 px-4 py-2 bg-light fw-medium" type="button">
-          <img src="../assets/icons/sort.svg" alt="" style="width: 16px; height: 16px;"/>
-          Sort by: Popularity
+        <button class="btn filter d-inline-flex align-items-center gap-2 px-4 py-2 bg-light fw-medium" type="button" data-filter="price" aria-pressed="false">
+          Price
+        </button>
+        <button class="btn filter d-inline-flex align-items-center gap-2 px-4 py-2 bg-light fw-medium" type="button" data-filter="rating" aria-pressed="false">
+          Rating
+        </button>
+        <button class="btn filter d-inline-flex align-items-center gap-2 px-4 py-2 bg-light fw-medium" type="button" data-filter="boutique" aria-pressed="false">
+          Boutique
         </button>
       </div>
     </section>
 
-    <!-- Hotel cards grid -->
-    <!--used js function -->
+    <!-- Hotel cards grid (populated by hotel-results.js) -->
+    <section id="cards-container" class="row g-4 mb-4"></section>
 
-    <section id="cards-container" class="row g-4 mb-5"></section>
- 
-
-    <!-- Discover More -->
-    <div class="d-flex justify-content-center pb-3">
-      <a class="btn light-green-btn d-inline-flex align-items-center gap-3 px-4 py-3 fw-bold shadow-sm border" href="#">
-        Discover More Properties
+    <!-- Discover More — clickable button, populated by hotel-results.js -->
+    <div class="d-flex justify-content-center pb-3" id="discover-more-wrap">
+      <button type="button" id="discover-more-btn" class="btn light-green-btn d-inline-flex align-items-center gap-3 px-4 py-3 fw-bold shadow-sm border">
+        Discover more
         <img src="../assets/icons/arrow-right.svg" alt="" style="width: 16px; height: 16px;" />
-      </a>
+      </button>
     </div>
 
   </main>
@@ -64,6 +78,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="../js/main.js" defer></script>
-  <script src="../js/pages/hotel-results.js" defer></script>
+  <script type="module" src="../js/pages/hotel-results.js"></script>
 </body>
 </html>

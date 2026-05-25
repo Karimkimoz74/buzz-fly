@@ -14,7 +14,7 @@
   <hr class="mt-1 mb-3 opacity-10">
 
   <div class="bg-light-purple d-flex align-items-center gap-2 mb-3 p-2 rounded-4  shadow-sm border">
-    <img id="sidebar-avatar" src="/assets/icons/user.svg" alt="Traveler profile" class="rounded-circle object-fit-cover flex-shrink-0" style="width:38px;height:38px;" />
+    <img id="sidebar-avatar" src="/assets/icons/user.svg" alt="Traveler profile" class="rounded-circle object-fit-cover flex-shrink-0" style="width:38px;height:38px;" data-auth-avatar data-default-src="/assets/icons/user.svg" />
     <div>
       <p class="fw-bold mb-0" style="font-size:.8125rem;">Traveler Profile</p>
     </div>
@@ -45,10 +45,10 @@
         <img src="/assets/icons/unclicked/helpcenter.svg" alt="" width="16" height="16" />
         <span>Help Center</span>
       </a>
-      <a href="/pages/auth/logout.html" class="nav-link rounded-pill fw-medium d-flex align-items-center gap-2 px-3 py-2 text-decoration-none btn text-danger bg-danger-subtle">
+      <button type="button" data-auth-signout class="nav-link rounded-pill fw-medium d-flex align-items-center gap-2 px-3 py-2 text-decoration-none btn text-danger bg-danger-subtle border-0 text-start w-100">
         <img src="/assets/icons/unclicked/logout.svg" alt="" width="16" height="16" />
         <span>Logout</span>
-      </a>
+      </button>
     </div>
 
     <a href="/index.html" class="btn green-btn w-100 py-2 mt-3 text-center text-decoration-none">

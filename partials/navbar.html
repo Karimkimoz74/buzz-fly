@@ -16,76 +16,27 @@
     <!--   ACTIONS (notifications + account) — always visible, even on mobile   -->
     <div class="d-flex align-items-center gap-1 order-lg-3 ms-auto ms-lg-0">
 
-      <!-- =====  NOTIFICATIONS DROPDOWN  ===== -->
-      <div class="dropdown">
+      <!-- =====  NOTIFICATIONS DROPDOWN — signed-in users only  ===== -->
+      <div class="dropdown d-none" data-auth-only="signed-in">
         <button type="button" class="buzz-icon-btn" aria-label="Notifications" data-bs-toggle="dropdown" aria-expanded="false">
           <img src="/assets/icons/bell.svg" alt="" />
         </button>
 
-        <div class="dropdown-menu dropdown-menu-end p-0 buzz-notif-menu">
-          <div class="px-4 py-3 border-bottom">
+        <div class="dropdown-menu dropdown-menu-end p-0 buzz-notif-menu" data-notif-menu>
+          <div class="px-4 py-3 border-bottom d-flex align-items-center justify-content-between gap-2">
             <h6 class="m-0 fw-bold">Notifications</h6>
+            <span class="badge rounded-pill bg-light-green text-green fw-semibold d-none" style="font-size:.65rem;" data-notif-unread-pill></span>
           </div>
 
-          <ul class="list-unstyled m-0">
-            <li>
-              <a href="#" class="dropdown-item d-flex gap-3 px-4 py-3 border-bottom bg-light-green">
-                <span class="buzz-notif-icon rounded-circle border bg-white d-inline-flex align-items-center justify-content-center">
-                  <img src="/assets/icons/plane-takeoff.svg" alt="" />
-                </span>
-                <span class="flex-grow-1">
-                  <span class="d-block fw-semibold small">Flash deal: 40% off Bali flights</span>
-                  <span class="d-block text-muted small">Expires in 2 days · 15m ago</span>
-                </span>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="dropdown-item d-flex gap-3 px-4 py-3 border-bottom bg-light-green">
-                <span class="buzz-notif-icon rounded-circle border bg-white d-inline-flex align-items-center justify-content-center">
-                  <img src="/assets/icons/plane.svg" alt="" />
-                </span>
-                <span class="flex-grow-1">
-                  <span class="d-block fw-semibold small">Price dropped $120 on LHR → JFK</span>
-                  <span class="d-block text-muted small">Your watched flight · 2h ago</span>
-                </span>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="dropdown-item d-flex gap-3 px-4 py-3 border-bottom">
-                <span class="buzz-notif-icon rounded-circle border bg-white d-inline-flex align-items-center justify-content-center">
-                  <img src="/assets/icons/bed.svg" alt="" />
-                </span>
-                <span class="flex-grow-1">
-                  <span class="d-block fw-semibold small">Booking confirmed</span>
-                  <span class="d-block text-muted small">Amaya Resort &amp; Spa · 1d ago</span>
-                </span>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="dropdown-item d-flex gap-3 px-4 py-3 border-bottom">
-                <span class="buzz-notif-icon rounded-circle border bg-white d-inline-flex align-items-center justify-content-center">
-                  <img src="/assets/icons/star.svg" alt="" />
-                </span>
-                <span class="flex-grow-1">
-                  <span class="d-block fw-semibold small">Kyoto is trending this week</span>
-                  <span class="d-block text-muted small">New destination spotlight · 2d ago</span>
-                </span>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="dropdown-item d-flex gap-3 px-4 py-3">
-                <span class="buzz-notif-icon rounded-circle border bg-white d-inline-flex align-items-center justify-content-center">
-                  <img src="/assets/icons/calendar.svg" alt="" />
-                </span>
-                <span class="flex-grow-1">
-                  <span class="d-block fw-semibold small">Your trip to Paris starts in 3 days</span>
-                  <span class="d-block text-muted small">Reminder · 3d ago</span>
-                </span>
-              </a>
-            </li>
-          </ul>
+          <!-- Populated by navbar-auth.js from notifications/{*} -->
+          <div data-notif-list>
+            <div class="px-4 py-4 text-center">
+              <p class="text-muted small mb-0">Loading…</p>
+            </div>
+          </div>
 
-          <a href="/pages/notifications.html" class="d-block text-center py-3 text-decoration-none fw-semibold text-green border-top">
+          <!-- Footer link — always visible, even when there are no rows. -->
+          <a href="/pages/Notifications.html" class="d-block text-center py-3 text-decoration-none fw-semibold text-green border-top">
             View all notifications
           </a>
         </div>
@@ -95,18 +46,34 @@
       <!-- =====  ACCOUNT DROPDOWN  ===== -->
       <div class="dropdown">
         <button type="button" class="buzz-icon-btn" aria-label="Account" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="/assets/icons/user.svg" alt="" />
+          <img src="/assets/icons/user.svg" alt="" data-auth-avatar data-auth-avatar-fill data-default-src="/assets/icons/user.svg" />
         </button>
 
         <div class="dropdown-menu dropdown-menu-end p-0">
-          <div class="px-4 py-3 border-bottom" style="min-width: 240px;">
-            <p class="m-0 fw-bold">Welcome User!</p>
-            <p class="m-0 text-muted small">Sign in to unlock your trips</p>
+
+          <!-- Signed-out variant -->
+          <div data-auth-only="signed-out">
+            <div class="px-4 py-3 border-bottom" style="min-width: 240px;">
+              <p class="m-0 fw-bold">Welcome to Buzz Fly!</p>
+              <p class="m-0 text-muted small">Sign in to unlock your trips</p>
+            </div>
+            <div class="p-2 d-grid gap-2">
+              <a href="/pages/auth/signin.html" class="btn green-btn w-100">Sign In / Sign Up</a>
+            </div>
           </div>
-          <div class="p-2 d-grid gap-2">
-            <a href="/pages/auth/signin.html" class="btn green-btn w-100">Sign In/Up</a>
-            <a href="/pages/profile/settings.html" class="btn green-btn w-100">Settings</a>
+
+          <!-- Signed-in variant (hidden by default) -->
+          <div class="d-none" data-auth-only="signed-in">
+            <div class="px-4 py-3 border-bottom" style="min-width: 240px;">
+              <p class="m-0 fw-bold" data-auth-display-name>Welcome back!</p>
+              <p class="m-0 text-muted small text-truncate" data-auth-email></p>
+            </div>
+            <div class="p-2 d-grid gap-2">
+              <a href="/pages/profile/profile.html" class="btn green-btn w-100">Settings</a>
+              <button type="button" class="btn light-purple-btn w-100" data-auth-signout>Sign Out</button>
+            </div>
           </div>
+
         </div>
       </div>
       <!-- =====  /ACCOUNT DROPDOWN  ===== -->

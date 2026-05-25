@@ -1,24 +1,89 @@
-/* Buzz Fly — auth.js
-   Handles the sign-in / sign-up / forgot-password pages.
-   Data is dummy (UI phase) — no real auth backend yet. */
+/* =====================================================
+   Buzz Fly — auth.js  (page script)
+   Wires the sign-in / sign-up / forgot-password forms to
+   the Firebase auth module under /js/firebase/auth.js.
 
-document.addEventListener("DOMContentLoaded", () => {
+   ROUTING POLICY:
+     After any successful sign-in / sign-up, decide where
+     to land based on the user's profile completeness:
+       - Profile missing or missing any onboarding-required
+         field → push to /pages/profile/profile.html?onboarding=1
+       - Profile complete → push to /index.html
+
+     A signed-in user who lands on these auth pages directly
+     is routed away on the same logic — one-shot check on
+     DOMContentLoaded, NOT a live listener (avoids racing
+     with in-progress sign-ins).
+
+   Loaded as <script type="module"> on:
+     pages/auth/signin.html
+     pages/auth/signup.html
+     pages/auth/forgot-password.html
+   ===================================================== */
+
+import {
+  signInWithEmail,
+  signUpWithEmail,
+  signInWithGoogle,
+  sendPasswordReset,
+  fetchProfile
+} from "/js/firebase/auth.js";
+
+import { auth } from "/js/firebase/firebase-init.js";
+
+document.addEventListener("DOMContentLoaded", async () => {
   initPasswordToggle();
+
+  // One-shot check: if Firebase already has a signed-in user when this
+  // page loads, route them away.
+  await auth.authStateReady();
+  if (auth.currentUser) {
+    await routeAfterAuth();
+    return;
+  }
+
+  // Otherwise wire up the form handlers
   initSocialButtons();
-  initAuthForm();
+  initSigninForm();
+  initSignupForm();
+  initForgotForm();
 });
 
-/* Show/hide password eye icon */
+/* ---------- Routing decision ---------- */
+
+const ONBOARDING_URL = "/pages/profile/profile.html?onboarding=1";
+const HOME_URL       = "/index.html";
+
+function profileNeedsOnboarding(profile) {
+  if (!profile) {
+    return true;
+  }
+  // Required onboarding fields per the profile spec
+  if (!profile.gender)         return true;
+  if (!profile.dateOfBirth)    return true;
+  if (!profile.passportNumber) return true;
+  if (!profile.phoneNumber)    return true;
+  return false;
+}
+
+async function routeAfterAuth() {
+  const profile = await fetchProfile();
+  if (profileNeedsOnboarding(profile)) {
+    window.location.href = ONBOARDING_URL;
+  } else {
+    window.location.href = HOME_URL;
+  }
+}
+
+/* ---------- Password eye toggle ---------- */
 function initPasswordToggle() {
   const toggles = document.querySelectorAll("[data-toggle-password]");
-
   toggles.forEach(function (btn) {
     btn.addEventListener("click", function () {
       const input = btn.parentElement.querySelector("input");
       if (!input) {
         return;
       }
-
       if (input.type === "password") {
         input.type = "text";
       } else {
@@ -28,70 +93,213 @@ function initPasswordToggle() {
   });
 }
 
-/* Social sign-in buttons (Google / Apple).
-   Real OAuth redirect will be wired when backend is ready.
-   For now: no-op placeholder so clicks don't do anything harmful. */
+/* ---------- Google sign-in button ---------- */
 function initSocialButtons() {
-  const buttons = document.querySelectorAll("[data-auth-provider]");
-
-  buttons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      const provider = btn.dataset.authProvider;
-      console.log("[auth] " + provider + " sign-in clicked — backend not wired yet.");
+  const googleButtons = document.querySelectorAll("[data-auth-provider='google']");
+  googleButtons.forEach(function (btn) {
+    btn.addEventListener("click", async function () {
+      const form = btn.closest("form");
+      clearError(form);
+      setBusy(btn, true);
+      try {
+        await signInWithGoogle();
+        await routeAfterAuth();
+      } catch (err) {
+        showError(form, friendlyError(err));
+        setBusy(btn, false);
+      }
     });
   });
 }
 
-/* Dummy form submit — prevent navigation, log values.
-   Replace with real fetch() when backend is ready. */
-function initAuthForm() {
-  const signinForm = document.getElementById("signinForm");
-  const signupForm = document.getElementById("signupForm");
-  const forgotForm = document.getElementById("forgotForm");
+/* ---------- Sign-in form (existing user) ---------- */
+function initSigninForm() {
+  const form = document.getElementById("signinForm");
+  if (!form) {
+    return;
+  }
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    clearError(form);
 
-  if (forgotForm) {
-    forgotForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const data = {
-        email: document.getElementById("email").value
-      };
-      console.log("[auth] reset-password submitted (dummy):", data);
-    });
+    const email    = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+      showError(form, "Please enter your email and password.");
+      return;
+    }
+
+    const submitBtn = form.querySelector("button[type='submit']");
+    setBusy(submitBtn, true);
+    try {
+      await signInWithEmail(email, password);
+      await routeAfterAuth();
+    } catch (err) {
+      showError(form, friendlyError(err));
+      setBusy(submitBtn, false);
+    }
+  });
+}
+
+/* ---------- Sign-up form (always new user → onboarding) ---------- */
+function initSignupForm() {
+  const form = document.getElementById("signupForm");
+  if (!form) {
+    return;
+  }
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    clearError(form);
+
+    const fullName        = document.getElementById("fullName").value.trim();
+    const email           = document.getElementById("email").value.trim();
+    const password        = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const agreed          = document.getElementById("agreeTerms").checked;
+
+    if (!fullName || !email || !password) {
+      showError(form, "Please fill in your full name, email and password.");
+      return;
+    }
+    if (password.length < 8) {
+      showError(form, "Password must be at least 8 characters.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      showError(form, "Passwords don't match.");
+      return;
+    }
+    if (!agreed) {
+      showError(form, "You must agree to the Terms and Privacy Policy.");
+      return;
+    }
+
+    const submitBtn = form.querySelector("button[type='submit']");
+    setBusy(submitBtn, true);
+    try {
+      await signUpWithEmail({ email, password, fullName });
+      // Fresh sign-up always goes to onboarding — no need to re-check
+      window.location.href = ONBOARDING_URL;
+    } catch (err) {
+      showError(form, friendlyError(err));
+      setBusy(submitBtn, false);
+    }
+  });
+}
+
+/* ---------- Forgot-password form ---------- */
+function initForgotForm() {
+  const form = document.getElementById("forgotForm");
+  if (!form) {
+    return;
+  }
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    clearError(form);
+    clearSuccess(form);
+
+    const email = document.getElementById("email").value.trim();
+    if (!email) {
+      showError(form, "Please enter your email address.");
+      return;
+    }
+
+    const submitBtn = form.querySelector("button[type='submit']");
+    setBusy(submitBtn, true);
+    try {
+      await sendPasswordReset(email);
+      showSuccess(form, "Reset email sent. Check your inbox.");
+    } catch (err) {
+      showError(form, friendlyError(err));
+    } finally {
+      setBusy(submitBtn, false);
+    }
+  });
+}
+
+/* ---------- UI helpers ---------- */
+
+function setBusy(button, busy) {
+  if (!button) {
+    return;
+  }
+  if (busy) {
+    button.disabled = true;
+    button.dataset.originalText = button.dataset.originalText || button.innerHTML;
+    button.innerHTML = "Please wait…";
+  } else {
+    button.disabled = false;
+    if (button.dataset.originalText) {
+      button.innerHTML = button.dataset.originalText;
+    }
+  }
+}
+
+function showError(form, message) {
+  if (!form) return;
+  let alert = form.querySelector(".buzz-auth-alert");
+  if (!alert) {
+    alert = document.createElement("div");
+    alert.className = "alert alert-danger buzz-auth-alert mb-3";
+    alert.setAttribute("role", "alert");
+    form.prepend(alert);
+  }
+  alert.textContent = message;
+}
+
+function clearError(form) {
+  if (!form) return;
+  const alert = form.querySelector(".buzz-auth-alert");
+  if (alert) alert.remove();
+}
+
+function showSuccess(form, message) {
+  if (!form) return;
+  let alert = form.querySelector(".buzz-auth-success");
+  if (!alert) {
+    alert = document.createElement("div");
+    alert.className = "alert alert-success buzz-auth-success mb-3";
+    alert.setAttribute("role", "alert");
+    form.prepend(alert);
+  }
+  alert.textContent = message;
+}
+
+function clearSuccess(form) {
+  if (!form) return;
+  const alert = form.querySelector(".buzz-auth-success");
+  if (alert) alert.remove();
+}
+
+function friendlyError(err) {
+  if (!err) return "Something went wrong. Please try again.";
+  const code = err.code || "";
+
+  if (code === "auth/invalid-credential" || code === "auth/wrong-password" || code === "auth/user-not-found") {
+    return "Email or password is incorrect.";
+  }
+  if (code === "auth/invalid-email") {
+    return "That email address looks invalid.";
+  }
+  if (code === "auth/email-already-in-use") {
+    return "An account with this email already exists. Try signing in instead.";
+  }
+  if (code === "auth/weak-password") {
+    return "Password is too weak. Use at least 8 characters.";
+  }
+  if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") {
+    return "Sign-in was cancelled.";
+  }
+  if (code === "auth/popup-blocked") {
+    return "Your browser blocked the sign-in popup. Allow popups and try again.";
+  }
+  if (code === "auth/network-request-failed") {
+    return "Network error. Check your connection and try again.";
+  }
+  if (code === "auth/too-many-requests") {
+    return "Too many attempts. Please wait a minute and try again.";
   }
 
-  if (signinForm) {
-    signinForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const data = {
-        email: document.getElementById("email").value,
-        password: document.getElementById("password").value
-      };
-      console.log("[auth] sign-in submitted (dummy):", data);
-    });
-  }
-
-  if (signupForm) {
-    signupForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const data = {
-        fullName: document.getElementById("fullName").value,
-        email: document.getElementById("email").value,
-        password: document.getElementById("password").value,
-        confirmPassword: document.getElementById("confirmPassword").value,
-        agreed: document.getElementById("agreeTerms").checked
-      };
-
-      if (data.password !== data.confirmPassword) {
-        console.log("[auth] passwords don't match");
-        return;
-      }
-      if (!data.agreed) {
-        console.log("[auth] must agree to terms");
-        return;
-      }
-
-      console.log("[auth] sign-up submitted (dummy):", data);
-    });
-  }
+  return err.message || "Something went wrong. Please try again.";
 }
