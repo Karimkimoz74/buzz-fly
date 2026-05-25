@@ -3,7 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Buzz Fly - Support</title>
+
+  <!-- Perf: warm the TLS handshake to Firebase + Bootstrap origins during
+       HTML parse, and start downloading the Firebase SDK in parallel. -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js" crossorigin>
+
+  <title>Buzz Fly - Contact Us</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,7 +24,6 @@
 </head>
 <body>
 
-  <!-- Navbar partial -->
   <div id="navbar-slot"></div>
 
   <main class="container py-5">
@@ -30,40 +40,72 @@
     <!--   FORM + INFO GRID   -->
     <section class="row g-4 mb-5">
 
-      <!--   FORM (left, wider)   -->
+      <!--   LEFT COLUMN: auth-gated form   -->
       <div class="col-12 col-lg-7">
-        <form id="contactForm" class="card border-0 shadow-sm rounded-4 p-4 p-md-5" novalidate>
 
-          <!-- Name + Email row -->
+        <!-- Signed-out view -->
+        <div class="d-none card border-0 shadow-sm rounded-4 p-4 p-md-5 text-center" data-contact-signin>
+          <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light-green mx-auto mb-4" style="width:72px;height:72px;">
+            <img src="/assets/icons/user.svg" alt="" width="28" height="28" />
+          </div>
+          <h2 class="h5 fw-bold mb-2">Sign in to contact us</h2>
+          <p class="text-muted small mb-4" style="max-width:28rem;margin:0 auto;">
+            We tie every support ticket to your account so we can find your bookings instantly.
+          </p>
+          <button type="button" class="btn green-btn px-4 py-2 align-self-center mx-auto" style="max-width:200px;" data-contact-signin-btn>
+            Log in / Sign Up
+          </button>
+        </div>
+
+        <!-- Loading -->
+        <div class="d-none card border-0 shadow-sm rounded-4 p-4 p-md-5 text-center" data-contact-loading>
+          <div class="spinner-border text-success mx-auto" role="status">
+            <span class="visually-hidden">Loading…</span>
+          </div>
+          <p class="text-muted small mt-3 mb-0">Loading your details…</p>
+        </div>
+
+        <!-- Form (signed-in) -->
+        <form id="contactForm" class="d-none card border-0 shadow-sm rounded-4 p-4 p-md-5" novalidate data-contact-form>
+
+          <!-- Identity row — read-only, prefilled from users/{uid} -->
           <div class="row g-3 mb-3">
             <div class="col-md-6">
-              <label for="name" class="form-label small fw-bold text-uppercase mb-2" style="letter-spacing: .08em; font-size: .75rem;">Full Name</label>
-              <input type="text" id="name" class="form-control bg-light border-0 py-3" placeholder="John Doe" />
-              <div class="invalid-feedback" id="nameError">Please enter your full name.</div>
+              <label for="contact-name" class="form-label small fw-bold text-uppercase mb-2" style="letter-spacing: .08em; font-size: .75rem;">Full Name</label>
+              <input type="text" id="contact-name" class="form-control bg-light border-0 py-3" disabled />
             </div>
             <div class="col-md-6">
-              <label for="email" class="form-label small fw-bold text-uppercase mb-2" style="letter-spacing: .08em; font-size: .75rem;">Email Address</label>
-              <input type="email" id="email" class="form-control bg-light border-0 py-3" placeholder="john@example.com" />
-              <div class="invalid-feedback" id="emailError">Please enter a valid email address.</div>
+              <label for="contact-email" class="form-label small fw-bold text-uppercase mb-2" style="letter-spacing: .08em; font-size: .75rem;">Email Address</label>
+              <input type="email" id="contact-email" class="form-control bg-light border-0 py-3" disabled />
             </div>
           </div>
 
-          <!-- Subject -->
+          <p class="small text-muted mb-3">
+            Need to change these? Visit
+            <a href="/pages/profile/profile.html" class="text-green text-decoration-none fw-semibold">Edit Profile</a>.
+          </p>
+
+          <!-- Reason -->
           <div class="mb-3">
-            <label for="subject" class="form-label small fw-bold text-uppercase mb-2" style="letter-spacing: .08em; font-size: .75rem;">Subject</label>
-            <input type="text" id="subject" class="form-control bg-light border-0 py-3" placeholder="How can we help?" />
-            <div class="invalid-feedback" id="subjectError">Please enter a subject.</div>
+            <label for="contact-reason" class="form-label small fw-bold text-uppercase mb-2" style="letter-spacing: .08em; font-size: .75rem;">Reason for Contact</label>
+            <select id="contact-reason" class="form-select bg-light border-0 py-3">
+              <option value="Booking Modification" selected>Booking Modification</option>
+              <option value="Cancellation Request">Cancellation Request</option>
+              <option value="Refund Request">Refund Request</option>
+              <option value="Trip Inquiry">Trip Inquiry</option>
+              <option value="Account Issue">Account Issue</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
 
           <!-- Message -->
           <div class="mb-3">
-            <label for="message" class="form-label small fw-bold text-uppercase mb-2" style="letter-spacing: .08em; font-size: .75rem;">Message</label>
-            <textarea id="message" class="form-control bg-light border-0 py-3" rows="5" placeholder="Tell us more about your inquiry..."></textarea>
-            <div class="invalid-feedback" id="messageError">Please enter your message.</div>
+            <label for="contact-message" class="form-label small fw-bold text-uppercase mb-2" style="letter-spacing: .08em; font-size: .75rem;">Message</label>
+            <textarea id="contact-message" class="form-control bg-light border-0 py-3" rows="5" placeholder="Tell us more about your inquiry…"></textarea>
           </div>
 
           <!-- Submit -->
-          <button type="submit" class="btn green-btn w-100 d-flex align-items-center justify-content-center gap-2 mt-3">
+          <button type="submit" class="btn green-btn w-100 d-flex align-items-center justify-content-center gap-2 mt-3" data-contact-submit>
             Send Message
             <img src="/assets/icons/send-message.svg" alt="" style="width: 20px; height: 20px; filter: brightness(0) invert(1);" />
           </button>
@@ -71,13 +113,12 @@
         </form>
       </div>
 
-      <!--   INFO COLUMN (right)   -->
+      <!--   RIGHT COLUMN: marketing info (unchanged)   -->
       <div class="col-12 col-lg-5 d-flex flex-column gap-4">
 
-        <!-- Info card -->
         <div class="card border-0 shadow-sm rounded-4 p-4">
 
-          <!-- Item 1: HQ -->
+          <!-- HQ -->
           <div class="d-flex align-items-start gap-3 pb-4 border-bottom">
             <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 bg-light-green text-green shadow-sm" style="width: 52px; height: 52px;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
@@ -91,7 +132,7 @@
             </div>
           </div>
 
-          <!-- Item 2: Email -->
+          <!-- Email -->
           <div class="d-flex align-items-start gap-3 py-4 border-bottom">
             <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 bg-light-purple text-purple shadow-sm" style="width: 52px; height: 52px;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
@@ -105,7 +146,7 @@
             </div>
           </div>
 
-          <!-- Item 3: Phone -->
+          <!-- Phone -->
           <div class="d-flex align-items-start gap-3 pt-4">
             <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 bg-light-green text-green shadow-sm" style="width: 52px; height: 52px;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
@@ -133,30 +174,10 @@
     </section>
   </main>
 
-  <!--   FOOTER   -->
   <div id="footer-slot"></div>
-
-  <!--   SUCCESS MODAL (Bootstrap)   -->
-  <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 rounded-4 shadow-lg">
-        <div class="modal-body text-center p-5">
-          <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto bg-light-green text-green mb-4" style="width: 64px; height: 64px;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-              <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
-          </div>
-          <h3 class="fw-bold mb-2" style="letter-spacing: -0.02em;">Message Sent Successfully!</h3>
-          <p class="text-muted mb-4">We'll get back to you as soon as we can.</p>
-          <button type="button" class="btn green-btn w-100" data-bs-dismiss="modal" id="closeModalBtn">Continue</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="/js/main.js" defer></script>
-  <script src="/js/pages/contact.js" defer></script>
+  <script type="module" src="/js/pages/contact.js"></script>
 </body>
 </html>

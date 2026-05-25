@@ -50,7 +50,7 @@
       <p class="text-muted small mb-4" style="max-width:22rem;">
         Start exploring destinations and tap the heart to save the ones you love.
       </p>
-      <a href="/pages/flights.html" class="btn green-btn px-4 py-2">Explore Destinations</a>
+      <a href="/index.html" class="btn green-btn px-4 py-2">Explore Destinations</a>
     `;
     return wrap;
   }
