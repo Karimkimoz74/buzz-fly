@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Perf: warm the TLS handshake to Firebase + Bootstrap origins during
+       HTML parse, and start downloading the Firebase SDK in parallel so
+       page scripts don't block waiting for the SDK to arrive. -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js" crossorigin>
   <title>Buzz Fly - Logout</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -61,5 +72,21 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="/js/main.js" defer></script>
+
+  <!-- Defensive sign-out: if the user arrives here while still signed in
+       (direct URL, browser back-button after a failed click handler, etc.)
+       finish the job. Also clears the cached avatar so the next sign-in
+       paints clean. -->
+  <script type="module">
+    import { signOut } from "/js/firebase/auth.js";
+    import { auth } from "/js/firebase/firebase-init.js";
+    import { userAvatarCache } from "/js/firebase/avatar-cache.js";
+
+    await auth.authStateReady();
+    if (auth.currentUser) {
+      try { await signOut(); } catch (err) { console.warn("[logout] signOut failed:", err); }
+    }
+    userAvatarCache.clear();
+  </script>
 </body>
 </html>
