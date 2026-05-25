@@ -4,6 +4,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Perf: warm the TLS handshake to Firebase + Bootstrap origins during
+       HTML parse, and start downloading the Firebase SDK in parallel so
+       page scripts don't block waiting for the SDK to arrive. -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js" crossorigin>
   <title>Profile - Buzz Fly</title>
   <link rel="stylesheet" href="/css/main.min.css" />
 </head>
@@ -17,8 +28,8 @@
       <!-- Page Header -->
       <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
         <div>
-          <h1 class="fw-bold fs-4 mb-1">Personal Information</h1>
-          <p class="text-muted small mb-0">Manage your traveler identity, passport, and contact details.</p>
+          <h1 class="fw-bold fs-4 mb-1" data-profile-page-title>Personal Information</h1>
+          <p class="text-muted small mb-0" data-profile-page-sub>Manage your traveler identity, passport, and contact details.</p>
         </div>
         <button type="button" class="btn green-btn px-3 py-2 flex-shrink-0" data-profile-edit-btn>
           Edit Profile
@@ -27,6 +38,13 @@
           aria-label="Notifications">
           <img src="/assets/icons/bell.svg" alt="" />
         </a>
+      </div>
+
+      <!-- Onboarding alert (visible only when ?onboarding=1) -->
+      <div class="alert bg-light-green text-green border-0 rounded-4 small d-flex align-items-center gap-2 mb-3 py-2 px-3 d-none"
+        role="alert" data-profile-onboarding-alert>
+        <img src="../../assets/icons/info.svg" width="15" height="15" class="flex-shrink-0" alt="info">
+        <span>Welcome! Complete your profile to start booking. Required fields are marked with <strong>*</strong>.</span>
       </div>
 
       <!-- Editing Alert (hidden by default) -->
@@ -42,25 +60,58 @@
         <div class="card-body p-3 p-lg-4">
 
           <!-- Avatar + Identity -->
-          <div
-            class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start gap-3 mb-4 pb-3 border-bottom">
+          <div class="mb-4 pb-3 border-bottom">
+            <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start gap-3">
 
-            <div class="position-relative flex-shrink-0">
-              <div class="rounded-circle bg-dark d-flex align-items-center justify-content-center"
-                style="width:84px;height:84px;overflow:hidden;">
-                <img id="avatar-preview" src="/assets/icons/user.svg" alt="Profile photo"
-                  style="width:46px;height:46px;filter:brightness(0) invert(1);object-fit:cover;" />
+              <div class="position-relative flex-shrink-0">
+                <div id="avatar-preview-wrap"
+                  class="rounded-circle overflow-hidden d-flex align-items-center justify-content-center bg-light"
+                  style="width:84px;height:84px;">
+                  <img id="avatar-preview" src="/assets/icons/user.svg" alt="Profile photo"
+                    style="width:42px;height:42px;object-fit:contain;display:block;" data-default-src="/assets/icons/user.svg" />
+                  <!-- Synchronously paint the cached avatar so it appears with
+                       the HTML, not after the Firebase SDK finishes loading.
+                       Also flips the preview into "fill" mode (full-bleed
+                       img, no placeholder bg) so it matches the picker tiles. -->
+                  <script>
+                    (function () {
+                      try {
+                        var v = localStorage.getItem("buzzfly.avatar");
+                        if (!v) return;
+                        var img  = document.getElementById("avatar-preview");
+                        var wrap = document.getElementById("avatar-preview-wrap");
+                        if (!img || !wrap) return;
+                        if (v.startsWith("/") || v.startsWith("http")) {
+                          img.src = v;
+                        } else {
+                          img.src = "/" + v;
+                        }
+                        img.style.width     = "100%";
+                        img.style.height    = "100%";
+                        img.style.objectFit = "cover";
+                        wrap.classList.remove("bg-light");
+                      } catch (e) { /* localStorage unavailable */ }
+                    })();
+                  </script>
+                </div>
               </div>
-              <input type="file" id="avatar-upload" accept="image/*" class="d-none" />
+
+              <div class="text-center text-sm-start flex-grow-1">
+                <h2 class="h6 fw-bold mb-0" data-profile-display-name>—</h2>
+                <p class="text-muted small mb-2">Traveler</p>
+                <button type="button" class="btn btn-sm light-green-btn py-1 px-3 d-none"
+                  style="font-size:.75rem;" data-avatar-picker-toggle>
+                  Change Avatar
+                </button>
+              </div>
             </div>
 
-            <div class="text-center text-sm-start">
-              <h2 class="h6 fw-bold mb-0">Alexander Mitchell</h2>
-              <p class="text-muted small mb-2"> Traveler</p>
-              <label for="avatar-upload" class="btn btn-sm light-green-btn py-1 px-3"
-                style="font-size:.75rem;cursor:pointer;">
-                Change Avatar
-              </label>
+            <!-- 5-asset avatar picker (revealed in edit mode after toggle click) -->
+            <div class="d-none mt-3" data-avatar-picker>
+              <p class="small fw-semibold text-muted mb-2">Pick an avatar</p>
+              <div class="d-flex flex-wrap gap-2" data-avatar-grid>
+                <!-- Populated by profile.js: 5 round tiles, click to select -->
+              </div>
             </div>
           </div>
 
@@ -74,76 +125,80 @@
 
               <!-- Title + Full Name -->
               <div class="col-12 col-sm-3">
-                <label class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Title</label>
-                <select class="form-select rounded-pill" disabled>
-                  <option value="mr" selected>MR</option>
-                  <option value="ms">MS</option>
-                  <option value="mrs">MRS</option>
-                  <option value="dr">DR</option>
+                <label for="profile-title" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Title</label>
+                <select id="profile-title" name="title" class="form-select rounded-pill" disabled>
+                  <option value="">—</option>
+                  <option value="MR">MR</option>
+                  <option value="MS">MS</option>
+                  <option value="MRS">MRS</option>
                 </select>
               </div>
               <div class="col-12 col-sm-9">
-                <label class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Full Name</label>
-                <input type="text" class="form-control rounded-pill" value="Alexander Mitchell" readonly />
+                <label for="profile-fullname" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Full Name <span class="text-danger" data-req-mark>*</span></label>
+                <input type="text" id="profile-fullname" name="fullName" class="form-control rounded-pill" readonly />
               </div>
 
               <!-- Gender + Date of Birth -->
               <div class="col-12 col-md-6">
-                <label class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Gender</label>
-                <select class="form-select rounded-pill" disabled>
-                  <option value="male" selected>Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Prefer not to say</option>
+                <label for="profile-gender" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Gender <span class="text-danger d-none" data-req-mark-onboarding>*</span></label>
+                <select id="profile-gender" name="gender" class="form-select rounded-pill" disabled>
+                  <option value="">—</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                 </select>
               </div>
               <div class="col-12 col-md-6">
-                <label class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Date of Birth</label>
-                <input type="date" class="form-control rounded-pill" value="1990-05-14" readonly />
+                <label for="profile-dob" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Date of Birth <span class="text-danger d-none" data-req-mark-onboarding>*</span></label>
+                <input type="date" id="profile-dob" name="dateOfBirth" class="form-control rounded-pill" readonly />
               </div>
 
               <!-- Age + Passport Number -->
               <div class="col-12 col-md-6">
-                <label class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Age</label>
-                <input type="number" class="form-control rounded-pill" value="34" min="0" max="120" readonly />
+                <label for="profile-age" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Age</label>
+                <input type="number" id="profile-age" name="age" class="form-control rounded-pill" min="0" max="120" readonly tabindex="-1" />
               </div>
               <div class="col-12 col-md-6">
-                <label class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Passport Number</label>
-                <input type="text" class="form-control rounded-pill" value="A12345678" placeholder="e.g. A12345678"
-                  readonly />
+                <label for="profile-passport" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Passport Number <span class="text-danger" data-req-mark>*</span></label>
+                <input type="text" id="profile-passport" name="passportNumber" class="form-control rounded-pill" placeholder="e.g. A12345678" readonly />
               </div>
 
               <!-- Passport Expiry + Country -->
               <div class="col-12 col-md-6">
-                <label class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Passport Expiry
-                  Date</label>
-                <input type="date" class="form-control rounded-pill" value="2028-11-20" readonly />
+                <label for="profile-passport-expiry" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Passport Expiry Date</label>
+                <input type="date" id="profile-passport-expiry" name="passportExpiry" class="form-control rounded-pill" readonly />
               </div>
               <div class="col-12 col-md-6">
-                <label class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Country</label>
-                <select class="form-select rounded-pill" disabled>
-                  <option value="us" selected>United States</option>
-                  <option value="eg">Egypt</option>
-                  <option value="gb">United Kingdom</option>
-                  <option value="de">Germany</option>
-                  <option value="fr">France</option>
-                  <option value="jp">Japan</option>
-                  <option value="ae">United Arab Emirates</option>
-                  <option value="sa">Saudi Arabia</option>
-                  <option value="ca">Canada</option>
-                  <option value="au">Australia</option>
-                  <option value="it">Italy</option>
-                  <option value="es">Spain</option>
+                <label for="profile-country" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Country</label>
+                <select id="profile-country" name="country" class="form-select rounded-pill" disabled>
+                  <option value="">—</option>
+                  <option value="United States">United States</option>
+                  <option value="Egypt">Egypt</option>
+                  <option value="United Kingdom">United Kingdom</option>
+                  <option value="Germany">Germany</option>
+                  <option value="France">France</option>
+                  <option value="Japan">Japan</option>
+                  <option value="United Arab Emirates">United Arab Emirates</option>
+                  <option value="Saudi Arabia">Saudi Arabia</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Australia">Australia</option>
+                  <option value="Italy">Italy</option>
+                  <option value="Spain">Spain</option>
+                  <option value="Switzerland">Switzerland</option>
+                  <option value="Turkey">Turkey</option>
+                  <option value="Singapore">Singapore</option>
+                  <option value="Maldives">Maldives</option>
+                  <option value="Indonesia">Indonesia</option>
                 </select>
               </div>
 
               <!-- Email + Phone -->
               <div class="col-12 col-md-6">
-                <label class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Email Address</label>
-                <input type="email" class="form-control rounded-pill" value="alex.mitchell@travel.com" readonly />
+                <label for="profile-email" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Email Address</label>
+                <input type="email" id="profile-email" name="email" class="form-control rounded-pill" readonly tabindex="-1" />
               </div>
               <div class="col-12 col-md-6">
-                <label class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Phone Number</label>
-                <input type="tel" class="form-control rounded-pill" value="+1 (555) 000-0000" readonly />
+                <label for="profile-phone" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Phone Number <span class="text-danger" data-req-mark>*</span></label>
+                <input type="tel" id="profile-phone" name="phoneNumber" class="form-control rounded-pill" placeholder="+1 (555) 000-0000" readonly />
               </div>
 
             </div>
@@ -205,9 +260,9 @@
     </main>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/js/main.js"></script>
-  <script src="/js/pages/profile.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script src="/js/main.js" defer></script>
+  <script type="module" src="/js/pages/profile.js"></script>
 </body>
 
 </html>

@@ -3,8 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flight Details — Buzz Fly</title>
+  <!-- Perf: warm the TLS handshake to Firebase + Bootstrap origins during
+       HTML parse, and start downloading the Firebase SDK in parallel so
+       page scripts don't block waiting for the SDK to arrive. -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js" crossorigin>
+  <title>Flight Booking — Buzz Fly</title>
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="/css/main.min.css" />
 </head>
 <body>
@@ -13,158 +25,140 @@
 
   <main class="container-xl py-4">
 
-    <!-- Breadcrumb -->
-    <nav class="d-flex align-items-center gap-2 mb-3" style="font-size:.8125rem;color:#71717a;">
-      <a href="/pages/my-trips.html" class="text-secondary text-decoration-none buzz-footer-link">Trips</a>
-      <span>›</span>
-      <a href="/pages/flight-search.html" class="text-secondary text-decoration-none buzz-footer-link">Search Results</a>
-      <span>›</span>
-      <span class="text-green fw-semibold">Flight Details</span>
-    </nav>
-
-    <!-- Page title -->
-    <h1 class="mb-1">London to Tokyo Narita</h1>
-    <p class="text-secondary mb-4">Business Class • One Way • Saturday, Oct 12</p>
+    <!-- Top header: trip kind + route + dates + back link -->
+    <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2 mb-4">
+      <div>
+        <p class="text-uppercase fw-bold mb-1" style="font-size:.65rem;color:#a1a1aa;letter-spacing:.1em;" data-trip-eyebrow>ONE WAY</p>
+        <h1 class="mb-1" data-route-title>—</h1>
+        <p class="text-secondary mb-0" data-route-sub>—</p>
+      </div>
+      <a href="javascript:history.back()" class="text-decoration-none fw-semibold text-green">← Back to results</a>
+    </div>
 
     <!-- Two-column layout -->
     <div class="row g-4 align-items-start">
 
-      <!-- LEFT COLUMN -->
-      <div class="col-12 col-lg-8">
+      <!-- LEFT: itinerary + amenities + baggage -->
+      <div class="col-12 col-lg-7">
 
-        <!-- Full Itinerary card -->
+        <!-- Journey overview — 1 card for one-way, 2 for round-trip -->
+        <div data-journey-cards></div>
+
+        <!-- Baggage allowance — per leg. Populated by JS so the same
+             markup serves one-way (one section) and round-trip (two). -->
         <div class="bg-white border rounded-4 p-4 mb-4">
-
-          <div class="d-flex align-items-center justify-content-between mb-4">
-            <div class="d-flex align-items-center gap-2">
-              <img src="/assets/icons/plane-takeoff.svg" alt="" width="18" height="18" />
-              <h3 class="mb-0">Full Itinerary</h3>
-            </div>
-            <span class="badge rounded-pill bg-light-green text-green fw-semibold" style="font-size:.75rem;">12h 45m Total</span>
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <img src="/assets/icons/Baggage.svg" alt="" width="20" height="20" />
+            <h3 class="mb-0" style="font-size:1rem;">Baggage Allowance</h3>
           </div>
-
-          <!-- Leg 1 -->
-          <div class="d-flex gap-3 pt-3 border-top">
-            <div class="rounded-circle bg-dark-green flex-shrink-0 mt-1" style="width:12px;height:12px;"></div>
-            <div class="flex-fill">
-              <div class="d-flex justify-content-between align-items-start gap-3">
-                <div>
-                  <p class="fw-bolder mb-1" style="font-size:1.125rem;">09:15 <span class="fw-semibold text-secondary">• LHR</span></p>
-                  <p class="text-secondary mb-1" style="font-size:.875rem;">London Heathrow Terminal 5</p>
-                  <a href="#" class="text-green fw-semibold text-decoration-none" style="font-size:.8125rem;">British Airways BA005</a>
-                </div>
-                <div class="text-end flex-shrink-0">
-                  <div class="text-uppercase fw-bold mb-1" style="font-size:.6rem;color:#a1a1aa;letter-spacing:.1em;">Duration</div>
-                  <div class="fw-bolder" style="font-size:1rem;">11h 30m</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Layover -->
-          <div class="d-flex align-items-center gap-2 my-3 px-3 py-2 rounded-3 border-start border-3" style="background:#f4f4f5;border-color:#e7e8e9!important;font-size:.8125rem;color:#52525b;">
-            <img src="/assets/icons/map-direction.svg" alt="" width="14" height="14" />
-            <span>45m Layover in Helsinki (HEL)</span>
-          </div>
-
-          <!-- Leg 2 -->
-          <div class="d-flex gap-3 pt-3 border-top">
-            <div class="rounded-circle bg-dark-purple flex-shrink-0 mt-1" style="width:12px;height:12px;"></div>
-            <div class="flex-fill">
-              <div class="d-flex justify-content-between align-items-start gap-3">
-                <div>
-                  <p class="fw-bolder mb-1" style="font-size:1.125rem;">08:00 <sup class="text-secondary" style="font-size:.65rem;">+1</sup> <span class="fw-semibold text-secondary">• NRT</span></p>
-                  <p class="text-secondary mb-1" style="font-size:.875rem;">Tokyo Narita Terminal 2</p>
-                  <a href="#" class="text-purple fw-semibold text-decoration-none" style="font-size:.8125rem;">Japan Airlines JL006</a>
-                </div>
-                <div class="text-end flex-shrink-0">
-                  <div class="text-uppercase fw-bold mb-1" style="font-size:.6rem;color:#a1a1aa;letter-spacing:.1em;">Seat Class</div>
-                  <div class="fw-bolder text-green" style="font-size:1rem;">SkySuite Business</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Amenities -->
-        <div class="row g-3 mb-4">
-          <div class="col-4">
-            <div class="bg-white border rounded-3 p-4">
-              <img src="/assets/icons/bed.svg" alt="" width="22" height="22" class="mb-2" />
-              <p class="fw-bold mb-1" style="font-size:.9375rem;">Baggage</p>
-              <p class="text-secondary mb-0" style="font-size:.8125rem;">2 × 32kg Checked Bags included</p>
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="bg-white border rounded-3 p-4">
-              <img src="/assets/icons/star.svg" alt="" width="22" height="22" class="mb-2" />
-              <p class="fw-bold mb-1" style="font-size:.9375rem;">In-flight</p>
-              <p class="text-secondary mb-0" style="font-size:.8125rem;">Multi-course meal &amp; spirits</p>
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="bg-white border rounded-3 p-4">
-              <img src="/assets/icons/globe.svg" alt="" width="22" height="22" class="mb-2" />
-              <p class="fw-bold mb-1" style="font-size:.9375rem;">Connectivity</p>
-              <p class="text-secondary mb-0" style="font-size:.8125rem;">High-speed Wi-Fi &amp; Power</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Map -->
-        <div class="rounded-4 overflow-hidden border" style="height:220px;">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d5000000!2d20!3d50!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e4!4m5!1s0x47d8a00baf21de75%3A0x52963a5addd52a99!2sLondon%20Heathrow%20Airport!3m2!1d51.4700223!2d-0.4542955!4m5!1s0x6018c993bdc01c77%3A0x9b89e2b8d6bef4dd!2sTokyo%20Narita%20Airport!3m2!1d35.7647561!2d140.3864527!5e0!3m2!1sen!2s!4v1700000000000"
-            width="100%" height="100%" style="border:0;display:block;"
-            allowfullscreen loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="Route map">
-          </iframe>
+          <div data-baggage-content></div>
+          <p class="text-secondary mb-0 mt-3" style="font-size:.78rem;">Allowance follows the cabin class you pick for each leg.</p>
         </div>
 
       </div>
 
-      <!-- RIGHT COLUMN -->
-      <div class="col-12 col-lg-4">
+      <!-- RIGHT: sticky booking card -->
+      <div class="col-12 col-lg-5">
+        <div class="card border-0 shadow rounded-4 p-4 sticky-top" style="top: 86px;" data-booking-card>
 
-        <!-- Fare Breakdown -->
-        <div class="bg-white border rounded-4 p-4 mb-4">
-          <h3 class="mb-4" style="font-size:1rem;">Fare Breakdown</h3>
-
-          <div class="d-flex flex-column gap-3 mb-4">
-            <div class="d-flex justify-content-between" style="font-size:.9rem;">
-              <span class="text-secondary">Base Fare</span><span>£2,450.00</span>
-            </div>
-            <div class="d-flex justify-content-between" style="font-size:.9rem;">
-              <span class="text-secondary">Taxes &amp; Fees</span><span>£342.10</span>
-            </div>
-            <div class="d-flex justify-content-between" style="font-size:.9rem;">
-              <span class="text-secondary">Fuel Surcharge</span><span>£120.00</span>
+          <!-- Loading placeholder -->
+          <div data-booking-loading>
+            <div class="placeholder-glow">
+              <span class="placeholder col-6 mb-3"></span>
+              <span class="placeholder col-12 mb-2"></span>
+              <span class="placeholder col-12 mb-2"></span>
+              <span class="placeholder col-12 mb-2"></span>
+              <span class="placeholder col-12"></span>
             </div>
           </div>
 
-          <div class="d-flex justify-content-between align-items-center pt-3 border-top mb-4">
-            <span class="fw-bold">Total Price</span>
-            <strong class="text-green" style="font-size:1.5rem;letter-spacing:-.02em;">£2,912.10</strong>
+          <!-- Error placeholder -->
+          <div data-booking-error class="d-none">
+            <p class="fw-semibold text-danger mb-2" data-booking-error-msg>We couldn't load this booking.</p>
+            <a href="/index.html" class="btn green-btn w-100 mt-2">Back to search</a>
           </div>
 
-          <button class="btn green-btn w-100 mb-2" style="font-size:1rem;" id="bookBtn">Book Now</button>
-          <p class="text-center text-uppercase fw-bold mb-0" style="font-size:.6rem;color:#a1a1aa;letter-spacing:.08em;">Price includes all mandatory fees</p>
+          <!-- Live booking form -->
+          <div data-booking-form class="d-none">
+
+            <!-- Total price summary -->
+            <div class="mb-3 lh-1">
+              <span class="fw-bold fs-1" data-total-price>$0</span>
+              <span class="text-muted ms-1 small">total</span>
+            </div>
+
+            <!-- Outbound cabin picker -->
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-uppercase text-secondary mb-2" style="font-size:.65rem;letter-spacing:.08em;" data-outbound-label>Cabin Class</label>
+              <div class="d-flex flex-column gap-2" data-outbound-picker></div>
+            </div>
+
+            <!-- Return cabin picker — round-trip only -->
+            <div class="mb-3 d-none" data-return-picker-wrap>
+              <label class="form-label small fw-bold text-uppercase text-secondary mb-2" style="font-size:.65rem;letter-spacing:.08em;">Cabin Class — Return</label>
+              <div class="d-flex flex-column gap-2" data-return-picker></div>
+            </div>
+
+            <!-- Fare breakdown -->
+            <div class="border-top pt-3" data-fare-lines></div>
+
+            <div class="d-flex justify-content-between fw-bold border-top mt-3 pt-3">
+              <span>Total Price</span>
+              <span data-line-total>$0</span>
+            </div>
+
+            <!-- Traveller block (signed-in only) -->
+            <div class="border-top mt-3 pt-3 d-none" data-traveller-block>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <p class="fw-bold text-uppercase text-secondary mb-0" style="font-size:.68rem;letter-spacing:.1em;">Traveller</p>
+                <div class="form-check form-switch m-0">
+                  <input class="form-check-input" type="checkbox" id="fd-trav-toggle" />
+                  <label class="form-check-label small text-secondary" for="fd-trav-toggle">Book for another traveller</label>
+                </div>
+              </div>
+              <div class="row g-2">
+                <div class="col-12">
+                  <label for="fd-trav-name" class="form-label small mb-1">Full Name</label>
+                  <input type="text" id="fd-trav-name" class="form-control rounded-pill" disabled />
+                </div>
+                <div class="col-12">
+                  <label for="fd-trav-email" class="form-label small mb-1">Email</label>
+                  <input type="email" id="fd-trav-email" class="form-control rounded-pill" disabled />
+                </div>
+                <div class="col-6">
+                  <label for="fd-trav-passport" class="form-label small mb-1">Passport</label>
+                  <input type="text" id="fd-trav-passport" class="form-control rounded-pill" disabled />
+                </div>
+                <div class="col-6">
+                  <label for="fd-trav-phone" class="form-label small mb-1">Phone</label>
+                  <input type="tel" id="fd-trav-phone" class="form-control rounded-pill" disabled />
+                </div>
+              </div>
+              <p class="text-muted small mt-2 mb-0" data-trav-helper>Booking under your profile. Toggle the switch to enter another traveller's details.</p>
+            </div>
+
+            <!-- Confirm -->
+            <button type="button" class="btn green-btn w-100 py-3 fw-semibold mt-3" data-confirm-btn>
+              Confirm and Pay
+            </button>
+            <p class="text-center text-muted small mb-0 mt-2">You won't be charged yet</p>
+
+            <!-- Sign-in nudge (signed-out only) -->
+            <p class="text-center small text-muted mt-2 d-none" data-signin-nudge>
+              You'll be asked to sign in to complete the booking.
+            </p>
+          </div>
+
         </div>
-
       </div>
+
     </div>
   </main>
 
   <div id="footer-slot"></div>
 
-  <a href="#" class="fab" aria-label="Chat">
-    <img src="/assets/icons/send-message.svg" alt="" />
-  </a>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="/js/main.js" defer></script>
-  <script src="/js/pages/flight-details.js" defer></script>
+  <script type="module" src="/js/pages/flight-details.js"></script>
 </body>
 </html>
