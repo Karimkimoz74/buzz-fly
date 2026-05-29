@@ -139,14 +139,15 @@ function renderList() {
 }
 
 function notifCardHtml(n) {
-  const icon       = iconForNotif(n);
-  const bgCircle   = bgForNotif(n);
-  const unreadDot  = !n.isRead
-    ? `<span class="rounded-circle bg-dark-purple d-inline-block flex-shrink-0" style="width:8px;height:8px;"></span>`
+  const icon     = iconForNotif(n);
+  const bgCircle = bgForNotif(n);
+  const ago      = relativeTime(n.createdAt);
+  const isBooking = n.type === "booking" || !!n.relatedBookingId;
+  const clickAttr = isBooking
+    ? `style="cursor:pointer;" onclick="window.location.href='/pages/profile/my-trips.html'"`
     : "";
-  const ago = relativeTime(n.createdAt);
   return `
-    <div class="card border-0 shadow-sm rounded-4 mb-3 p-4">
+    <div class="card border-0 shadow-sm rounded-4 mb-3 p-4" ${clickAttr}>
       <div class="d-flex align-items-start gap-3">
         <div class="rounded-3 d-inline-flex align-items-center justify-content-center ${bgCircle} flex-shrink-0" style="width:52px;height:52px;">
           <img src="${icon}" alt="" style="width:22px;height:22px;" />
@@ -154,10 +155,7 @@ function notifCardHtml(n) {
         <div class="flex-grow-1">
           <div class="d-flex align-items-start justify-content-between gap-2 mb-1">
             <h2 class="fs-6 fw-bold mb-0">${escapeHtml(n.title || "")}</h2>
-            <div class="d-flex align-items-center gap-2 flex-shrink-0">
-              <span class="text-muted" style="font-size:.78rem;white-space:nowrap;">${escapeHtml(ago)}</span>
-              ${unreadDot}
-            </div>
+            <span class="text-muted flex-shrink-0" style="font-size:.78rem;white-space:nowrap;">${escapeHtml(ago)}</span>
           </div>
           <p class="text-muted mb-0" style="font-size:.875rem;">${escapeHtml(n.body || "")}</p>
         </div>
