@@ -21,30 +21,8 @@
     <!-- ===== HERO ===== -->
     <section class="py-5" style="background: linear-gradient(160deg, #f0fdf4 0%, #f5f3ff 100%);">
       <div class="container text-center py-4">
-        <h1 class="display-4 fw-bold mb-4" style="letter-spacing: -0.02em;">How can we help?</h1>
-
-        <!-- Search bar -->
-        <div class="mx-auto position-relative" style="max-width: 600px;">
-          <span class="position-absolute top-50 translate-middle-y ps-4" style="left: 0; pointer-events: none;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
-              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </span>
-          <input
-            type="text"
-            id="helpSearch"
-            class="form-control bg-white border-0 shadow-sm rounded-pill py-3 ps-5 pe-4 fs-6"
-            placeholder="Search for flight status, baggage, or lounge access..."
-          />
-        </div>
-
-        <!-- Popular tags -->
-        <div class="mt-3 d-flex align-items-center justify-content-center gap-2 flex-wrap">
-          <span class="text-muted small">Popular:</span>
-          <a href="#" class="badge rounded-pill text-nav-green bg-light-green text-decoration-none fw-semibold px-3 py-2">Flight Delays</a>
-          <a href="#" class="badge rounded-pill text-nav-green bg-light-green text-decoration-none fw-semibold px-3 py-2">Pet Policy</a>
-          <a href="#" class="badge rounded-pill text-nav-green bg-light-green text-decoration-none fw-semibold px-3 py-2">Refunds</a>
-        </div>
+        <h1 class="display-4 fw-bold mb-2" style="letter-spacing: -0.02em;">How can we help?</h1>
+        <p class="text-muted fs-5 mb-0">Browse support topics or find quick answers below.</p>
       </div>
     </section>
 
@@ -62,24 +40,44 @@
               <h2 class="fs-4 fw-bold mb-2">Booking Support</h2>
               <p class="text-muted mb-4">Manage your itineraries, upgrade seats, and select preferred meals for your next journey.</p>
               <div class="d-flex gap-2 flex-wrap mt-auto">
-                <a href="#" class="btn btn-sm light-green-btn px-4 py-2 fw-semibold">Manage Bookings</a>
-                <a href="#" class="btn btn-sm light-green-btn px-4 py-2 fw-semibold">Flight Status</a>
+                <a href="/pages/profile/my-trips.html" class="btn btn-sm light-green-btn px-4 py-2 fw-semibold">Manage Bookings</a>
               </div>
             </div>
           </div>
 
-          <!-- Payments — small card (col-5) -->
+          <!-- Payments — small card (col-5) with inline learn more -->
           <div class="col-12 col-lg-5">
             <div class="card border-0 shadow-sm rounded-4 p-4 h-100 buzz-deal">
               <div class="rounded-3 d-inline-flex align-items-center justify-content-center bg-light-purple mb-3" style="width: 52px; height: 52px;">
                 <img src="/assets/icons/Payments.svg" alt="Payments" style="width: 26px; height: 26px;" />
               </div>
               <h2 class="fs-4 fw-bold mb-2">Payments</h2>
-              <p class="text-muted mb-4">View invoices, update cards, and manage corporate billing profiles.</p>
-              <a href="#" class="d-inline-flex align-items-center gap-1 text-nav-green fw-semibold text-decoration-none small mt-auto buzz-deal-details">
+              <p class="text-muted mb-3">View invoices, update cards, and manage corporate billing profiles.</p>
+
+              <!-- Inline learn more content -->
+              <div id="payments-details" class="collapse mb-3">
+                <ul class="list-unstyled small text-muted mb-0" style="line-height: 2;">
+                  <li>✓ We accept Visa, Mastercard, Amex, and PayPal</li>
+                  <li>✓ Invoices are emailed within 24 hours of booking</li>
+                  <li>✓ Update your saved card anytime in Settings</li>
+                  <li>✓ Corporate billing profiles support PO numbers and monthly invoicing</li>
+                  <li>✓ All transactions are secured with 3D Secure and SSL encryption</li>
+                  <li>✓ Refunds are returned to the original payment method within 5–10 business days</li>
+                </ul>
+              </div>
+
+              <button
+                class="d-inline-flex align-items-center gap-1 text-nav-green fw-semibold border-0 bg-transparent p-0 small mt-auto buzz-deal-details"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#payments-details"
+                aria-expanded="false"
+                aria-controls="payments-details"
+                onclick="this.querySelector('svg').style.transform = this.getAttribute('aria-expanded')==='true' ? 'rotate(90deg)' : 'rotate(0deg)'"
+              >
                 Learn more
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
-              </a>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; transition: transform .2s;"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+              </button>
             </div>
           </div>
 
@@ -90,41 +88,120 @@
                 <img src="/assets/icons/Cancellation.svg" alt="Cancellations" style="width: 26px; height: 26px;" />
               </div>
               <h2 class="fs-5 fw-bold mb-2">Cancellations</h2>
-              <p class="text-muted small mb-4">Understand refund timelines and manage travel voucher conversions.</p>
-              <a href="#" class="d-inline-flex align-items-center gap-1 text-nav-green fw-semibold text-decoration-none small mt-auto buzz-deal-details">
-                Start Request
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
-              </a>
+              <p class="text-muted small mb-3">Understand refund timelines and manage travel voucher conversions.</p>
+
+              <!-- Inline cancellation policies -->
+              <div id="cancellation-policies" class="collapse mb-3">
+                <div class="small text-muted" style="line-height: 1.9;">
+                  <p class="fw-semibold text-dark mb-1">Free Cancellation</p>
+                  <p class="mb-2">Cancel within 24 hours of booking for a full refund, regardless of fare type.</p>
+                  <p class="fw-semibold text-dark mb-1">Standard Fares</p>
+                  <p class="mb-2">Cancellations made 7+ days before departure receive a full refund minus a $35 processing fee. Within 7 days, a travel voucher is issued instead.</p>
+                  <p class="fw-semibold text-dark mb-1">Non-Refundable Fares</p>
+                  <p class="mb-2">No cash refund. A travel voucher equal to the ticket value (minus fees) is issued and valid for 12 months.</p>
+                  <p class="fw-semibold text-dark mb-1">Refund Timeline</p>
+                  <p class="mb-0">Approved refunds are returned to your original payment method within 5–10 business days.</p>
+                </div>
+              </div>
+
+              <button
+                class="d-inline-flex align-items-center gap-1 text-nav-green fw-semibold border-0 bg-transparent p-0 small mt-auto buzz-deal-details"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#cancellation-policies"
+                aria-expanded="false"
+                aria-controls="cancellation-policies"
+                onclick="this.querySelector('svg').style.transform = this.getAttribute('aria-expanded')==='true' ? 'rotate(90deg)' : 'rotate(0deg)'"
+              >
+                Learn more
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; transition: transform .2s;"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+              </button>
             </div>
           </div>
 
-          <!-- Baggage -->
+          <!-- Baggage with inline policies -->
           <div class="col-12 col-md-4">
             <div class="card border-0 shadow-sm rounded-4 p-4 h-100 buzz-deal">
               <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 52px; height: 52px; background-color: #e0f2fe;">
                 <img src="/assets/icons/Baggage.svg" alt="Baggage" style="width: 20px; height: 26px;" />
               </div>
               <h2 class="fs-5 fw-bold mb-2">Baggage</h2>
-              <p class="text-muted small mb-4">Track lost items or check allowance for international routes.</p>
-              <a href="#" class="d-inline-flex align-items-center gap-1 text-nav-green fw-semibold text-decoration-none small mt-auto buzz-deal-details">
+              <p class="text-muted small mb-3">Track lost items or check allowance for international routes.</p>
+
+              <!-- Inline baggage policies -->
+              <div id="baggage-policies" class="collapse mb-3">
+                <div class="small text-muted" style="line-height: 1.9;">
+                  <p class="fw-semibold text-dark mb-1">Carry-on</p>
+                  <p class="mb-2">1 bag up to 10 kg (55 × 40 × 23 cm) — included in all fares.</p>
+                  <p class="fw-semibold text-dark mb-1">Checked Baggage</p>
+                  <p class="mb-2">Economy: 1 × 23 kg free. Business: 2 × 32 kg free. Extra bags charged at check-in.</p>
+                  <p class="fw-semibold text-dark mb-1">Oversized / Special Items</p>
+                  <p class="mb-2">Sports equipment, strollers, and musical instruments must be declared at booking. Fees vary by route.</p>
+                  <p class="fw-semibold text-dark mb-1">Lost or Delayed Baggage</p>
+                  <p class="mb-0">Report immediately at the airport desk or via My Trips within 24 hours of arrival.</p>
+                </div>
+              </div>
+
+              <button
+                class="d-inline-flex align-items-center gap-1 text-nav-green fw-semibold border-0 bg-transparent p-0 small mt-auto buzz-deal-details"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#baggage-policies"
+                aria-expanded="false"
+                aria-controls="baggage-policies"
+                onclick="this.querySelector('svg').style.transform = this.getAttribute('aria-expanded')==='true' ? 'rotate(90deg)' : 'rotate(0deg)'"
+              >
                 View Policies
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
-              </a>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; transition: transform .2s;"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+              </button>
             </div>
           </div>
 
-          <!-- Elite Status -->
+          <!-- Elite Status with inline benefits -->
           <div class="col-12 col-md-4">
             <div class="card border-0 shadow-sm rounded-4 p-4 h-100 buzz-deal">
               <div class="rounded-3 d-inline-flex align-items-center justify-content-center bg-light-green mb-3" style="width: 52px; height: 52px;">
                 <img src="/assets/icons/Elite Status.svg" alt="Elite Status" style="width: 22px; height: 26px;" />
               </div>
               <h2 class="fs-5 fw-bold mb-2">Elite Status</h2>
-              <p class="text-muted small mb-4">How to earn miles, tier benefits, and lounge access rules.</p>
-              <a href="#" class="d-inline-flex align-items-center gap-1 text-nav-green fw-semibold text-decoration-none small mt-auto buzz-deal-details">
+              <p class="text-muted small mb-3">How to earn miles, tier benefits, and lounge access rules.</p>
+
+              <!-- Inline benefits -->
+              <div id="elite-benefits" class="collapse mb-3">
+                <div class="small text-muted" style="line-height: 1.9;">
+                  <p class="fw-semibold text-dark mb-1">Silver (10,000 miles/yr)</p>
+                  <ul class="ps-3 mb-2">
+                    <li>Priority check-in & boarding</li>
+                    <li>1 free checked bag upgrade</li>
+                    <li>10% bonus miles on every flight</li>
+                  </ul>
+                  <p class="fw-semibold text-dark mb-1">Gold (25,000 miles/yr)</p>
+                  <ul class="ps-3 mb-2">
+                    <li>Lounge access on international routes</li>
+                    <li>Free seat upgrades (subject to availability)</li>
+                    <li>25% bonus miles &amp; dedicated phone line</li>
+                  </ul>
+                  <p class="fw-semibold text-dark mb-1">Platinum (50,000 miles/yr)</p>
+                  <ul class="ps-3 mb-0">
+                    <li>Global lounge access + guest pass</li>
+                    <li>Guaranteed upgrades &amp; free cancellations</li>
+                    <li>50% bonus miles &amp; personal travel manager</li>
+                  </ul>
+                </div>
+              </div>
+
+              <button
+                class="d-inline-flex align-items-center gap-1 text-nav-green fw-semibold border-0 bg-transparent p-0 small mt-auto buzz-deal-details"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#elite-benefits"
+                aria-expanded="false"
+                aria-controls="elite-benefits"
+                onclick="this.querySelector('svg').style.transform = this.getAttribute('aria-expanded')==='true' ? 'rotate(90deg)' : 'rotate(0deg)'"
+              >
                 Check Benefits
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
-              </a>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; transition: transform .2s;"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+              </button>
             </div>
           </div>
 
@@ -142,62 +219,97 @@
           <!-- FAQ 1 -->
           <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
             <h3 class="accordion-header">
-              <button
-                class="accordion-button collapsed fw-semibold bg-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#faq1"
-                aria-expanded="false"
-                aria-controls="faq1"
-              >
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
                 Can I change my flight 24 hours before departure?
               </button>
             </h3>
             <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
               <div class="accordion-body text-muted">
-                Yes — most fare types allow changes up to 24 hours before departure. Depending on your ticket class, a change fee or fare difference may apply. Elite members can make changes for free up to 2 hours before departure. Log in to Manage Bookings to see your specific options.
+                Yes — most fare types allow changes up to 24 hours before departure. Depending on your ticket class, a change fee or fare difference may apply. Elite members can make changes for free up to 2 hours before departure. Go to <a href="/pages/profile/my-trips.html" class="text-nav-green fw-semibold">My Trips</a> to see your specific options.
               </div>
             </div>
           </div>
 
-          <!-- FAQ 2 -->
+          <!-- FAQ 2 — Flight Delays -->
           <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
             <h3 class="accordion-header">
-              <button
-                class="accordion-button collapsed fw-semibold bg-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#faq2"
-                aria-expanded="false"
-                aria-controls="faq2"
-              >
-                How do I request a digital concierge for my group?
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                What happens if my flight is delayed?
               </button>
             </h3>
             <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
               <div class="accordion-body text-muted">
-                Group travel requests with digital concierge support can be submitted under the "Group Travel" section in the main navigation. A dedicated concierge will be assigned within 24 hours and will coordinate all itinerary details, seat preferences, and special requirements on your behalf.
+                If your flight is delayed by more than 2 hours, you are entitled to meal vouchers at the airport. For delays over 5 hours you may request a full refund or a free rebooking on the next available flight. Notifications are sent automatically to your registered email and app. You can also track real-time status under <a href="/pages/profile/my-trips.html" class="text-nav-green fw-semibold">My Trips</a>.
               </div>
             </div>
           </div>
 
-          <!-- FAQ 3 -->
-          <div class="accordion-item border rounded-4 shadow-sm overflow-hidden">
+          <!-- FAQ 3 — Pet Policy in Hotels -->
+          <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
             <h3 class="accordion-header">
-              <button
-                class="accordion-button collapsed fw-semibold bg-white"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#faq3"
-                aria-expanded="false"
-                aria-controls="faq3"
-              >
-                What are the current travel restrictions for Europe?
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                What is the pet policy for hotels booked through Buzz Fly?
               </button>
             </h3>
             <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
               <div class="accordion-body text-muted">
-                Travel requirements vary by destination and nationality. We recommend checking the official government travel advisory for your home country and your destination country before booking. Our concierge team can also provide up-to-date entry requirement summaries — just start a chat below.
+                Pet policies vary by hotel. When searching for hotels, look for the "Pet Friendly" filter to see only properties that allow pets. Each hotel listing shows its specific rules — including size limits, breed restrictions, and any per-night pet fee. Always confirm with the hotel directly before arrival, as policies can change.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 4 — Refunds -->
+          <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
+            <h3 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
+                How long does a refund take?
+              </button>
+            </h3>
+            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted">
+                Refunds are processed within 3–5 business days of your cancellation request being approved. The amount is returned to your original payment method. Credit/debit card refunds may take an additional 5–7 business days to appear depending on your bank. Travel vouchers are issued instantly and can be used on your next booking.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 5 — Baggage fees -->
+          <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
+            <h3 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
+                How do I add an extra checked bag to my booking?
+              </button>
+            </h3>
+            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted">
+                You can add extra baggage before your flight through <a href="/pages/profile/my-trips.html" class="text-nav-green fw-semibold">My Trips</a> — simply select your booking and choose "Add Baggage." Adding baggage online is cheaper than paying at the airport. Fees vary by route and how far in advance you add the bag.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 6 — Check-in -->
+          <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
+            <h3 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" aria-expanded="false" aria-controls="faq6">
+                When can I check in online?
+              </button>
+            </h3>
+            <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted">
+                Online check-in opens 48 hours before departure and closes 1 hour before departure for most domestic flights, and 2 hours before for international flights. You can check in from <a href="/pages/profile/my-trips.html" class="text-nav-green fw-semibold">My Trips</a> and download your boarding pass directly to your device.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 7 — Travel restrictions -->
+          <div class="accordion-item border rounded-4 shadow-sm overflow-hidden">
+            <h3 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq7" aria-expanded="false" aria-controls="faq7">
+                What are the current travel restrictions for international routes?
+              </button>
+            </h3>
+            <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted">
+                Travel requirements vary by destination and nationality. We recommend checking the official government travel advisory for your home country and your destination before booking. Entry requirements — including visas, vaccinations, and health declarations — are displayed on the flight details page when you search. Our support team can also assist with specific queries.
               </div>
             </div>
           </div>
