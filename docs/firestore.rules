@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Hotels + flights: anyone can read, nobody can write from the app.
+    // Writes happen only via the seed script (Admin SDK, bypasses rules).
+    match /hotels/{hotelId}   { allow read: if true; allow write: if false; }
+    match /flights/{flightId} { allow read: if true; allow write: if false; }
+
+    // Users: a signed-in user can only touch their own profile document.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Bookings: a user can only read/edit bookings they own.
+    match /bookings/{bookingId} {
+      allow read, write: if request.auth != null
+                      && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null
+                 && request.auth.uid == request.resource.data.userId;
+    }
+
+    // Trips: same ownership rule as bookings.
+    match /trips/{tripId} {
+      allow read, write: if request.auth != null
+                      && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null
+                 && request.auth.uid == request.resource.data.userId;
+    }
+
+    // Support tickets: any signed-in user can submit one; nobody reads
+    // them from the app (an admin reads them in the Console).
+    match /support_tickets/{ticketId} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if false;
+    }
+
+    // Notifications: per-user feed.
+    //   create — client writes welcome / booking-confirmed / cancelled /
+    //            reminder, all tagged with userId == auth.uid.
+    //   read   — navbar dropdown + Notifications page query by userId.
+    //   update — markNotificationRead / markAllNotificationsRead flip isRead.
+    //   delete — blocked. Keep the audit trail; use a deletedAt field +
+    //            client-side filter if you ever need "Clear all".
+    match /notifications/{notificationId} {
+      allow create: if request.auth != null
+                 && request.auth.uid == request.resource.data.userId;
+      allow read:   if request.auth != null
+                 && request.auth.uid == resource.data.userId;
+      allow update: if request.auth != null
+                 && request.auth.uid == resource.data.userId;
+      allow delete: if false;
+    }
+
+  }
+}
