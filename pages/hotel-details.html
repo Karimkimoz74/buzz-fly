@@ -3,10 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buzz Fly | The Emerald Canopy Retreat</title>
+  <!-- Perf: warm the TLS handshake to Firebase + Bootstrap origins during
+       HTML parse, and start downloading the Firebase SDK in parallel so
+       page scripts don't block waiting for the SDK to arrive. -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js" crossorigin>
+  <title>Hotel Details — Buzz Fly</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link href="../css/main.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../css/pages/hotel-details.css">
+  <link href="/css/main.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -14,261 +24,211 @@
 
   <main class="container py-4 py-lg-5">
 
-    <!-- ===== IMAGE GALLERY ===== -->
-    <div class="container py-4 py-lg-5">
+    <!-- ===== HERO GALLERY (5-slide carousel, populated from hotel.images) ===== -->
+    <div id="hotelGallery"
+         class="carousel slide rounded-4 overflow-hidden position-relative mb-4"
+         data-bs-ride="carousel"
+         style="height: 340px; background:#e5e7eb;">
 
-      <div class="row g-2">
+      <!-- Slides — JS injects exactly N <div.carousel-item> from hotel.images -->
+      <div class="carousel-inner h-100" data-hotel-gallery-inner></div>
 
-        <!-- LEFT BIG IMAGE -->
-        <div class="col-12 col-md-7" style="height: 340px;">
-          <div class="rounded-start-4 rounded-sm overflow-hidden position-relative w-100 h-100">
-            <img src="../assets/images/dest-ubud.png"
-                class="w-100 h-100 object-fit-cover"> <!-- fit-cover -> no distortion, just croops the image-->
+      <!-- Static overlay + title (sibling of carousel-inner so they don't slide) -->
+      <div class="position-absolute top-0 start-0 w-100 h-100"
+           style="background: linear-gradient(to top, rgba(0,0,0,0.65), transparent 55%); pointer-events:none;"></div>
 
-            <!-- Overlay -->
-            <div class="position-absolute top-0 start-0 w-100 h-100"
-                style="background: linear-gradient(to top, rgba(0,0,0,0.65), transparent 55%);">
-            </div>
-
-            <!-- Text -->
-            <div class="position-absolute bottom-0 start-0 p-3 p-md-4">
-              <span class="text-white text-uppercase fw-bold px-2 py-1 mb-2 d-inline-block bg-dark-green rounded-5" style="font-size: 0.6rem;"> <!-- smallest font isn't small enough-->
-                Featured Sanctuary
-              </span>
-              <h1 class="text-white fw-bold mb-0 fs-2">
-                The Emerald Canopy Retreat
-              </h1>
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT SIDE -->
-        <div class="col-12 col-md-5 d-flex flex-column gap-2">
-
-          <!-- TOP -->
-          <div style="height: 166px; ">
-            <img src="../assets/images/stay-skyline.png"
-                class="w-100 h-100 object-fit-cover rounded-top-left" style="border-top-right-radius: 1.1rem;">
-          </div>
-
-          <!-- BOTTOM -->
-          <div class="row g-2">
-            <div class="col-6" style="height: 166px;">
-              <img src="../assets/images/stay-amaya.png"
-                  class="rounded-bottom-left w-100 h-100 object-fit-cover">
-            </div>
-
-            <div class="col-6" style="height: 166px;">
-              <img src="../assets/images/dest-zermatt.png"
-                  class="w-100 h-100 object-fit-cover" style="border-bottom-right-radius: 1.1rem">
-            </div>
-          </div>
-
-        </div>
-
+      <div class="position-absolute bottom-0 start-0 p-3 p-md-4"
+           style="pointer-events:none;">
+        <span class="text-white text-uppercase fw-bold px-2 py-1 mb-2 d-inline-block bg-dark-green rounded-5" style="font-size: 0.6rem;">
+          Featured Sanctuary
+        </span>
+        <h1 class="text-white fw-bold mb-0 fs-2" data-hotel-title>—</h1>
       </div>
 
+      <!-- Indicators (JS populates one button per image) -->
+      <div class="carousel-indicators" data-hotel-gallery-indicators></div>
+
+      <!-- Prev / Next controls -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#hotelGallery" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#hotelGallery" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
     </div>
 
-
-
-    
     <!-- ===== RATING ROW ===== -->
     <div class="d-flex align-items-center gap-3 mb-4">
       <div class="d-flex align-items-center gap-1 fw-semibold small">
-        <img src="../assets/icons/star.svg" style="width: 15px; height: 15px;">
-        4.9 
-        <span class="fw-normal text-muted">(128 reviews)</span>
+        <img src="/assets/icons/star.svg" style="width: 15px; height: 15px;" alt="">
+        <span data-hotel-rating>—</span>
       </div>
       <span class="d-flex align-items-center gap-1 text-muted small">
-        <img src="../assets/icons/location.svg" style="width: 14px; height: 14px;">
-        Bali, Indonesia
+        <img src="/assets/icons/location.svg" style="width: 14px; height: 14px;" alt="">
+        <span data-hotel-location>—</span>
       </span>
     </div>
-
-
-
 
     <!-- ===== MAIN TWO-COLUMN LAYOUT ===== -->
     <div class="row g-4 g-lg-5">
 
-      <!-- LEFT COLUMN: Description, Amenities, Map -->
-      <div class="col-lg-7"> <!-- only separates into 2 col when on lg screen-->
+      <!-- LEFT COLUMN -->
+      <div class="col-lg-7">
 
         <h2 class="fw-bold mb-2">Experience Unrivaled Serenity</h2>
-        <p class="text-muted lh-lg"> <!-- line height large spacing between text lines-->
-          Nestled within the heart of the Ubud highlands, The Emerald Canopy Retreat offers an
-          editorial escape from the mundane. Designed with a philosophy of "Integrated Nature,"
-          every corner of this sanctuary blurs the line between high-end architecture and the wild
-          Indonesian forest. Enjoy curated experiences from sunrise meditation sessions to private
-          culinary journeys prepared by Michelin-starred chefs.
-        </p>
+        <p class="text-muted lh-lg" data-hotel-description>—</p>
 
         <!-- Premium Amenities -->
         <h3 class="fw-semibold mt-4 mb-3">Premium Amenities</h3>
-        <div class="row row-cols-4 g-3"> <!-- create 4 equal columns-->
-
-          <div class="col">
-            <div class="border rounded-3 p-3 text-center h-100">
-              <i class="bi bi-wifi fs-4 text-nav-green d-block mb-2"></i>
-              <small class="text-muted">Ultra-Fast Wi-Fi</small>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="border rounded-3 p-3 text-center h-100">
-              <i class="bi bi-water fs-4 text-nav-green d-block mb-2"></i>
-              <small class="text-muted">Private Infinity Pool</small>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="border rounded-3 p-3 text-center h-100">
-              <i class="bi bi-flower1 fs-4 text-nav-green d-block mb-2"></i>
-              <small class="text-muted">Wellness Center</small>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="border rounded-3 p-3 text-center h-100">
-              <i class="bi bi-cup-hot fs-4 text-nav-green d-block mb-2"></i>
-              <small class="text-muted">Signature Dining</small>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="border rounded-3 p-3 text-center h-100">
-              <i class="bi bi-p-circle-fill fs-4 text-nav-green d-block mb-2"></i>
-              <small class="text-muted">Valet Parking</small>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="border rounded-3 p-3 text-center h-100">
-              <i class="bi bi-person-walking fs-4 text-nav-green d-block mb-2"></i>
-              <small class="text-muted">24/7 Gym</small>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="border rounded-3 p-3 text-center h-100">
-              <i class="bi bi-thermometer-snow fs-4 text-nav-green d-block mb-2"></i>
-              <small class="text-muted">Climate Control</small>
-            </div>
-          </div>
-
-          <div class="col">
-            <div class="border rounded-3 p-3 text-center h-100">
-              <i class="bi bi-person-badge fs-4 text-nav-green d-block mb-2"></i>
-              <small class="text-muted">Personal Host</small>
-            </div>
-          </div>
-
+        <div class="row row-cols-4 g-3">
+          <div class="col"><div class="border rounded-3 p-3 text-center h-100"><i class="bi bi-wifi fs-4 text-nav-green d-block mb-2"></i><small class="text-muted">Ultra-Fast Wi-Fi</small></div></div>
+          <div class="col"><div class="border rounded-3 p-3 text-center h-100"><i class="bi bi-water fs-4 text-nav-green d-block mb-2"></i><small class="text-muted">Private Infinity Pool</small></div></div>
+          <div class="col"><div class="border rounded-3 p-3 text-center h-100"><i class="bi bi-flower1 fs-4 text-nav-green d-block mb-2"></i><small class="text-muted">Wellness Center</small></div></div>
+          <div class="col"><div class="border rounded-3 p-3 text-center h-100"><i class="bi bi-cup-hot fs-4 text-nav-green d-block mb-2"></i><small class="text-muted">Signature Dining</small></div></div>
+          <div class="col"><div class="border rounded-3 p-3 text-center h-100"><i class="bi bi-p-circle-fill fs-4 text-nav-green d-block mb-2"></i><small class="text-muted">Valet Parking</small></div></div>
+          <div class="col"><div class="border rounded-3 p-3 text-center h-100"><i class="bi bi-person-walking fs-4 text-nav-green d-block mb-2"></i><small class="text-muted">24/7 Gym</small></div></div>
+          <div class="col"><div class="border rounded-3 p-3 text-center h-100"><i class="bi bi-thermometer-snow fs-4 text-nav-green d-block mb-2"></i><small class="text-muted">Climate Control</small></div></div>
+          <div class="col"><div class="border rounded-3 p-3 text-center h-100"><i class="bi bi-person-badge fs-4 text-nav-green d-block mb-2"></i><small class="text-muted">Personal Host</small></div></div>
         </div>
 
         <!-- Location -->
         <h3 class="fw-semibold mt-4 mb-3">Location</h3>
         <div class="position-relative rounded-3 overflow-hidden border" style="height: 220px;">
-          <img src="../assets/icons/map-background.svg" alt="Hotel location map" class="w-100 h-100 object-fit-cover">
+          <img src="/assets/icons/map-background.svg" alt="" class="w-100 h-100 object-fit-cover">
           <div class="position-absolute bottom-0 start-0 m-3 bg-white rounded-3 shadow-sm d-flex align-items-center gap-2 px-3 py-2">
-            <img src="../assets/icons/location.svg" alt="" style="width: 20px; height: 20px;">
+            <img src="/assets/icons/location.svg" alt="" style="width: 20px; height: 20px;">
             <div>
-              <p class="mb-0 fw-semibold small">Jalan Raya Sanggingan</p>
-              <p class="mb-0 text-muted" style="font-size: 0.7rem;">15 min from Town Center</p>
+              <p class="mb-0 fw-semibold small" data-hotel-location-line>—</p>
+              <p class="mb-0 text-muted" style="font-size: 0.7rem;">Buzz Fly featured stay</p>
             </div>
           </div>
         </div>
-
       </div>
 
       <!-- RIGHT COLUMN: Booking Card -->
       <div class="col-lg-5">
-        <div class="card border-0 shadow rounded-4 p-4 sticky-top" style="top: 86px;">
+        <div class="card border-0 shadow rounded-4 p-4 sticky-top" style="top: 86px;" data-booking-card>
 
-          <!-- Price + Rare Find badge -->
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <div class="lh-1">
-              <span class="fw-bold fs-1">$450</span>
+          <!-- Loading placeholder -->
+          <div data-booking-loading>
+            <div class="placeholder-glow">
+              <span class="placeholder col-6 mb-3"></span>
+              <span class="placeholder col-12 mb-2"></span>
+              <span class="placeholder col-12 mb-2"></span>
+              <span class="placeholder col-12 mb-2"></span>
+              <span class="placeholder col-12"></span>
+            </div>
+          </div>
+
+          <!-- Error placeholder -->
+          <div data-booking-error class="d-none">
+            <p class="fw-semibold text-danger mb-2" data-booking-error-msg>We couldn't load this hotel.</p>
+            <a href="/pages/hotel-results.html" class="btn green-btn w-100 mt-2">Back to search</a>
+          </div>
+
+          <!-- Live booking form -->
+          <div data-booking-form class="d-none">
+
+            <!-- Price -->
+            <div class="mb-3 lh-1">
+              <span class="fw-bold fs-1" data-price-per-night>$0</span>
               <span class="text-muted ms-1 small">/ night</span>
             </div>
-            
-            <div class="text-end">
-              <span class="fw-bold px-3 py-1 rounded-pill d-inline-block small bg-light-purple text-purple"
-                    style="font-size: 0.65rem; letter-spacing: 0.5px;">
-                RARE FIND
-              </span>
-              <p class="mb-0 mt-1 text-muted" style="font-size: 0.65rem;">68% booked this week</p>
-            </div>
-          </div>
 
-          <!-- Check-in / Check-out / Guests -->
-          <div class="row g-2 mb-3">
-            <div class="col-6">
-              <div class="border rounded-3 p-2">
-                <small class="text-muted text-uppercase fw-semibold d-block"
-                       style="font-size: 0.6rem; letter-spacing: 0.8px;">Check-in</small>
-                <span class="fw-semibold small">Oct 24, 2024</span>
+            <!-- Room type -->
+            <label for="hd-room-type" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Room Type</label>
+            <select id="hd-room-type" class="form-select rounded-pill mb-2"></select>
+
+            <!-- Check-in / Check-out / Guests (display-only — picked on Stage 1/2) -->
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label for="hd-checkin" class="form-label small text-uppercase fw-semibold text-secondary mb-1" style="font-size:.6rem;letter-spacing:.8px;">Check-in</label>
+                <input type="date" id="hd-checkin" class="form-control rounded-3" disabled />
+              </div>
+              <div class="col-6">
+                <label for="hd-checkout" class="form-label small text-uppercase fw-semibold text-secondary mb-1" style="font-size:.6rem;letter-spacing:.8px;">Check-out</label>
+                <input type="date" id="hd-checkout" class="form-control rounded-3" disabled />
+              </div>
+              <div class="col-12">
+                <label for="hd-guests" class="form-label small text-uppercase fw-semibold text-secondary mb-1" style="font-size:.6rem;letter-spacing:.8px;">Guests</label>
+                <select id="hd-guests" class="form-select rounded-pill" disabled></select>
               </div>
             </div>
-            <div class="col-6">
-              <div class="border rounded-3 p-2">
-                <small class="text-muted text-uppercase fw-semibold d-block"
-                       style="font-size: 0.6rem; letter-spacing: 0.8px;">Check-out</small>
-                <span class="fw-semibold small">Oct 29, 2024</span>
-              </div>
+
+            <!-- Price breakdown -->
+            <div class="d-flex justify-content-between small mb-2">
+              <span class="text-muted" data-line-base-label>—</span>
+              <span data-line-base-amount>$0</span>
             </div>
-            <div class="col-12">
-              <div class="border rounded-3 p-2">
-                <small class="text-muted text-uppercase fw-semibold d-block"
-                       style="font-size: 0.6rem; letter-spacing: 0.8px;">Guests</small>
-                <span class="fw-semibold small">2 Adults, 1 Child</span>
-              </div>
+            <div class="d-flex justify-content-between small mb-2">
+              <span class="text-muted">Local Taxes</span>
+              <span data-line-taxes>$0</span>
             </div>
-          </div>
+            <div class="d-flex justify-content-between small">
+              <span class="text-muted">Service Fee</span>
+              <span data-line-service>$0</span>
+            </div>
 
-          <!-- Reserve button -->
-          <a href="/pages/confirm-payment.html" class="btn green-btn w-100 py-3 fw-semibold mb-2">
-            Reserve My Sanctuary
-          </a>
-          <p class="text-center text-muted small mb-3">You won't be charged yet</p>
+            <div class="d-flex justify-content-between fw-bold border-top mt-3 pt-3">
+              <span>Total</span>
+              <span data-line-total>$0</span>
+            </div>
 
-          <!-- Price breakdown -->
-          <div class="d-flex justify-content-between small mb-2">
-            <span class="text-muted">5 nights &times; $450</span>  <!-- &times; == multiplication sign-->
-            <span>$2,250</span>
-          </div>
-          <div class="d-flex justify-content-between small mb-2">
-            <span class="text-muted">Cleaning fee</span>
-            <span>$85</span>
-          </div>
-          <div class="d-flex justify-content-between small">
-            <span class="text-muted">Buzz Fly service fee</span>
-            <span>$320</span>
-          </div>
+            <!-- Traveller block (signed-in only) -->
+            <div class="border-top mt-3 pt-3 d-none" data-traveller-block>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <p class="fw-bold text-uppercase text-secondary mb-0" style="font-size:.68rem;letter-spacing:.1em;">Traveller</p>
+                <div class="form-check form-switch m-0">
+                  <input class="form-check-input" type="checkbox" id="hd-trav-toggle" />
+                  <label class="form-check-label small text-secondary" for="hd-trav-toggle">Book for another traveller</label>
+                </div>
+              </div>
+              <div class="row g-2">
+                <div class="col-12">
+                  <label for="hd-trav-name" class="form-label small mb-1">Full Name</label>
+                  <input type="text" id="hd-trav-name" class="form-control rounded-pill" disabled />
+                </div>
+                <div class="col-12">
+                  <label for="hd-trav-email" class="form-label small mb-1">Email</label>
+                  <input type="email" id="hd-trav-email" class="form-control rounded-pill" disabled />
+                </div>
+                <div class="col-6">
+                  <label for="hd-trav-passport" class="form-label small mb-1">Passport</label>
+                  <input type="text" id="hd-trav-passport" class="form-control rounded-pill" disabled />
+                </div>
+                <div class="col-6">
+                  <label for="hd-trav-phone" class="form-label small mb-1">Phone</label>
+                  <input type="tel" id="hd-trav-phone" class="form-control rounded-pill" disabled />
+                </div>
+              </div>
+              <p class="text-muted small mt-2 mb-0" data-trav-helper>Booking under your profile. Toggle the switch to enter another traveller's details.</p>
+            </div>
 
-          <div class="d-flex justify-content-between fw-bold border-top mt-3 pt-3">
-            <span>Total</span>
-            <span>$2,655</span>
-          </div>
+            <!-- Confirm -->
+            <button type="button" class="btn green-btn w-100 py-3 fw-semibold mt-3" data-confirm-btn>
+              Confirm and Pay
+            </button>
+            <p class="text-center text-muted small mb-0 mt-2">You won't be charged yet</p>
 
-          <!-- Price guarantee -->
-          <div class="d-flex align-items-center justify-content-center gap-2 border-top mt-3 pt-3">
-            <img src="../assets/icons/badge-verified.svg" style="width: 15px; height: 15px;">
-            <small class="text-muted">Lowest Price Guarantee by Buzz Fly</small>
+            <!-- Sign-in nudge (signed-out only) -->
+            <p class="text-center small text-muted mt-2 d-none" data-signin-nudge>
+              You'll be asked to sign in to complete the booking.
+            </p>
           </div>
 
         </div>
       </div>
 
     </div>
-
   </main>
 
   <div id="footer-slot"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
-  <script src="../js/pages/hotel-details.js" defer></script>
-  <script src="../js/main.js" defer></script>
+  <script src="/js/main.js" defer></script>
+  <script type="module" src="/js/pages/hotel-details.js"></script>
 
 </body>
 </html>

@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Perf: warm the TLS handshake to Firebase + Bootstrap origins during
+       HTML parse, and start downloading the Firebase SDK in parallel so
+       page scripts don't block waiting for the SDK to arrive. -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js" crossorigin>
   <title>Buzz Fly - To Infinity And Beyond</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -53,90 +64,145 @@
       <div class="card shadow-lg border-0 rounded-4 p-4">
         <form>
 
-          <!-- Tabs (Bootstrap nav-pills + custom .buzz-tab for green active state) -->
-          <ul class="nav nav-pills mb-3" role="tablist">
-            <li class="nav-item me-2" role="presentation">
-              <button class="nav-link buzz-tab active" data-bs-toggle="pill" data-bs-target="#flights-pane" type="button" role="tab" aria-controls="flights-pane" aria-selected="true">
-                <img src="assets/icons/plane.svg" alt="" style="width: 14px; height: 14px;" />
-                Flights
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link buzz-tab" data-bs-toggle="pill" data-bs-target="#hotels-pane" type="button" role="tab" aria-controls="hotels-pane" aria-selected="false">
-                <img src="assets/icons/bed.svg" alt="" style="width: 14px; height: 14px;" />
-                Hotels
-              </button>
-            </li>
-          </ul>
+          <!-- Tabs (left) + flight-only trip toggle (right) on the SAME row -->
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+            <ul class="nav nav-pills mb-0" role="tablist">
+              <li class="nav-item me-2" role="presentation">
+                <button class="nav-link buzz-tab active" data-bs-toggle="pill" data-bs-target="#flights-pane" type="button" role="tab" aria-controls="flights-pane" aria-selected="true">
+                  <img src="assets/icons/plane.svg" alt="" style="width: 14px; height: 14px;" />
+                  Flights
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link buzz-tab" data-bs-toggle="pill" data-bs-target="#hotels-pane" type="button" role="tab" aria-controls="hotels-pane" aria-selected="false">
+                  <img src="assets/icons/bed.svg" alt="" style="width: 14px; height: 14px;" />
+                  Hotels
+                </button>
+              </li>
+            </ul>
+
+            <!-- Round Trip / One Way — flight-only, hidden when Hotels is active -->
+            <div class="d-inline-flex gap-1 bg-light rounded-pill p-1" data-flight-only>
+              <button type="button" class="btn btn-sm rounded-pill green-btn px-3" data-flight-trip="roundtrip" aria-pressed="true">Round Trip</button>
+              <button type="button" class="btn btn-sm rounded-pill btn-light px-3" data-flight-trip="oneway" aria-pressed="false">One Way</button>
+            </div>
+          </div>
 
           <!-- Tab panes -->
           <div class="tab-content">
 
             <!-- FLIGHTS PANE -->
             <div class="tab-pane fade show active" id="flights-pane" role="tabpanel">
+
+              <!-- Inline error/info messages live here, populated by home.js -->
+              <div id="flight-search-msg"></div>
+
               <div class="row g-3 align-items-end">
-                <div class="col-md-3">
-                  <label for="from" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Departure</label>
-                  <input type="text" id="from" name="from" class="form-control" placeholder="Where from?" />
+
+                <div class="col-md-6 col-lg-3">
+                  <label for="flight-from" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">From</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white"><img src="assets/icons/plane-takeoff.svg" alt="" style="width: 16px; height: 16px; opacity: .55;" /></span>
+                    <input list="flight-airports" type="text" id="flight-from" name="flight-from" class="form-control" placeholder="City or IATA code" autocomplete="off" />
+                  </div>
                 </div>
-                <div class="col-md-3">
-                  <label for="to" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Destination</label>
-                  <input type="text" id="to" name="to" class="form-control" placeholder="Where to?" />
+
+                <div class="col-md-6 col-lg-3">
+                  <label for="flight-to" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">To</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white"><img src="assets/icons/plane-takeoff.svg" alt="" style="width: 16px; height: 16px; opacity: .55;" /></span>
+                    <input list="flight-airports" type="text" id="flight-to" name="flight-to" class="form-control" placeholder="City or IATA code" autocomplete="off" />
+                  </div>
                 </div>
-                <div class="col-md-2">
-                  <label for="checkin" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Check-in</label>
-                  <input type="date" id="checkin" name="checkin" class="form-control" />
+
+                <!-- One <datalist> shared by both From and To inputs -->
+                <datalist id="flight-airports"></datalist>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                  <label for="flight-departure" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Departure</label>
+                  <input type="date" id="flight-departure" name="flight-departure" class="form-control" />
                 </div>
-                <div class="col-md-2">
-                  <label for="checkout" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Check-out</label>
-                  <input type="date" id="checkout" name="checkout" class="form-control" />
+
+                <div class="col-6 col-md-4 col-lg-2" data-flight-return-col>
+                  <label for="flight-return" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Return</label>
+                  <input type="date" id="flight-return" name="flight-return" class="form-control" />
                 </div>
-                <div class="col-md-2">
-                  <button type="button" class="btn green-btn w-100 d-inline-flex align-items-center justify-content-center gap-2" data-search-target="pages/flight-search.html">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="11" cy="11" r="7"/>
-                      <path d="m21 21-4.3-4.3"/>
-                    </svg>
-                    Search
-                  </button>
+
+                <div class="col-12 col-md-4 col-lg-2">
+                  <label for="flight-cabin" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Cabin</label>
+                  <select id="flight-cabin" name="flight-cabin" class="form-select">
+                    <option value="Standard" selected>Standard</option>
+                    <option value="Business">Business</option>
+                    <option value="First">First</option>
+                  </select>
                 </div>
+
+              </div>
+
+              <div class="d-flex justify-content-end mt-3">
+                <button type="button" id="flight-search-btn" class="btn green-btn px-5 d-inline-flex align-items-center justify-content-center gap-2">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="7"/>
+                    <path d="m21 21-4.3-4.3"/>
+                  </svg>
+                  Search Flights
+                </button>
               </div>
             </div>
 
             <!-- HOTELS PANE -->
             <div class="tab-pane fade" id="hotels-pane" role="tabpanel">
+              <!-- Inline error/info messages live here, populated by home.js -->
+              <div id="hotel-search-msg"></div>
+
               <div class="row g-3 align-items-end">
-                <div class="col-md-4">
+                <div class="col-md-12 col-lg-4">
                   <label for="hotel-dest" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Destination</label>
                   <div class="input-group">
                     <span class="input-group-text bg-white"><img src="assets/icons/globe.svg" alt="" style="width: 16px; height: 16px; opacity: .55;" /></span>
-                    <input type="text" id="hotel-dest" name="hotel-dest" class="form-control" placeholder="Where are you going?" />
+                    <input list="hotel-dest-options" type="text" id="hotel-dest" name="hotel-dest" class="form-control" placeholder="Where are you going?" autocomplete="off" />
+                    <datalist id="hotel-dest-options"></datalist>
                   </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-6 col-md-3 col-lg-2">
                   <label for="hotel-checkin" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Check-in</label>
                   <input type="date" id="hotel-checkin" name="hotel-checkin" class="form-control" />
                 </div>
-                <div class="col-md-2">
+                <div class="col-6 col-md-3 col-lg-2">
                   <label for="hotel-checkout" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Check-out</label>
                   <input type="date" id="hotel-checkout" name="hotel-checkout" class="form-control" />
                 </div>
-                <div class="col-md-2">
+                <div class="col-6 col-md-3 col-lg-2">
                   <label for="hotel-guests" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Guests</label>
                   <div class="input-group">
                     <span class="input-group-text bg-white"><img src="assets/icons/user.svg" alt="" style="width: 16px; height: 16px; opacity: .55;" /></span>
-                    <input type="text" id="hotel-guests" name="hotel-guests" class="form-control" placeholder="2 adults" />
+                    <select id="hotel-guests" name="hotel-guests" class="form-select">
+                      <option value="">Any</option>
+                      <option value="1">1 guest</option>
+                      <option value="2">2 guests</option>
+                      <option value="3">3 guests</option>
+                      <option value="4">4 guests</option>
+                      <option value="5">5 guests</option>
+                      <option value="6">6 guests</option>
+                    </select>
                   </div>
                 </div>
-                <div class="col-md-2">
-                  <button type="button" class="btn green-btn w-100 d-inline-flex align-items-center justify-content-center gap-2" data-search-target="pages/hotel-results.html">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="11" cy="11" r="7"/>
-                      <path d="m21 21-4.3-4.3"/>
-                    </svg>
-                    Search
-                  </button>
+                <div class="col-6 col-md-3 col-lg-2">
+                  <label for="hotel-room-type" class="form-label small fw-bold text-uppercase text-muted mb-1" style="letter-spacing: .08em; font-size: .6875rem;">Room Type</label>
+                  <select id="hotel-room-type" name="hotel-room-type" class="form-select">
+                    <option value="">Any</option>
+                  </select>
                 </div>
+              </div>
+
+              <div class="d-flex justify-content-end mt-3">
+                <button type="button" id="hotel-search-btn" class="btn green-btn px-5 d-inline-flex align-items-center justify-content-center gap-2">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="7"/>
+                    <path d="m21 21-4.3-4.3"/>
+                  </svg>
+                  Search Hotels
+                </button>
               </div>
             </div>
 
@@ -145,19 +211,19 @@
       </div>
     </section>
 
-    <!-- ==============  TRENDING DESTINATIONS  ============== -->
+    <!-- ==============  TRENDING DESTINATIONS  ==============
+         Decorative hero strip. Each card links straight into the
+         hotel results pipeline (Stage 2) pre-filtered by destination —
+         a real working search, no fake prices.
+         ============================================ -->
     <section class="container mb-5">
 
       <!-- Section header -->
       <div class="d-flex justify-content-between align-items-end gap-3 mb-4">
         <div>
           <h2 class="fw-bold mb-1">Trending Destinations</h2>
-          <p class="text-muted mb-0">Curated spots that are defining travel this season.</p>
+          <p class="text-muted mb-0">Tap a destination to see live stays.</p>
         </div>
-        <a href="/pages/flight-search.html" class="d-inline-flex align-items-center gap-2 px-3 py-2 text-green text-decoration-none fw-semibold rounded-pill buzz-view-all">
-          View all
-          <img src="assets/icons/arrow-right.svg" alt="" style="width: 14px; height: 14px;" />
-        </a>
       </div>
 
       <!-- Cards grid: Ubud + Kyoto + (Zermatt over Paris) -->
@@ -165,7 +231,7 @@
 
         <!-- Featured: Ubud -->
         <div class="col-lg-5">
-          <a href="/pages/flight-search.html" class="buzz-dest-card d-block position-relative rounded-4 overflow-hidden shadow-sm h-100">
+          <a href="pages/hotel-results.html?destination=Bali" class="buzz-dest-card d-block position-relative rounded-4 overflow-hidden shadow-sm h-100">
             <img src="assets/images/dest-ubud.png" alt="" class="w-100 h-100 buzz-dest-card__img" style="object-fit: cover;" />
             <span class="position-absolute top-0 start-0 m-3 badge rounded-pill bg-white text-purple text-uppercase fw-bold px-3 py-1 buzz-eyebrow">Editor's Choice</span>
             <div class="position-absolute bottom-0 start-0 end-0 p-4 text-white buzz-dest-card__overlay">
@@ -177,7 +243,7 @@
 
         <!-- Tall: Kyoto -->
         <div class="col-lg-4">
-          <a href="/pages/flight-search.html" class="buzz-dest-card d-block position-relative rounded-4 overflow-hidden shadow-sm h-100">
+          <a href="pages/hotel-results.html?destination=Kyoto" class="buzz-dest-card d-block position-relative rounded-4 overflow-hidden shadow-sm h-100">
             <img src="assets/images/dest-kyoto.png" alt="" class="w-100 h-100 buzz-dest-card__img" style="object-fit: cover;" />
             <div class="position-absolute bottom-0 start-0 end-0 p-4 text-white buzz-dest-card__overlay">
               <h3 class="fw-bold mb-1">Kyoto, Japan</h3>
@@ -188,98 +254,19 @@
 
         <!-- Right column: Zermatt + Paris stacked -->
         <div class="col-lg-3 d-flex flex-column gap-4">
-          <a href="/pages/flight-search.html" class="buzz-dest-card d-block position-relative rounded-4 overflow-hidden shadow-sm flex-grow-1">
+          <a href="pages/hotel-results.html?destination=Zurich" class="buzz-dest-card d-block position-relative rounded-4 overflow-hidden shadow-sm flex-grow-1">
             <img src="assets/images/dest-zermatt.png" alt="" class="w-100 h-100 buzz-dest-card__img" style="object-fit: cover;" />
             <div class="position-absolute bottom-0 start-0 end-0 p-3 text-white buzz-dest-card__overlay">
               <h3 class="fw-bold mb-0 fs-6">Zermatt, Swiss</h3>
             </div>
           </a>
 
-          <a href="/pages/flight-search.html" class="buzz-dest-card d-block position-relative rounded-4 overflow-hidden shadow-sm flex-grow-1">
+          <a href="pages/hotel-results.html?destination=Paris" class="buzz-dest-card d-block position-relative rounded-4 overflow-hidden shadow-sm flex-grow-1">
             <img src="assets/images/dest-paris.png" alt="" class="w-100 h-100 buzz-dest-card__img" style="object-fit: cover;" />
             <div class="position-absolute bottom-0 start-0 end-0 p-3 text-white buzz-dest-card__overlay">
               <h3 class="fw-bold mb-0 fs-6">Paris, France</h3>
             </div>
           </a>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ==============  POPULAR THIS WEEK  ============== -->
-    <section class="container mb-5">
-      <h2 class="fw-bold mb-4">Popular This Week</h2>
-
-      <div class="row g-4">
-
-        <!-- Flight deals column (5/12) -->
-        <div class="col-lg-5">
-          <h3 class="d-flex align-items-center gap-2 fs-6 fw-bold mb-3">
-            <img src="assets/icons/plane-takeoff.svg" alt="" style="width: 20px; height: 20px;" />
-            Top Flight Deals
-          </h3>
-
-          <div class="d-flex align-items-center gap-3 p-3 mb-3 bg-white border rounded-3 buzz-deal">
-            <span class="bg-light-green text-green fw-bold rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 48px; height: 48px; font-size: .75rem; letter-spacing: .05em;">LHR</span>
-            <div class="flex-grow-1">
-              <p class="m-0 fw-bold small">London to New York</p>
-              <p class="m-0 small text-muted">Round trip · Economy</p>
-            </div>
-            <div class="text-end">
-              <p class="m-0 fw-bold text-green">$452</p>
-              <a href="pages/flight-details.html" class="small text-uppercase fw-bold text-muted text-decoration-none buzz-deal-details" style="letter-spacing: .1em; font-size: .6875rem;">Details</a>
-            </div>
-          </div>
-
-          <div class="d-flex align-items-center gap-3 p-3 mb-3 bg-white border rounded-3 buzz-deal">
-            <span class="bg-light-green text-green fw-bold rounded-3 d-inline-flex align-items-center justify-content-center" style="width: 48px; height: 48px; font-size: .75rem; letter-spacing: .05em;">SFO</span>
-            <div class="flex-grow-1">
-              <p class="m-0 fw-bold small">San Francisco to Tokyo</p>
-              <p class="m-0 small text-muted">Round trip · Premium</p>
-            </div>
-            <div class="text-end">
-              <p class="m-0 fw-bold text-green">$890</p>
-              <a href="pages/flight-details.html" class="small text-uppercase fw-bold text-muted text-decoration-none buzz-deal-details" style="letter-spacing: .1em; font-size: .6875rem;">Details</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Featured stays column (7/12) -->
-        <div class="col-lg-7">
-          <h3 class="d-flex align-items-center gap-2 fs-6 fw-bold mb-3">
-            <img src="assets/icons/bed-double.svg" alt="" style="width: 20px; height: 20px;" />
-            Featured Stays
-          </h3>
-
-          <div class="row g-3">
-            <div class="col-md-6">
-              <a href="pages/hotel-details.html" class="card h-100 border buzz-stay text-decoration-none text-dark">
-                <img src="assets/images/stay-amaya.png" alt="" class="card-img-top" style="height: 120px; object-fit: cover;" />
-                <div class="card-body p-3">
-                  <h4 class="fw-bold mb-1 fs-6">Amaya Resort and Spa</h4>
-                  <p class="m-0 d-flex align-items-center gap-1 small fw-bold text-green">
-                    <img src="assets/icons/star.svg" alt="" style="width: 12px; height: 12px;" />4.9
-                  </p>
-                  <p class="m-0 small text-muted">Maldives</p>
-                  <p class="m-0 small text-muted"><span class="fw-bold text-dark">$320</span> / night</p>
-                </div>
-              </a>
-            </div>
-
-            <div class="col-md-6">
-              <a href="pages/hotel-details.html" class="card h-100 border buzz-stay text-decoration-none text-dark">
-                <img src="assets/images/stay-skyline.png" alt="" class="card-img-top" style="height: 120px; object-fit: cover;" />
-                <div class="card-body p-3">
-                  <h4 class="fw-bold mb-1 fs-6">The Skyline Suites</h4>
-                  <p class="m-0 d-flex align-items-center gap-1 small fw-bold text-green">
-                    <img src="assets/icons/star.svg" alt="" style="width: 12px; height: 12px;" />4.7
-                  </p>
-                  <p class="m-0 small text-muted">Singapore</p>
-                  <p class="m-0 small text-muted"><span class="fw-bold text-dark">$275</span> / night</p>
-                </div>
-              </a>
-            </div>
-          </div>
         </div>
 
       </div>
@@ -292,7 +279,7 @@
 
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
    <script src="js/main.js" defer></script>
-   <script src="js/pages/home.js" defer></script>
+   <script type="module" src="js/pages/home.js"></script>
 
 </body>
 </html>

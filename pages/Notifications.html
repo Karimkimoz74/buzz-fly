@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Perf: warm the TLS handshake to Firebase + Bootstrap origins during
+       HTML parse, and start downloading the Firebase SDK in parallel. -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js" crossorigin>
+
   <title>Buzz Fly - Notifications</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -13,164 +24,68 @@
 </head>
 <body>
 
-  <!-- Navbar partial -->
   <div id="navbar-slot"></div>
 
   <div class="container py-5">
-      <main>
+    <main>
 
-        <!-- Page header -->
-        <div class="d-flex align-items-center justify-content-between mb-4">
-          <div>
-            <p class="text-uppercase fw-bold text-nav-green mb-1" style="font-size: .7rem; letter-spacing: .12em;">Updates &amp; Alerts</p>
-            <h1 class="fw-bold mb-0" style="letter-spacing: -0.02em;">Notifications</h1>
-          </div>
-          <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-sm border fw-semibold rounded-pill px-4 py-2 bg-white" style="font-size: .875rem;" id="markAllBtn">Mark all read</button>
-          </div>
+      <!-- Page header -->
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+          <p class="text-uppercase fw-bold text-nav-green mb-1" style="font-size: .7rem; letter-spacing: .12em;">Updates &amp; Alerts</p>
+          <h1 class="fw-bold mb-0" style="letter-spacing: -0.02em;">Notifications</h1>
         </div>
-
-        <!-- ── Notification 1: Check-in (large, unread) ── -->
-        <div class="card border-0 shadow-sm rounded-4 mb-3 p-4 buzz-deal notif-item" data-read="false">
-          <div class="d-flex align-items-start gap-3">
-            <div class="rounded-3 d-inline-flex align-items-center justify-content-center bg-light-green flex-shrink-0" style="width: 52px; height: 52px;">
-              <img src="/assets/icons/plane flight.svg" alt="Flight" style="width: 26px; height: 22px;" />
-            </div>
-            <div class="flex-grow-1">
-              <div class="d-flex align-items-start justify-content-between gap-2 mb-1">
-                <h2 class="fs-6 fw-bold mb-0">Your flight to Tokyo is ready for check-in</h2>
-                <div class="d-flex align-items-center gap-2 flex-shrink-0">
-                  <span class="text-muted" style="font-size: .78rem; white-space: nowrap;">2m ago</span>
-                  <span class="rounded-circle bg-dark-purple d-inline-block flex-shrink-0" style="width: 8px; height: 8px;"></span>
-                </div>
-              </div>
-              <p class="text-muted mb-3" style="font-size: .875rem;">Flight BZ-204 departs in 24 hours. Complete your digital health declaration and secure your preferred window seat now.</p>
-              <div class="d-flex gap-2 flex-wrap">
-                <a href="#" class="btn btn-sm green-btn px-4 py-2 fw-semibold">Check-in Now</a>
-                <a href="#" class="btn btn-sm border bg-white px-4 py-2 fw-semibold rounded-pill" style="font-size: .875rem;">View Itinerary</a>
-              </div>
-            </div>
-          </div>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-sm border fw-semibold rounded-pill px-4 py-2 bg-white d-none" style="font-size: .875rem;" data-notif-mark-all>Mark all read</button>
         </div>
+      </div>
 
-        <!-- ── Notification 2: Security Alert ── -->
-        <div class="card border-0 shadow-sm rounded-4 mb-3 p-4 buzz-deal notif-item" data-read="false">
-          <div class="d-flex align-items-center gap-3">
-            <div class="rounded-3 d-inline-flex align-items-center justify-content-center bg-light-purple flex-shrink-0" style="width: 52px; height: 52px;">
-              <img src="/assets/icons/Security alert.svg" alt="Security" style="width: 20px; height: 24px;" />
-            </div>
-            <div class="flex-grow-1">
-              <div class="d-flex align-items-start justify-content-between gap-2">
-                <div>
-                  <h2 class="fs-6 fw-bold mb-1">Security Alert: New Device Login</h2>
-                  <p class="text-muted mb-0" style="font-size: .875rem;">A login was detected from a Chrome browser on MacOS in Paris, France.</p>
-                </div>
-                <span class="text-muted flex-shrink-0" style="font-size: .78rem; white-space: nowrap;">4h ago</span>
-              </div>
-            </div>
-          </div>
+      <!-- Signed-out state -->
+      <section class="d-none text-center py-5" data-notif-signin>
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-white shadow-sm mb-4" style="width:80px;height:80px;">
+          <img src="/assets/icons/bell.svg" alt="" width="32" height="32" style="opacity:.4;" />
         </div>
+        <h2 class="h5 fw-bold mb-2">Sign in to see your notifications</h2>
+        <p class="text-muted small mb-4" style="max-width:24rem;margin:0 auto;">
+          Booking confirmations, cancellations, and 24h reminders live in your account.
+        </p>
+        <button type="button" class="btn green-btn px-4 py-2" data-notif-signin-btn>Log in / Sign Up</button>
+      </section>
 
-        <!-- ── Row: Price Drop + Review Experience (side by side) ── -->
-        <div class="row g-3 mb-3">
-
-          <!-- Price Drop -->
-          <div class="col-12 col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 buzz-deal notif-item" data-read="true">
-              <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
-                <div class="rounded-3 d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px; background-color: #dbeafe;">
-                  <img src="/assets/icons/Bed(price drop).svg" alt="Hotel" style="width: 24px; height: 16px;" />
-                </div>
-                <span class="text-muted" style="font-size: .78rem; white-space: nowrap;">8h ago</span>
-              </div>
-              <h2 class="fs-6 fw-bold mb-1">Price Drop: Aman Tokyo</h2>
-              <p class="text-muted mb-3" style="font-size: .875rem;">Rates for your saved stay have decreased by 15%. Limited time offer.</p>
-              <div class="rounded-3 overflow-hidden" style="height: 160px;">
-                <img src="/assets/images/Aman TOKYO.png" alt="Aman Tokyo" class="w-100 h-100 object-fit-cover" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Review Experience -->
-          <div class="col-12 col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 buzz-deal notif-item" data-read="true">
-              <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
-                <div class="rounded-3 d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px; background-color: #fef3c7;">
-                  <img src="/assets/icons/Review your experience.svg" alt="Review" style="width: 22px; height: 22px;" />
-                </div>
-                <span class="text-muted" style="font-size: .78rem; white-space: nowrap;">1d ago</span>
-              </div>
-              <h2 class="fs-6 fw-bold mb-1">Review Your Experience</h2>
-              <p class="text-muted mb-3" style="font-size: .875rem;">How was your recent "Mount Fuji Sunset Hike"? Share your feedback with other travelers.</p>
-              <!-- Avatar group -->
-              <div class="d-flex align-items-center gap-1">
-                <span class="rounded-circle bg-dark-green d-inline-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0" style="width: 28px; height: 28px; font-size: .7rem; margin-left: 0;">JP</span>
-                <span class="rounded-circle bg-dark-purple d-inline-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0" style="width: 28px; height: 28px; font-size: .7rem; margin-left: -8px;">AS</span>
-                <span class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0" style="width: 28px; height: 28px; font-size: .7rem; margin-left: -8px;">+4</span>
-              </div>
-            </div>
-          </div>
-
+      <!-- Loading state -->
+      <section class="d-none text-center py-5" data-notif-loading>
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Loading…</span>
         </div>
+        <p class="text-muted small mt-3 mb-0">Loading your notifications…</p>
+      </section>
 
-        <!-- ── Notification 5: Refund Processed ── -->
-        <div class="card border-0 shadow-sm rounded-4 mb-3 p-4 buzz-deal notif-item" data-read="true">
-          <div class="d-flex align-items-center gap-3">
-            <div class="rounded-3 d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width: 52px; height: 52px; background-color: #d1fae5;">
-              <img src="/assets/icons/Refuned Processed.svg" alt="Refund" style="width: 24px; height: 20px;" />
-            </div>
-            <div class="flex-grow-1">
-              <div class="d-flex align-items-start justify-content-between gap-2">
-                <div>
-                  <h2 class="fs-6 fw-bold mb-1">Refund Processed</h2>
-                  <p class="text-muted mb-0" style="font-size: .875rem;">The refund of $124.50 for Trip #8892 has been credited to your original payment method.</p>
-                </div>
-                <span class="text-muted flex-shrink-0" style="font-size: .78rem; white-space: nowrap;">2d ago</span>
-              </div>
-            </div>
-          </div>
+      <!-- Error state -->
+      <section class="d-none text-center py-5" data-notif-error>
+        <p class="text-danger fw-semibold mb-2">Something went wrong.</p>
+        <p class="text-muted small mb-3">We couldn't load your notifications. Check your connection and try again.</p>
+        <button type="button" class="btn green-btn px-4 py-2" data-notif-retry-btn>Retry</button>
+      </section>
+
+      <!-- Empty state -->
+      <section class="d-none text-center py-5" data-notif-empty>
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-white shadow-sm mb-3" style="width:64px;height:64px;">
+          <img src="/assets/icons/bell.svg" alt="" width="26" height="26" style="opacity:.4;" />
         </div>
+        <p class="fw-semibold mb-1">You're all caught up</p>
+        <p class="text-muted small mb-0">New booking activity and trip reminders will appear here.</p>
+      </section>
 
-        <!-- ── Notification 6: Happy Buzz-anniversary ── -->
-        <div class="card border-0 shadow-sm rounded-4 mb-3 p-4 buzz-deal notif-item" data-read="true">
-          <div class="d-flex align-items-center gap-3">
-            <div class="rounded-3 d-inline-flex align-items-center justify-content-center bg-light-purple flex-shrink-0" style="width: 52px; height: 52px;">
-              <img src="/assets/icons/Happy Buzz Aniverssary.svg" alt="Anniversary" style="width: 24px; height: 24px;" />
-            </div>
-            <div class="flex-grow-1">
-              <div class="d-flex align-items-start justify-content-between gap-2">
-                <div>
-                  <h2 class="fs-6 fw-bold mb-1">Happy Buzz-anniversary!</h2>
-                  <p class="text-muted mb-0" style="font-size: .875rem;">You've been a Buzz Fly member for 2 years! Enjoy a 10% discount on your next lounge access.</p>
-                </div>
-                <span class="text-muted flex-shrink-0" style="font-size: .78rem; white-space: nowrap;">3d ago</span>
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- Live list -->
+      <section class="d-none" data-notif-list></section>
 
-      </main>
+    </main>
   </div>
 
-  <!-- Footer partial -->
   <div id="footer-slot"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="/js/main.js" defer></script>
-  <script>
-    // ADDED BY MORSHDY — mark all read clears unread dots
-    document.addEventListener('DOMContentLoaded', function () {
-      const markAllBtn = document.getElementById('markAllBtn');
-      if (markAllBtn) {
-        markAllBtn.addEventListener('click', function () {
-          document.querySelectorAll('.notif-item[data-read="false"]').forEach(function (item) {
-            item.dataset.read = 'true';
-            const dot = item.querySelector('.bg-dark-purple.rounded-circle[style*="8px"]');
-            if (dot) dot.remove();
-          });
-        });
-      }
-    });
-  </script>
+  <script type="module" src="/js/pages/notifications.js"></script>
 </body>
 </html>

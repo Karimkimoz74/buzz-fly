@@ -3,9 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flight Search — Buzz Fly</title>
 
-  <!-- Compiled Bootstrap + custom tokens from main.scss -->
+  <!-- Perf: warm the TLS handshake to Firebase + Bootstrap origins during
+       HTML parse, and start downloading the Firebase SDK in parallel so
+       page scripts don't block waiting for the SDK to arrive. -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js" crossorigin>
+  <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js" crossorigin>
+
+  <title>Flight Results — Buzz Fly</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="/css/main.min.css" />
 </head>
 <body>
@@ -14,278 +26,42 @@
 
   <main class="container-xl py-4">
 
-    <!-- ── SEARCH BAR ── -->
-    <section class="bg-white border rounded-4 p-3 mb-3 shadow-sm">
-
-      <!-- Fields row -->
-      <div class="d-flex align-items-center gap-2 flex-wrap mb-3">
-
-        <div class="border rounded-3 px-3 py-2 flex-fill" style="min-width:150px;cursor:pointer;">
-          <div class="text-uppercase fw-bold mb-1" style="font-size:.6rem;color:#a1a1aa;letter-spacing:.12em;">From</div>
-          <div class="d-flex align-items-center gap-2 fw-semibold">
-            <img src="/assets/icons/plane-takeoff.svg" alt="" width="16" height="16" />
-            <span id="fromCity">San Francisco</span>
-            <span class="badge rounded-pill text-bg-light fw-normal" style="font-size:.7rem;" id="fromCode">SFO</span>
-          </div>
-        </div>
-
-        <button class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0" id="swapBtn" style="width:34px;height:34px;" aria-label="Swap">⇄</button>
-
-        <div class="border rounded-3 px-3 py-2 flex-fill" style="min-width:150px;cursor:pointer;">
-          <div class="text-uppercase fw-bold mb-1" style="font-size:.6rem;color:#a1a1aa;letter-spacing:.12em;">To</div>
-          <div class="d-flex align-items-center gap-2 fw-semibold">
-            <img src="/assets/icons/plane.svg" alt="" width="16" height="16" />
-            <span id="toCity">Tokyo</span>
-            <span class="badge rounded-pill text-bg-light fw-normal" style="font-size:.7rem;" id="toCode">HND</span>
-          </div>
-        </div>
-
-        <div class="border rounded-3 px-3 py-2 flex-fill" style="min-width:150px;cursor:pointer;">
-          <div class="text-uppercase fw-bold mb-1" style="font-size:.6rem;color:#a1a1aa;letter-spacing:.12em;">Dates</div>
-          <div class="d-flex align-items-center gap-2 fw-semibold">
-            <img src="/assets/icons/calendar.svg" alt="" width="16" height="16" />
-            <span>Oct 12 – Oct 24</span>
-          </div>
-        </div>
-
-        <div class="border rounded-3 px-3 py-2 flex-fill" style="min-width:140px;cursor:pointer;">
-          <div class="text-uppercase fw-bold mb-1" style="font-size:.6rem;color:#a1a1aa;letter-spacing:.12em;">Travelers</div>
-          <div class="d-flex align-items-center gap-2 fw-semibold">
-            <img src="/assets/icons/user.svg" alt="" width="16" height="16" />
-            <span>1, Business</span>
-          </div>
-        </div>
-
-        <button class="btn green-btn d-flex align-items-center justify-content-center rounded-3 flex-shrink-0" style="width:48px;height:48px;">
-          <img src="/assets/icons/search-globe.svg" alt="Search" width="20" height="20" style="filter:brightness(0) invert(1);" />
-        </button>
-
+    <!-- Header: leg indicator + route + back link -->
+    <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-2 mb-4">
+      <div>
+        <p class="text-uppercase fw-bold mb-1" style="font-size:.65rem;color:#a1a1aa;letter-spacing:.1em;" data-leg-eyebrow>OUTBOUND</p>
+        <h1 class="mb-1" data-route-title>—</h1>
+        <p class="text-secondary mb-0" data-route-sub>—</p>
       </div>
-
-      <!-- Trip tabs + filter pills -->
-      <div class="d-flex align-items-center gap-2 flex-wrap">
-        <div class="d-flex gap-1 bg-light rounded-pill p-1 flex-shrink-0">
-          <button class="buzz-tab active" data-tab>One Way</button>
-          <button class="buzz-tab" data-tab>Round Trip</button>
-          <button class="buzz-tab" data-tab>Multi-city</button>
-        </div>
-        <button class="btn btn-sm btn-outline-secondary rounded-pill" data-pill>Stops</button>
-        <button class="btn btn-sm btn-outline-secondary rounded-pill" data-pill>Airlines</button>
-        <button class="btn btn-sm btn-outline-secondary rounded-pill" data-pill>Duration</button>
-        <button class="btn btn-sm btn-outline-secondary rounded-pill" data-pill>Price range</button>
-        <button class="btn btn-sm btn-outline-secondary rounded-pill" data-pill>Bags</button>
-      </div>
-
-    </section>
-
-    <!-- ── BODY ── -->
-    <div class="row g-4 align-items-start">
-
-      <!-- SIDEBAR -->
-      <aside class="col-12 col-lg-3">
-
-        <div class="bg-white border rounded-3 p-4 mb-3">
-          <p class="text-uppercase fw-bold mb-3" style="font-size:.7rem;letter-spacing:.1em;color:#71717a;">Price per person</p>
-          <input type="range" class="form-range mb-1" min="0" max="4200" value="2200" id="priceRange" />
-          <div class="d-flex justify-content-between" style="font-size:.75rem;color:#71717a;">
-            <span>$0</span><span id="priceVal">$2,200</span><span>$4,200</span>
-          </div>
-        </div>
-
-        <div class="bg-white border rounded-3 p-4 mb-3">
-          <p class="text-uppercase fw-bold mb-3" style="font-size:.7rem;letter-spacing:.1em;color:#71717a;">Stops</p>
-          <div class="d-flex flex-column gap-2" style="font-size:.875rem;">
-            <label class="d-flex align-items-center gap-2" style="cursor:pointer;"><input type="checkbox" class="form-check-input m-0" checked />Non-stop<span class="ms-auto fw-semibold text-nav-green" style="font-size:.75rem;">$890</span></label>
-            <label class="d-flex align-items-center gap-2" style="cursor:pointer;"><input type="checkbox" class="form-check-input m-0" checked />1 stop<span class="ms-auto fw-semibold text-nav-green" style="font-size:.75rem;">$640</span></label>
-            <label class="d-flex align-items-center gap-2" style="cursor:pointer;"><input type="checkbox" class="form-check-input m-0" />2+ stops<span class="ms-auto fw-semibold text-nav-green" style="font-size:.75rem;">$490</span></label>
-          </div>
-        </div>
-
-        <div class="bg-white border rounded-3 p-4 mb-3">
-          <p class="text-uppercase fw-bold mb-3" style="font-size:.7rem;letter-spacing:.1em;color:#71717a;">Airlines</p>
-          <div class="d-flex flex-column gap-2" style="font-size:.875rem;">
-            <label class="d-flex align-items-center gap-2" style="cursor:pointer;"><input type="checkbox" class="form-check-input m-0" checked />ANA</label>
-            <label class="d-flex align-items-center gap-2" style="cursor:pointer;"><input type="checkbox" class="form-check-input m-0" checked />Japan Airlines</label>
-            <label class="d-flex align-items-center gap-2" style="cursor:pointer;"><input type="checkbox" class="form-check-input m-0" />United Airlines</label>
-            <label class="d-flex align-items-center gap-2" style="cursor:pointer;"><input type="checkbox" class="form-check-input m-0" />Delta</label>
-            <label class="d-flex align-items-center gap-2" style="cursor:pointer;"><input type="checkbox" class="form-check-input m-0" />Korean Air</label>
-          </div>
-        </div>
-
-        <div class="bg-white border rounded-3 p-4 mb-3">
-          <p class="text-uppercase fw-bold mb-3" style="font-size:.7rem;letter-spacing:.1em;color:#71717a;">Departure time</p>
-          <div class="d-flex flex-column gap-2">
-            <button class="btn btn-sm text-start rounded-3 light-green-btn" data-time>Morning <span class="float-end text-secondary" style="font-size:.72rem;">6am–12pm</span></button>
-            <button class="btn btn-sm text-start rounded-3 btn-light" data-time>Afternoon <span class="float-end text-secondary" style="font-size:.72rem;">12pm–6pm</span></button>
-            <button class="btn btn-sm text-start rounded-3 btn-light" data-time>Night <span class="float-end text-secondary" style="font-size:.72rem;">6pm–12am</span></button>
-          </div>
-        </div>
-
-        <div class="bg-white border rounded-3 p-4">
-          <p class="text-uppercase fw-bold mb-3" style="font-size:.7rem;letter-spacing:.1em;color:#71717a;">Flight duration</p>
-          <input type="range" class="form-range mb-1" min="8" max="20" value="14" id="durationRange" />
-          <div class="d-flex justify-content-between" style="font-size:.75rem;color:#71717a;">
-            <span>8h</span><span id="durationVal">Up to 14h</span><span>20h</span>
-          </div>
-        </div>
-
-      </aside>
-
-      <!-- RESULTS -->
-      <div class="col-12 col-lg-9">
-
-        <!-- Sort header -->
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <p class="mb-0 text-secondary" style="font-size:.9375rem;"><strong class="text-dark">124 flights</strong> · SFO → HND · Oct 12</p>
-          <div class="d-flex align-items-center gap-1">
-            <span class="text-secondary me-1" style="font-size:.875rem;">Sort:</span>
-            <button class="btn btn-sm rounded-pill green-btn" data-sort>Best</button>
-            <button class="btn btn-sm rounded-pill btn-light" data-sort>Cheapest</button>
-            <button class="btn btn-sm rounded-pill btn-light" data-sort>Fastest</button>
-          </div>
-        </div>
-
-        <!-- Price calendar -->
-        <div class="bg-white border rounded-3 p-3 mb-3 d-flex align-items-center gap-1">
-          <button class="btn btn-light rounded-circle flex-shrink-0 p-0 d-flex align-items-center justify-content-center" style="width:30px;height:30px;">&#8249;</button>
-          <div class="d-flex flex-fill justify-content-around">
-            <div class="text-center px-2 py-1 rounded-3 fs-price-day" style="cursor:pointer;" data-day><div style="font-size:.72rem;color:#71717a;">Oct 10</div><div class="fw-bold" style="font-size:.875rem;">$980</div></div>
-            <div class="text-center px-2 py-1 rounded-3 fs-price-day" data-day><div style="font-size:.72rem;color:#71717a;">Oct 11</div><div class="fw-bold" style="font-size:.875rem;">$890</div></div>
-            <div class="text-center px-2 py-1 rounded-3 bg-light-green fs-price-day" data-day><div class="text-green" style="font-size:.72rem;">Oct 12</div><div class="fw-bold text-green" style="font-size:.875rem;">$890</div></div>
-            <div class="text-center px-2 py-1 rounded-3 fs-price-day" data-day><div style="font-size:.72rem;color:#71717a;">Oct 13</div><div class="fw-bold" style="font-size:.875rem;">$760</div></div>
-            <div class="text-center px-2 py-1 rounded-3 fs-price-day" data-day><div style="font-size:.72rem;color:#71717a;">Oct 14</div><div class="fw-bold text-nav-green" style="font-size:.875rem;">$640</div></div>
-            <div class="text-center px-2 py-1 rounded-3 fs-price-day" data-day><div style="font-size:.72rem;color:#71717a;">Oct 15</div><div class="fw-bold" style="font-size:.875rem;">$710</div></div>
-            <div class="text-center px-2 py-1 rounded-3 fs-price-day" data-day><div style="font-size:.72rem;color:#71717a;">Oct 16</div><div class="fw-bold" style="font-size:.875rem;">$830</div></div>
-          </div>
-          <button class="btn btn-light rounded-circle flex-shrink-0 p-0 d-flex align-items-center justify-content-center" style="width:30px;height:30px;">&#8250;</button>
-        </div>
-
-        <!-- Card 1 — Best Value -->
-        <div class="bg-white border rounded-4 p-4 mb-3 position-relative fs-card" style="border-color:#006D33!important;border-width:2px!important;">
-          <span class="position-absolute top-0 start-0 ms-4 badge bg-dark-purple rounded-top-0 rounded-bottom-2" style="font-size:.6rem;letter-spacing:.1em;">BEST VALUE</span>
-          <div class="d-flex align-items-center gap-4 pt-1">
-            <div class="flex-fill">
-              <p class="text-secondary mb-2 fw-semibold" style="font-size:.875rem;">ANA · NH 106</p>
-              <div class="d-flex align-items-center gap-3 mb-3">
-                <div><div class="fw-bolder lh-1 mb-1" style="font-size:1.375rem;">09:15</div><div class="text-secondary fw-semibold" style="font-size:.72rem;">SFO</div></div>
-                <div class="flex-fill text-center"><div class="text-secondary fw-semibold mb-1" style="font-size:.75rem;">11h 40m</div><hr class="my-0" /><div class="text-nav-green fw-semibold mt-1" style="font-size:.7rem;">Non-stop</div></div>
-                <div class="text-end"><div class="fw-bolder lh-1 mb-1" style="font-size:1.375rem;">13:55 <sup style="font-size:.6rem;color:#a1a1aa;">+1</sup></div><div class="text-secondary fw-semibold" style="font-size:.72rem;">HND</div></div>
-              </div>
-              <div class="d-flex flex-wrap gap-2">
-                <span class="badge rounded-pill text-bg-light fw-normal" style="font-size:.72rem;">Entertainment</span>
-                <span class="badge rounded-pill text-bg-light fw-normal" style="font-size:.72rem;">Wi-Fi</span>
-                <span class="badge rounded-pill text-bg-light fw-normal" style="font-size:.72rem;">Meal</span>
-                <span class="badge rounded-pill bg-light-purple text-purple fw-normal" style="font-size:.72rem;">1 bag</span>
-              </div>
-            </div>
-            <div class="text-end flex-shrink-0" style="min-width:140px;">
-              <div class="text-uppercase fw-bold mb-1" style="font-size:.65rem;color:#a1a1aa;letter-spacing:.08em;">Business</div>
-              <div class="fw-bolder lh-1 mb-1" style="font-size:1.75rem;">$890</div>
-              <div class="text-secondary mb-3" style="font-size:.65rem;">per person</div>
-              <button class="btn green-btn w-100 mb-2 fs-select-btn">Select</button>
-              <a href="/pages/flight-details.html" class="text-green text-decoration-underline d-block" style="font-size:.8rem;font-weight:600;">View details</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="bg-white border rounded-4 p-4 mb-3 fs-card">
-          <div class="d-flex align-items-center gap-4">
-            <div class="flex-fill">
-              <p class="text-secondary mb-2 fw-semibold" style="font-size:.875rem;">Japan Airlines · JL 61</p>
-              <div class="d-flex align-items-center gap-3 mb-3">
-                <div><div class="fw-bolder lh-1 mb-1" style="font-size:1.375rem;">12:30</div><div class="text-secondary fw-semibold" style="font-size:.72rem;">SFO</div></div>
-                <div class="flex-fill text-center"><div class="text-secondary fw-semibold mb-1" style="font-size:.75rem;">11h 25m</div><hr class="my-0" /><div class="text-nav-green fw-semibold mt-1" style="font-size:.7rem;">Non-stop</div></div>
-                <div class="text-end"><div class="fw-bolder lh-1 mb-1" style="font-size:1.375rem;">15:55 <sup style="font-size:.6rem;color:#a1a1aa;">+1</sup></div><div class="text-secondary fw-semibold" style="font-size:.72rem;">HND</div></div>
-              </div>
-              <div class="d-flex flex-wrap gap-2">
-                <span class="badge rounded-pill text-bg-light fw-normal" style="font-size:.72rem;">Entertainment</span>
-                <span class="badge rounded-pill text-bg-light fw-normal" style="font-size:.72rem;">Meal</span>
-                <span class="badge rounded-pill bg-light-purple text-purple fw-normal" style="font-size:.72rem;">2 bags</span>
-              </div>
-            </div>
-            <div class="text-end flex-shrink-0" style="min-width:140px;">
-              <div class="text-uppercase fw-bold mb-1" style="font-size:.65rem;color:#a1a1aa;letter-spacing:.08em;">Business</div>
-              <div class="fw-bolder lh-1 mb-1" style="font-size:1.75rem;">$1,020</div>
-              <div class="text-secondary mb-3" style="font-size:.65rem;">per person</div>
-              <button class="btn green-btn w-100 mb-2 fs-select-btn">Select</button>
-              <a href="/pages/flight-details.html" class="text-green text-decoration-underline d-block" style="font-size:.8rem;font-weight:600;">View details</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3 — Cheapest -->
-        <div class="bg-white border rounded-4 p-4 mb-3 position-relative fs-card">
-          <span class="position-absolute top-0 start-0 ms-4 badge bg-dark-green rounded-top-0 rounded-bottom-2" style="font-size:.6rem;letter-spacing:.1em;">CHEAPEST</span>
-          <div class="d-flex align-items-center gap-4 pt-1">
-            <div class="flex-fill">
-              <p class="text-secondary mb-2 fw-semibold" style="font-size:.875rem;">United Airlines · UA 837</p>
-              <div class="d-flex align-items-center gap-3 mb-3">
-                <div><div class="fw-bolder lh-1 mb-1" style="font-size:1.375rem;">07:00</div><div class="text-secondary fw-semibold" style="font-size:.72rem;">SFO</div></div>
-                <div class="flex-fill text-center"><div class="text-secondary fw-semibold mb-1" style="font-size:.75rem;">14h 55m</div><hr class="my-0" /><div class="fw-semibold mt-1" style="font-size:.7rem;color:#D97706;">1 stop · ICN</div></div>
-                <div class="text-end"><div class="fw-bolder lh-1 mb-1" style="font-size:1.375rem;">22:55 <sup style="font-size:.6rem;color:#a1a1aa;">+1</sup></div><div class="text-secondary fw-semibold" style="font-size:.72rem;">HND</div></div>
-              </div>
-              <div class="d-flex flex-wrap gap-2">
-                <span class="badge rounded-pill text-bg-light fw-normal" style="font-size:.72rem;">Meal</span>
-                <span class="badge rounded-pill bg-light-purple text-purple fw-normal" style="font-size:.72rem;">1 bag</span>
-              </div>
-            </div>
-            <div class="text-end flex-shrink-0" style="min-width:140px;">
-              <div class="text-uppercase fw-bold mb-1" style="font-size:.65rem;color:#a1a1aa;letter-spacing:.08em;">Economy</div>
-              <div class="fw-bolder lh-1 mb-1" style="font-size:1.75rem;">$640</div>
-              <div class="text-secondary mb-3" style="font-size:.65rem;">per person</div>
-              <button class="btn green-btn w-100 mb-2 fs-select-btn">Select</button>
-              <a href="/pages/flight-details.html" class="text-green text-decoration-underline d-block" style="font-size:.8rem;font-weight:600;">View details</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="bg-white border rounded-4 p-4 mb-3 fs-card">
-          <div class="d-flex align-items-center gap-4">
-            <div class="flex-fill">
-              <p class="text-secondary mb-2 fw-semibold" style="font-size:.875rem;">Korean Air · KE 24</p>
-              <div class="d-flex align-items-center gap-3 mb-3">
-                <div><div class="fw-bolder lh-1 mb-1" style="font-size:1.375rem;">14:10</div><div class="text-secondary fw-semibold" style="font-size:.72rem;">SFO</div></div>
-                <div class="flex-fill text-center"><div class="text-secondary fw-semibold mb-1" style="font-size:.75rem;">13h 05m</div><hr class="my-0" /><div class="fw-semibold mt-1" style="font-size:.7rem;color:#D97706;">1 stop · ICN</div></div>
-                <div class="text-end"><div class="fw-bolder lh-1 mb-1" style="font-size:1.375rem;">03:15 <sup style="font-size:.6rem;color:#a1a1aa;">+2</sup></div><div class="text-secondary fw-semibold" style="font-size:.72rem;">HND</div></div>
-              </div>
-              <div class="d-flex flex-wrap gap-2">
-                <span class="badge rounded-pill text-bg-light fw-normal" style="font-size:.72rem;">Entertainment</span>
-                <span class="badge rounded-pill text-bg-light fw-normal" style="font-size:.72rem;">Wi-Fi</span>
-                <span class="badge rounded-pill bg-light-purple text-purple fw-normal" style="font-size:.72rem;">2 bags</span>
-              </div>
-            </div>
-            <div class="text-end flex-shrink-0" style="min-width:140px;">
-              <div class="text-uppercase fw-bold mb-1" style="font-size:.65rem;color:#a1a1aa;letter-spacing:.08em;">Business</div>
-              <div class="fw-bolder lh-1 mb-1" style="font-size:1.75rem;">$780</div>
-              <div class="text-secondary mb-3" style="font-size:.65rem;">per person</div>
-              <button class="btn green-btn w-100 mb-2 fs-select-btn">Select</button>
-              <a href="/pages/flight-details.html" class="text-green text-decoration-underline d-block" style="font-size:.8rem;font-weight:600;">View details</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Load more -->
-        <div class="text-center py-3">
-          <button class="btn btn-outline-secondary rounded-pill px-5" id="loadMoreBtn">
-            Show more flights <span class="fw-normal">(120 remaining)</span>
-          </button>
-        </div>
-
-      </div>
+      <a href="/index.html" class="text-decoration-none fw-semibold text-green" data-back-link>← Back to search</a>
     </div>
+
+    <!-- Inline messages live here -->
+    <div id="flight-results-msg" class="mb-3"></div>
+
+    <!-- Filter chips (one active at a time) -->
+    <div class="d-flex flex-wrap gap-2 mb-3" data-chips>
+      <button type="button" class="btn btn-sm rounded-pill green-btn px-3" data-chip="best" aria-pressed="true">Best Value</button>
+      <button type="button" class="btn btn-sm rounded-pill btn-light px-3" data-chip="fastest" aria-pressed="false">Fastest</button>
+      <button type="button" class="btn btn-sm rounded-pill btn-light px-3" data-chip="cheapest" aria-pressed="false">Cheapest</button>
+    </div>
+
+    <!-- Results -->
+    <div id="flight-results"></div>
+
+    <!-- Discover more -->
+    <div class="text-center py-3 d-none" data-discover-wrap>
+      <button type="button" class="btn btn-outline-secondary rounded-pill px-5" data-discover-btn>
+        Discover more flights
+      </button>
+    </div>
+
   </main>
 
   <div id="footer-slot"></div>
 
-  <a href="#" class="fab" aria-label="Chat">
-    <img src="/assets/icons/send-message.svg" alt="" />
-  </a>
-
-  <script src="/js/main.js"></script>
-  <script src="/js/pages/flight-search.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="/js/main.js" defer></script>
+  <script type="module" src="/js/pages/flight-search.js"></script>
 </body>
 </html>
