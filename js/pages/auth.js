@@ -33,6 +33,7 @@ import { auth } from "/js/firebase/firebase-init.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   initPasswordToggle();
+  preserveNextOnCrossLinks();
 
   // One-shot check: if Firebase already has a signed-in user when this
   // page loads, route them away.
@@ -49,10 +50,42 @@ document.addEventListener("DOMContentLoaded", async () => {
   initForgotForm();
 });
 
+/* Append the current ?next= to every link pointing to another auth
+   page. Without this, a user who landed on signin?next=/bookings and
+   clicked "Create Account" would lose the redirect target. */
+function preserveNextOnCrossLinks() {
+  const next = getNextUrl();
+  if (!next) return;
+  const targets = [
+    "/pages/auth/signin.html",
+    "/pages/auth/signup.html",
+    "/pages/auth/forgot-password.html"
+  ];
+  for (const target of targets) {
+    document.querySelectorAll(`a[href="${target}"]`).forEach(function (a) {
+      a.href = target + "?next=" + encodeURIComponent(next);
+    });
+  }
+}
+
 /* ---------- Routing decision ---------- */
 
 const ONBOARDING_URL = "/pages/profile/profile.html?onboarding=1";
 const HOME_URL       = "/index.html";
+
+/* Read the ?next= URL param and validate it. Only same-origin relative
+   paths starting with a single slash are accepted, so a malicious URL
+   like ?next=//evil.com or ?next=https://evil.com is rejected. Returns
+   the path or null when missing/invalid. */
+function getNextUrl() {
+  const raw = new URLSearchParams(window.location.search).get("next");
+  if (!raw) return null;
+  const decoded = decodeURIComponent(raw);
+  // Must start with a single '/' (not '//' protocol-relative, not 'http')
+  if (!decoded.startsWith("/")) return null;
+  if (decoded.startsWith("//")) return null;
+  return decoded;
+}
 
 function profileNeedsOnboarding(profile) {
   if (!profile) {
@@ -66,13 +99,26 @@ function profileNeedsOnboarding(profile) {
   return false;
 }
 
+/* Build the onboarding URL, threading the next param through so that
+   when the profile-onboarding form is saved, the user lands back on
+   the page they originally came from. */
+function buildOnboardingUrl(next) {
+  if (!next) return ONBOARDING_URL;
+  return ONBOARDING_URL + "&next=" + encodeURIComponent(next);
+}
+
 async function routeAfterAuth() {
+  const next    = getNextUrl();
   const profile = await fetchProfile();
+
   if (profileNeedsOnboarding(profile)) {
-    window.location.href = ONBOARDING_URL;
-  } else {
-    window.location.href = HOME_URL;
+    // Carry next forward through onboarding — the profile page reads
+    // it and redirects there after a successful save.
+    window.location.href = buildOnboardingUrl(next);
+    return;
   }
+  // Profile already complete — go straight to the next page.
+  window.location.href = next || HOME_URL;
 }
 
 /* ---------- Password eye toggle ---------- */
@@ -179,8 +225,9 @@ function initSignupForm() {
     setBusy(submitBtn, true);
     try {
       await signUpWithEmail({ email, password, fullName });
-      // Fresh sign-up always goes to onboarding — no need to re-check
-      window.location.href = ONBOARDING_URL;
+      // Fresh sign-up always goes to onboarding — pass next through so
+      // the profile-onboarding save lands back on the original page.
+      window.location.href = buildOnboardingUrl(getNextUrl());
     } catch (err) {
       showError(form, friendlyError(err));
       setBusy(submitBtn, false);
