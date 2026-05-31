@@ -342,7 +342,11 @@ async function saveProfile() {
   }
 
   if (state.isOnboarding) {
-    window.location.href = HOME_URL;
+    // Honour ?next= when threaded through by auth.js (e.g. the user
+    // started by trying to book a hotel as a guest). Falls back to
+    // the home page otherwise. Validated for same-origin redirect.
+    const next = getValidatedNextUrl();
+    window.location.href = next || HOME_URL;
     return;
   }
 
@@ -356,6 +360,18 @@ async function saveProfile() {
   els.avatarToggleBtn?.classList.add("d-none");
 
   showToast("Profile saved.", "success");
+}
+
+/* Read the ?next= URL param and validate it. Only same-origin relative
+   paths starting with a single slash are accepted, so a malicious URL
+   like ?next=//evil.com or ?next=https://evil.com is rejected. */
+function getValidatedNextUrl() {
+  const raw = new URLSearchParams(window.location.search).get("next");
+  if (!raw) return null;
+  const decoded = decodeURIComponent(raw);
+  if (!decoded.startsWith("/")) return null;
+  if (decoded.startsWith("//")) return null;
+  return decoded;
 }
 
 /* ---------- Validation ---------- */
