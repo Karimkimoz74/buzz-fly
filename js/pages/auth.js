@@ -228,8 +228,7 @@ function initSignupForm() {
     setBusy(submitBtn, true);
     try {
       await signUpWithEmail({ email, password, fullName });
-      // Fresh sign-up always goes to onboarding — pass next through so
-      // the profile-onboarding save lands back on the original page.
+      localStorage.setItem('buzzfly.profileIncomplete', '1');
       window.location.href = buildOnboardingUrl(getNextUrl());
     } catch (err) {
       showError(form, friendlyError(err));
