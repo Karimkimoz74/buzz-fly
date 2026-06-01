@@ -123,6 +123,8 @@ function highlightActiveSidebarLink() {
   document.querySelectorAll(".sidebar-nav-link").forEach(link => {
     if (link.getAttribute("href") === path) {
       link.classList.add("active");
+    } else {
+      link.classList.remove("active");
     }
   });
 }
