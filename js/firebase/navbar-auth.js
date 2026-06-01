@@ -34,6 +34,7 @@ export function initAuthAwareNavbar() {
     try {
       await signOut();
       userAvatarCache.clear();
+      localStorage.removeItem('buzzfly.profileIncomplete');
       window.location.href = LOGOUT_URL;
     } catch (err) {
       console.error("[navbar-auth] sign out failed:", err);

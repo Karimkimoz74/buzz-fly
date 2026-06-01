@@ -1,5 +1,23 @@
 /* Buzz Fly — main.js */
 
+/* edited by rawan — restore saved theme immediately */
+(function () {
+  var t = localStorage.getItem('buzzfly.theme');
+  if (t) document.documentElement.setAttribute('data-bs-theme', t);
+})();
+
+/* edited by rawan — if profile is known incomplete, block all pages
+   except auth pages and the profile page itself                     */
+(function () {
+  if (localStorage.getItem('buzzfly.profileIncomplete') !== '1') return;
+  var path = window.location.pathname;
+  var exempt = path.includes('/pages/auth/') ||
+               path.includes('/pages/profile/profile.html');
+  if (exempt) return;
+  window.location.href = '/pages/profile/profile.html?onboarding=1&next=' +
+    encodeURIComponent(path + window.location.search);
+})();
+
 document.addEventListener("DOMContentLoaded", async () => {
   await loadPartials();
   highlightActiveNavLink();

@@ -336,6 +336,12 @@ body {
     transition: background .2s ease, color .2s ease;
 }
 
+// inactive hover — deepen the tint slightly
+.buzz-tab:not(.active):hover {
+    background: darken($light-green, 8%);
+    color: $dark-green;
+}
+
 .buzz-tab.active {
     background: linear-gradient(to right, $dark-green, $gradient-green) !important;
     color: #fff !important;
@@ -420,4 +426,132 @@ body {
 
 .sidebar-nav-link.active img {
     filter: brightness(0) invert(1);
+}
+
+
+// ╔══════════════════════════════════════════════════════╗
+// ║   edited by rawan — Dark Mode + Settings components  ║
+// ╚══════════════════════════════════════════════════════╝
+
+// Swap Bootstrap's default blue-gray dark palette with green-tinted brand darks.
+// Bootstrap reads these vars for body, cards, borders, dropdowns, modals, forms.
+[data-bs-theme="dark"] {
+    --bs-body-bg:                #0F1512;
+    --bs-body-color:             #ECEFEC;
+    --bs-emphasis-color:         #ECEFEC;
+    --bs-secondary-color:        #9AA39C;
+    --bs-card-bg:                #1B221D;
+    --bs-border-color:           #2D352F;
+    --bs-secondary-bg:           #232B25;
+    --bs-tertiary-bg:            #1B221D;
+    // Dropdowns + modals need explicit vars — Bootstrap doesn't auto-derive these
+    --bs-dropdown-bg:            #1B221D;
+    --bs-dropdown-border-color:  #2D352F;
+    --bs-dropdown-link-color:    #ECEFEC;
+    --bs-dropdown-link-hover-bg: #232B25;
+    --bs-modal-bg:               #1B221D;
+    --bs-modal-border-color:     #2D352F;
+}
+
+// .bg-light hardcodes --bs-light-rgb (always white), Bootstrap doesn't override it
+[data-bs-theme="dark"] body,
+[data-bs-theme="dark"] .bg-light    { background-color: #0F1512 !important; }
+
+// .bg-white is always white in Bootstrap — override for navbar and cards
+[data-bs-theme="dark"] .navbar.bg-white { background-color: #1B221D !important; box-shadow: 0 1px 0 rgba($dark-green,.5) !important; }
+[data-bs-theme="dark"] .card.bg-white   { background-color: #1B221D !important; }
+
+// btn-light stays white in dark mode by default — make it use dark surface instead
+[data-bs-theme="dark"] .btn-light {
+    background-color: #232B25 !important;
+    border-color: #2D352F !important;
+    color: #ECEFEC !important;
+}
+[data-bs-theme="dark"] .btn-light:hover {
+    background-color: #2A322C !important;
+    color: #ECEFEC !important;
+}
+
+// edited by rawan — hotel filter chips: bg-light makes them invisible in dark mode
+[data-bs-theme="dark"] .btn.filter.bg-light {
+    background-color: var(--bs-secondary-bg) !important;
+    color: var(--bs-body-color) !important;
+}
+
+// edited by rawan — light-purple-btn stays light in dark mode, fix it
+[data-bs-theme="dark"] .light-purple-btn {
+    background-color: rgba($purple,.18) !important;
+    color: #C4B5FD !important;
+}
+[data-bs-theme="dark"] .light-purple-btn:hover {
+    background-color: rgba($purple,.28) !important;
+}
+
+// edited by rawan — bg-white elements that stay white in dark mode
+[data-bs-theme="dark"] .input-group-text.bg-white {
+    background-color: var(--bs-tertiary-bg) !important;
+    border-color: var(--bs-border-color) !important;
+}
+[data-bs-theme="dark"] .btn.bg-white,
+[data-bs-theme="dark"] .btn.bg-white:hover {
+    background-color: var(--bs-secondary-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-border-color) !important;
+}
+// Content sections + plane icon span (flight-details, confirm-payment, index)
+[data-bs-theme="dark"] div.bg-white,
+[data-bs-theme="dark"] span.bg-white,
+[data-bs-theme="dark"] figcaption.bg-white {
+    background-color: var(--bs-card-bg) !important;
+    color: var(--bs-body-color) !important;
+}
+// Round Trip / One Way pill wrapper on home search card
+[data-bs-theme="dark"] [data-flight-only] {
+    background-color: var(--bs-secondary-bg) !important;
+}
+
+// .buzz-tab inactive — dark mode: match btn-light dark style + hover
+[data-bs-theme="dark"] .buzz-tab:not(.active) {
+    background: #232B25;
+    color: $gradient-green;
+}
+[data-bs-theme="dark"] .buzz-tab:not(.active):hover {
+    background: #2A322C;
+    color: $gradient-green;
+}
+
+// Our custom brand classes — Bootstrap doesn't know about these
+[data-bs-theme="dark"] .text-green                  { color: $gradient-green !important; }
+[data-bs-theme="dark"] .bg-light-green              { background-color: rgba($dark-green,.18) !important; }
+[data-bs-theme="dark"] .bg-light-purple             { background-color: rgba($purple,.18) !important; }
+[data-bs-theme="dark"] .sidebar-hamburger           { background: rgba($dark-green,.18); }
+[data-bs-theme="dark"] .buzz-nav-link.active        { color: $gradient-green !important; }
+[data-bs-theme="dark"] .buzz-nav-link.active::after { background: linear-gradient(to right, $nav-green, $gradient-green); }
+[data-bs-theme="dark"] .buzz-icon-btn:hover,
+[data-bs-theme="dark"] .buzz-icon-btn:focus         { background: rgba($gradient-green,.15) !important; }
+[data-bs-theme="dark"] .buzz-footer-link:hover      { color: $gradient-green !important; }
+[data-bs-theme="dark"] .buzz-view-all:hover         { background: rgba($gradient-green,.12) !important; color: $gradient-green !important; }
+
+// Sidebar — custom off-canvas component, Bootstrap doesn't style it
+[data-bs-theme="dark"] #profile-sidebar            { background-color: #1B221D !important; border-color: #2D352F !important; }
+[data-bs-theme="dark"] .sidebar-nav-link           { color: #9AA39C !important; }
+[data-bs-theme="dark"] .sidebar-nav-link:hover     { background: rgba($gradient-green,.12) !important; color: $gradient-green !important; }
+[data-bs-theme="dark"] .sidebar-nav-link.active    { background: $dark-green !important; color: #fff !important; }
+[data-bs-theme="dark"] .sidebar-nav-link.active img { filter: brightness(0) invert(1); }
+
+// form inputs that have bg-light hardcoded in HTML (contact page)
+[data-bs-theme="dark"] .form-control.bg-light,
+[data-bs-theme="dark"] .form-select.bg-light       { background-color: #2A322C !important; color: #ECEFEC !important; border-color: #2D352F !important; }
+[data-bs-theme="dark"] .form-control.bg-light::placeholder { color: #9AA39C !important; }
+
+// Page hero gradient (custom class used on Help-center, Cookie-policy, Privacy-Policy)
+.buzz-page-hero                  { background: linear-gradient(160deg, #f0fdf4 0%, #f5f3ff 100%); }
+[data-bs-theme="dark"] .buzz-page-hero { background: linear-gradient(160deg, rgba($dark-green,.15) 0%, rgba($purple,.12) 100%) !important; }
+
+// ── Settings page (edited by rawan) ────────────────────────────────────────
+
+// Delete button — suppress the global .btn scale on hover
+#delete-account-btn:hover {
+    transform: none;
+    background: rgba(220,38,38,.14) !important;
 }
