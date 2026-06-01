@@ -17,6 +17,9 @@
   <title>Confirm Payment — Buzz Fly</title>
 
   <link rel="stylesheet" href="/css/main.min.css" />
+  <script>/* edited by rawan - apply stored theme before first paint */
+    (function(){var t=localStorage.getItem("buzzfly.theme");if(t)document.documentElement.setAttribute("data-bs-theme",t);})();
+  </script>
 </head>
 <body>
 
@@ -100,7 +103,7 @@
             </div>
 
             <!-- Traveller block — 4 read-only rows -->
-            <div class="rounded-3 p-3 mb-3" style="background:#f4f4f5;">
+            <div class="rounded-3 p-3 mb-3 bg-secondary-subtle">
               <p class="text-uppercase fw-bold mb-2" style="font-size:.6rem;color:#a1a1aa;letter-spacing:.1em;">Traveller</p>
               <div class="d-flex flex-column gap-1" data-summary-traveller-rows></div>
             </div>
@@ -117,7 +120,7 @@
             </div>
             <p class="text-end mb-4" style="font-size:.7rem;color:#a1a1aa;">All taxes and service fees included</p>
 
-            <div class="d-flex gap-3 rounded-3 p-3" style="background:#f4f4f5;">
+            <div class="d-flex gap-3 rounded-3 p-3 bg-secondary-subtle">
               <img src="/assets/icons/calendar.svg" alt="" width="18" height="18" class="flex-shrink-0 mt-1" />
               <div>
                 <p class="fw-bold mb-1" style="font-size:.875rem;">Flexible Cancellation</p>

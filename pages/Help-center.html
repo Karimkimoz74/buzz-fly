@@ -10,6 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="/css/main.min.css" />
+  <script>/* edited by rawan - apply stored theme before first paint */
+    (function(){var t=localStorage.getItem("buzzfly.theme");if(t)document.documentElement.setAttribute("data-bs-theme",t);})();
+  </script>
 </head>
 <body>
 
@@ -19,7 +22,7 @@
   <main>
 
     <!-- ===== HERO ===== -->
-    <section class="py-5" style="background: linear-gradient(160deg, #f0fdf4 0%, #f5f3ff 100%);">
+    <section class="py-5 buzz-page-hero">
       <div class="container text-center py-4">
         <h1 class="display-4 fw-bold mb-2" style="letter-spacing: -0.02em;">How can we help?</h1>
         <p class="text-muted fs-5 mb-0">Browse support topics or find quick answers below.</p>
@@ -84,7 +87,7 @@
           <!-- Cancellations -->
           <div class="col-12 col-md-4">
             <div class="card border-0 shadow-sm rounded-4 p-4 h-100 buzz-deal">
-              <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 52px; height: 52px; background-color: #fee2e2;">
+              <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 52px; height: 52px; background-color: rgba(220,38,38,.12);">
                 <img src="/assets/icons/Cancellation.svg" alt="Cancellations" style="width: 26px; height: 26px;" />
               </div>
               <h2 class="fs-5 fw-bold mb-2">Cancellations</h2>
@@ -122,7 +125,7 @@
           <!-- Baggage with inline policies -->
           <div class="col-12 col-md-4">
             <div class="card border-0 shadow-sm rounded-4 p-4 h-100 buzz-deal">
-              <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 52px; height: 52px; background-color: #e0f2fe;">
+              <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 52px; height: 52px; background-color: rgba(14,165,233,.12);">
                 <img src="/assets/icons/Baggage.svg" alt="Baggage" style="width: 20px; height: 26px;" />
               </div>
               <h2 class="fs-5 fw-bold mb-2">Baggage</h2>
@@ -219,7 +222,7 @@
           <!-- FAQ 1 -->
           <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
             <h3 class="accordion-header">
-              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
                 Can I change my flight 24 hours before departure?
               </button>
             </h3>
@@ -233,7 +236,7 @@
           <!-- FAQ 2 — Flight Delays -->
           <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
             <h3 class="accordion-header">
-              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
                 What happens if my flight is delayed?
               </button>
             </h3>
@@ -247,7 +250,7 @@
           <!-- FAQ 3 — Pet Policy in Hotels -->
           <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
             <h3 class="accordion-header">
-              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
                 What is the pet policy for hotels booked through Buzz Fly?
               </button>
             </h3>
@@ -261,7 +264,7 @@
           <!-- FAQ 4 — Refunds -->
           <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
             <h3 class="accordion-header">
-              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
                 How long does a refund take?
               </button>
             </h3>
@@ -275,7 +278,7 @@
           <!-- FAQ 5 — Baggage fees -->
           <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
             <h3 class="accordion-header">
-              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
                 How do I add an extra checked bag to my booking?
               </button>
             </h3>
@@ -289,7 +292,7 @@
           <!-- FAQ 6 — Check-in -->
           <div class="accordion-item border rounded-4 shadow-sm mb-3 overflow-hidden">
             <h3 class="accordion-header">
-              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" aria-expanded="false" aria-controls="faq6">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" aria-expanded="false" aria-controls="faq6">
                 When can I check in online?
               </button>
             </h3>
@@ -303,7 +306,7 @@
           <!-- FAQ 7 — Travel restrictions -->
           <div class="accordion-item border rounded-4 shadow-sm overflow-hidden">
             <h3 class="accordion-header">
-              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq7" aria-expanded="false" aria-controls="faq7">
+              <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq7" aria-expanded="false" aria-controls="faq7">
                 What are the current travel restrictions for international routes?
               </button>
             </h3>
