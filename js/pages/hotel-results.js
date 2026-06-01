@@ -212,7 +212,6 @@ function render() {
     html += createHotelCard(hotel);
   }
   container.innerHTML = html;
-  wireFavButtons();
 
   updateSubtitle(state.filtered.length);
 
@@ -299,11 +298,6 @@ function createHotelCard(hotel) {
       <article class="card h-100 border-0 rounded-4 overflow-hidden shadow-sm">
         <div class="position-relative rounded-4 overflow-hidden" style="height: 255px;">
           <img src="${safeImg}" class="w-100 h-100 object-fit-cover" alt="${safeTitle}">
-          <button type="button"
-                  class="fav-btn position-absolute top-0 end-0 m-3 p-2 rounded-circle border-0 d-flex align-items-center justify-content-center glass-badge shadow-sm"
-                  aria-label="Save ${safeTitle}">
-            <img src="../assets/icons/favorite_outline.svg" style="width: 16px; height: 16px;">
-          </button>
         </div>
         <div class="card-body p-4 d-flex flex-column">
           <div class="d-flex justify-content-between align-items-center gap-2 mb-1">
@@ -368,25 +362,6 @@ function buildDetailsHref(hotel) {
   return `hotel-details.html?${params.toString()}`;
 }
 
-/* =====================================================
-   Favorite button toggle (UI only)
-   ===================================================== */
-
-function wireFavButtons() {
-  document.querySelectorAll(".fav-btn").forEach((button) => {
-    button.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      button.classList.toggle("is-active");
-      const icon = button.querySelector("img");
-      if (button.classList.contains("is-active")) {
-        icon.src = "../assets/icons/favorite.svg";
-      } else {
-        icon.src = "../assets/icons/favorite_outline.svg";
-      }
-    });
-  });
-}
 
 /* =====================================================
    Helpers

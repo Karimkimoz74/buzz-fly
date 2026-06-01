@@ -1,232 +1,141 @@
-/* =====================================================
-   Buzz Fly — trips.js (My Trips page)
+// trips.js — My Trips page
 
-   Auth-gated reader of bookings/{*} for the current user.
-   Round-trip flight bookings expand into TWO cards (one
-   keyed on travelDate, one on returnDate). The hotel /
-   one-way flight case stays as a single card.
-
-   Also runs the 24h-before-travel reminder check on every
-   visit — see notifications.checkAndCreateReminders.
-
-   Loaded as <script type="module"> on:
-     pages/profile/my-trips.html
-   ===================================================== */
-
-import { auth } from "/js/firebase/firebase-init.js";
-import { onAuthChange } from "/js/firebase/auth.js";
-import { userBookings } from "/js/firebase/bookings.js";
+import { onAuthChange }          from "/js/firebase/auth.js";
+import { userBookings }          from "/js/firebase/bookings.js";
 import { checkAndCreateReminders } from "/js/firebase/notifications.js";
-import {
-  goToTripDetail,
-  consumeCancelledFlag
-} from "/js/firebase/trip-detail-bridge.js";
+import { goToTripDetail, consumeCancelledFlag } from "/js/firebase/trip-detail-bridge.js";
 
 const SIGNIN_URL = "/pages/auth/signin.html";
 
-/* ---------- DOM refs ---------- */
-
 const els = {
-  signin:        document.querySelector("[data-trips-signin]"),
-  signinBtn:     document.querySelector("[data-trips-signin-btn]"),
-  loading:       document.querySelector("[data-trips-loading]"),
-  error:         document.querySelector("[data-trips-error]"),
-  retryBtn:      document.querySelector("[data-trips-retry-btn]"),
-  main:          document.querySelector("[data-trips-main]"),
-  typeTabs:      document.querySelector("[data-type-tabs]"),
-  whenTabs:      document.querySelector("[data-when-tabs]"),
-  grid:          document.querySelector("[data-trips-grid]"),
-  empty:         document.querySelector("[data-trips-empty]"),
-  emptyTitle:    document.querySelector("[data-trips-empty-title]")
+  signin:    document.querySelector("[data-trips-signin]"),
+  signinBtn: document.querySelector("[data-trips-signin-btn]"),
+  loading:   document.querySelector("[data-trips-loading]"),
+  error:     document.querySelector("[data-trips-error]"),
+  retryBtn:  document.querySelector("[data-trips-retry-btn]"),
+  main:      document.querySelector("[data-trips-main]"),
+  typeTabs:  document.querySelector("[data-type-tabs]"),
+  whenTabs:  document.querySelector("[data-when-tabs]"),
+  grid:      document.querySelector("[data-trips-grid]"),
+  empty:     document.querySelector("[data-trips-empty]"),
+  emptyTitle: document.querySelector("[data-trips-empty-title]")
 };
-
-/* ---------- Page state ---------- */
 
 const state = {
-  bookings:    [],          // raw docs from Firestore
-  type:        "flight",    // 'flight' | 'hotel'
-  when:        "upcoming"   // 'upcoming' | 'past'
+  bookings: [],
+  type: "flight",   // 'flight' | 'hotel'
+  when: "upcoming"  // 'upcoming' | 'past'
 };
 
-/* ---------- Init ---------- */
+// ── Init ─────────────────────────────────────────────────────────────────────
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   bindUi();
-  // Listen continuously — if the user signs out in another tab the
-  // view flips to the sign-in CTA, and signing back in re-fetches.
-  onAuthChange(function (user) {
-    if (user) {
-      loadAndRender();
-    } else {
-      showSigninCta();
-    }
-  });
+  onAuthChange(user => user ? loadAndRender() : showView("signin"));
 });
 
 function bindUi() {
-  if (els.signinBtn) {
-    els.signinBtn.addEventListener("click", function () {
-      const here = window.location.pathname;
-      window.location.href = SIGNIN_URL + "?next=" + encodeURIComponent(here);
+  els.signinBtn?.addEventListener("click", () => {
+    window.location.href = SIGNIN_URL + "?next=" + encodeURIComponent(window.location.pathname);
+  });
+  els.retryBtn?.addEventListener("click", loadAndRender);
+
+  wireTabGroup(els.typeTabs, "type-tab", "type", paintTypeTabs);
+  wireTabGroup(els.whenTabs, "when-tab",  "when", paintWhenTabs);
+
+  // One delegated listener covers all cards — survives every innerHTML replace
+  els.grid?.addEventListener("click", e => {
+    const card = e.target.closest("[data-trip-card]");
+    if (!card) return;
+    const booking = state.bookings.find(b => b.id === card.dataset.tripCard);
+    if (!booking) return;
+    try {
+      goToTripDetail(booking);
+    } catch (err) {
+      console.error("[trips] goToTripDetail failed:", err);
+      toast("Couldn't open the trip details. Please try again.", "danger");
+    }
+  });
+}
+
+function wireTabGroup(container, attr, stateKey, paintFn) {
+  if (!container) return;
+  container.querySelectorAll("[data-" + attr + "]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const next = btn.getAttribute("data-" + attr);
+      if (next === state[stateKey]) return;
+      state[stateKey] = next;
+      paintFn();
+      renderGrid();
     });
-  }
-  if (els.retryBtn) {
-    els.retryBtn.addEventListener("click", function () { loadAndRender(); });
-  }
-  if (els.typeTabs) {
-    els.typeTabs.querySelectorAll("[data-type-tab]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        const next = btn.dataset.typeTab;
-        if (next === state.type) return;
-        state.type = next;
-        paintTypeTabs();
-        renderGrid();
-      });
-    });
-  }
-  if (els.whenTabs) {
-    els.whenTabs.querySelectorAll("[data-when-tab]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        const next = btn.dataset.whenTab;
-        if (next === state.when) return;
-        state.when = next;
-        paintWhenTabs();
-        renderGrid();
-      });
-    });
-  }
+  });
 }
 
-/* ---------- Auth gate + fetch ---------- */
+// ── Auth + fetch ──────────────────────────────────────────────────────────────
 
-function showSigninCta() {
-  if (els.signin)  els.signin.classList.remove("d-none");
-  if (els.loading) els.loading.classList.add("d-none");
-  if (els.error)   els.error.classList.add("d-none");
-  if (els.main)    els.main.classList.add("d-none");
-}
-
-function showLoading() {
-  if (els.signin)  els.signin.classList.add("d-none");
-  if (els.loading) els.loading.classList.remove("d-none");
-  if (els.error)   els.error.classList.add("d-none");
-  if (els.main)    els.main.classList.add("d-none");
-}
-
-function showError() {
-  if (els.signin)  els.signin.classList.add("d-none");
-  if (els.loading) els.loading.classList.add("d-none");
-  if (els.error)   els.error.classList.remove("d-none");
-  if (els.main)    els.main.classList.add("d-none");
-}
-
-function showMain() {
-  if (els.signin)  els.signin.classList.add("d-none");
-  if (els.loading) els.loading.classList.add("d-none");
-  if (els.error)   els.error.classList.add("d-none");
-  if (els.main)    els.main.classList.remove("d-none");
+function showView(name) {
+  const panels = { signin: els.signin, loading: els.loading, error: els.error, main: els.main };
+  Object.entries(panels).forEach(([key, el]) => el?.classList.toggle("d-none", key !== name));
 }
 
 async function loadAndRender() {
-  showLoading();
+  showView("loading");
   try {
     state.bookings = await userBookings();
   } catch (err) {
     console.error("[trips] fetch failed:", err);
-    showError();
+    showView("error");
     return;
   }
-  showMain();
+  showView("main");
   paintTypeTabs();
   paintWhenTabs();
   renderGrid();
 
-  // Fire reminder notifications for any booking starting in <24h
-  // that we haven't already reminded on this device. Idempotent.
-  checkAndCreateReminders(state.bookings).catch(function (err) {
-    console.warn("[trips] reminder scan failed:", err);
-  });
-
-  // If the user just cancelled a booking on Trip Detail, the fresh
-  // userBookings() above already reflects the new status — the
-  // cancelled card has moved from Upcoming to Past. Toast to confirm.
-  const cancelled = consumeCancelledFlag();
-  if (cancelled) {
-    toast("Booking cancelled.", "success");
-  }
+  checkAndCreateReminders(state.bookings).catch(err =>
+    console.warn("[trips] reminder scan failed:", err)
+  );
+  if (consumeCancelledFlag()) toast("Booking cancelled.", "success");
 }
 
-/* ---------- Tab paint ---------- */
+// ── Tabs ──────────────────────────────────────────────────────────────────────
 
 function paintTypeTabs() {
-  if (!els.typeTabs) return;
-  els.typeTabs.querySelectorAll("[data-type-tab]").forEach(function (btn) {
-    const active = btn.dataset.typeTab === state.type;
-    btn.setAttribute("aria-pressed", active ? "true" : "false");
-    if (active) {
-      btn.classList.add("green-btn");
-      btn.classList.remove("btn-outline-secondary");
-    } else {
-      btn.classList.remove("green-btn");
-      btn.classList.add("btn-outline-secondary");
-    }
-    // Re-tint the icon based on active state (white on active, default otherwise)
-    const ic = btn.querySelector("img");
-    if (ic) {
-      ic.style.filter = active ? "brightness(0) invert(1)" : "";
-    }
-  });
+  paintTabs(els.typeTabs, "type-tab", state.type, "btn-outline-secondary", true);
 }
-
 function paintWhenTabs() {
-  if (!els.whenTabs) return;
-  els.whenTabs.querySelectorAll("[data-when-tab]").forEach(function (btn) {
-    const active = btn.dataset.whenTab === state.when;
-    btn.setAttribute("aria-pressed", active ? "true" : "false");
-    if (active) {
-      btn.classList.add("green-btn");
-      btn.classList.remove("btn-light");
-    } else {
-      btn.classList.remove("green-btn");
-      btn.classList.add("btn-light");
+  paintTabs(els.whenTabs, "when-tab", state.when, "btn-light", false);
+}
+
+function paintTabs(container, attr, activeValue, inactiveClass, tintIcon) {
+  if (!container) return;
+  container.querySelectorAll("[data-" + attr + "]").forEach(btn => {
+    const active = btn.getAttribute("data-" + attr) === activeValue;
+    btn.setAttribute("aria-pressed", String(active));
+    btn.classList.toggle("green-btn", active);
+    btn.classList.toggle(inactiveClass, !active);
+    if (tintIcon) {
+      const ic = btn.querySelector("img");
+      if (ic) ic.style.filter = active ? "brightness(0) invert(1)" : "";
     }
   });
 }
 
-/* ---------- Leg splitting (round-trip → 2 cards) ----------
+// ── Data ──────────────────────────────────────────────────────────────────────
 
-   A booking with type === 'flight', segments.length >= 2 and a
-   non-null returnDate expands into Departure (keyed on travelDate)
-   + Return (keyed on returnDate). Hotels and one-way flights stay
-   as a single card keyed on travelDate. */
+// Round-trip → 2 legs (Departure + Return). One-way/hotel → 1 leg.
 function legsFor(bookings, wantedType) {
   const out = [];
   for (const b of bookings) {
     if (b.type !== wantedType) continue;
-    const isRoundTrip = b.type === "flight"
-                     && Array.isArray(b.segments)
+    const isRoundTrip = Array.isArray(b.segments)
                      && b.segments.length >= 2
                      && b.returnDate != null;
     if (isRoundTrip) {
-      out.push({
-        booking:  b,
-        date:     toDateOrNull(b.travelDate),
-        legLabel: "Departure",
-        legRoute: b.segments[0].route
-      });
-      out.push({
-        booking:  b,
-        date:     toDateOrNull(b.returnDate),
-        legLabel: "Return",
-        legRoute: b.segments[1].route
-      });
+      out.push({ booking: b, date: toDateOrNull(b.travelDate), legLabel: "Departure", legRoute: b.segments[0].route });
+      out.push({ booking: b, date: toDateOrNull(b.returnDate),  legLabel: "Return",    legRoute: b.segments[1].route });
     } else {
-      out.push({
-        booking:  b,
-        date:     toDateOrNull(b.travelDate),
-        legLabel: null,
-        legRoute: null
-      });
+      out.push({ booking: b, date: toDateOrNull(b.travelDate), legLabel: null, legRoute: null });
     }
   }
   return out;
@@ -239,40 +148,29 @@ function toDateOrNull(t) {
   return null;
 }
 
-/* ---------- Upcoming / Past filter ---------- */
-
 function visibleLegs(legs, isUpcoming) {
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
-
-  if (isUpcoming) {
-    return legs.filter(function (l) {
-      if (l.booking.status === "cancelled") return false;
-      if (l.date == null) return true;          // undated → treat as upcoming
-      return l.date >= startOfToday;
-    });
-  }
-  return legs.filter(function (l) {
-    if (l.booking.status === "cancelled") return true;
-    if (l.date == null) return false;
-    return l.date < startOfToday;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return legs.filter(l => {
+    const cancelled = l.booking.status === "cancelled";
+    return isUpcoming
+      ? !cancelled && (l.date == null || l.date >= today)
+      : cancelled  || (l.date != null  && l.date < today);
   });
 }
 
-/* ---------- Render ---------- */
+// ── Render ────────────────────────────────────────────────────────────────────
 
 function renderGrid() {
   if (!els.grid) return;
 
-  const legs    = legsFor(state.bookings, state.type);
-  const visible = visibleLegs(legs, state.when === "upcoming");
+  const isUpcoming = state.when === "upcoming";
+  const visible    = visibleLegs(legsFor(state.bookings, state.type), isUpcoming);
 
-  // Sort visible: upcoming ascending, past descending (recent first).
-  visible.sort(function (a, b) {
-    const aMs = a.date ? a.date.getTime() : (state.when === "upcoming" ? Infinity : -Infinity);
-    const bMs = b.date ? b.date.getTime() : (state.when === "upcoming" ? Infinity : -Infinity);
-    if (state.when === "upcoming") return aMs - bMs;
-    return bMs - aMs;
+  visible.sort((a, b) => {
+    const aMs = a.date?.getTime() ?? (isUpcoming ? Infinity : -Infinity);
+    const bMs = b.date?.getTime() ?? (isUpcoming ? Infinity : -Infinity);
+    return isUpcoming ? aMs - bMs : bMs - aMs;
   });
 
   if (visible.length === 0) {
@@ -280,9 +178,8 @@ function renderGrid() {
     if (els.empty) {
       els.empty.classList.remove("d-none");
       if (els.emptyTitle) {
-        const word = state.when === "upcoming" ? "upcoming" : "past";
-        const noun = state.type === "flight" ? "flights" : "hotels";
-        els.emptyTitle.textContent = `No ${word} ${noun} yet`;
+        els.emptyTitle.textContent =
+          `No ${isUpcoming ? "upcoming" : "past"} ${state.type === "flight" ? "flights" : "hotels"} yet`;
       }
     }
     return;
@@ -290,35 +187,23 @@ function renderGrid() {
 
   if (els.empty) els.empty.classList.add("d-none");
   els.grid.innerHTML = visible.map(tripCardHtml).join("");
-
-  // Wire each card → Trip Detail with the underlying booking.
-  // Round-trip departure + return cards both point at the same
-  // booking, so Trip Detail can read travelDate / returnDate itself.
-  els.grid.querySelectorAll("[data-trip-card]").forEach(function (card) {
-    card.addEventListener("click", function () {
-      const id = card.dataset.tripCard;
-      const booking = state.bookings.find(function (b) { return b.id === id; });
-      if (!booking) return;
-      try {
-        goToTripDetail(booking);
-      } catch (err) {
-        console.error("[trips] goToTripDetail failed:", err);
-        toast("Couldn't open the trip details. Please try again.", "danger");
-      }
-    });
-  });
 }
 
+const STATUS_PILL = {
+  cancelled: ["bg-danger-subtle text-danger",       "CANCELLED"],
+  completed: ["bg-secondary-subtle text-secondary", "COMPLETED"]
+};
+
 function tripCardHtml(leg) {
-  const b      = leg.booking;
-  const pill   = statusPillHtml(b.status);
-  const icon   = b.type === "flight" ? "plane-takeoff.svg" : "bed.svg";
-  const bgIcon = b.type === "flight" ? "bg-light-green"     : "bg-light-purple";
-  const subtitleText = leg.legLabel
-    ? `${leg.legLabel} · ${leg.legRoute || ""}`
-    : (b.subtitle || "");
-  const dateText  = leg.date ? formatDate(leg.date) : "Date to confirm";
-  const priceText = "$" + (Number(b.total) || 0).toLocaleString("en-US");
+  const b           = leg.booking;
+  const [cls, label] = STATUS_PILL[b.status] || ["bg-light-green text-green", "CONFIRMED"];
+  const pill        = `<span class="badge rounded-pill ${cls} fw-semibold" style="font-size:.65rem;">${label}</span>`;
+  const icon        = b.type === "flight" ? "plane-takeoff.svg" : "bed.svg";
+  const bgIcon      = b.type === "flight" ? "bg-light-green" : "bg-light-purple";
+  const subtitle    = leg.legLabel ? `${leg.legLabel} · ${leg.legRoute || ""}` : (b.subtitle || "");
+  const dateText    = leg.date ? formatDate(leg.date) : "Date to confirm";
+  const priceText   = "$" + (Number(b.total) || 0).toLocaleString("en-US");
+  const rowLabel    = b.type === "hotel" ? "Stay" : (leg.legLabel || "Flight");
 
   return `
     <div class="col-12 col-md-6 col-xl-4">
@@ -330,38 +215,23 @@ function tripCardHtml(leg) {
             </div>
             ${pill}
           </div>
-
           <div class="mb-3">
             <h3 class="h6 fw-bold mb-1">${escapeHtml(b.title || "—")}</h3>
-            <p class="text-muted small mb-0">${escapeHtml(subtitleText)}</p>
+            <p class="text-muted small mb-0">${escapeHtml(subtitle)}</p>
           </div>
-
           <div class="d-flex align-items-center justify-content-between mt-auto pt-3 border-top">
             <div>
-              <p class="text-uppercase fw-bold mb-1" style="font-size:.62rem;color:#a1a1aa;letter-spacing:.08em;">
-                ${b.type === "hotel" ? "Stay" : (leg.legLabel || "Flight")}
-              </p>
+              <p class="text-uppercase fw-bold mb-1" style="font-size:.62rem;color:#a1a1aa;letter-spacing:.08em;">${rowLabel}</p>
               <p class="fw-semibold small mb-0">${escapeHtml(dateText)}</p>
             </div>
             <p class="fw-bold text-green mb-0">${priceText}</p>
           </div>
         </div>
       </article>
-    </div>
-  `;
+    </div>`;
 }
 
-function statusPillHtml(status) {
-  if (status === "cancelled") {
-    return `<span class="badge rounded-pill bg-danger-subtle text-danger fw-semibold" style="font-size:.65rem;">CANCELLED</span>`;
-  }
-  if (status === "completed") {
-    return `<span class="badge rounded-pill bg-secondary-subtle text-secondary fw-semibold" style="font-size:.65rem;">COMPLETED</span>`;
-  }
-  return `<span class="badge rounded-pill bg-light-green text-green fw-semibold" style="font-size:.65rem;">CONFIRMED</span>`;
-}
-
-/* ---------- Helpers ---------- */
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function formatDate(d) {
   if (!(d instanceof Date) || isNaN(d.getTime())) return "—";
@@ -369,21 +239,15 @@ function formatDate(d) {
 }
 
 function escapeHtml(s) {
-  if (s === null || s === undefined) return "";
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+  if (s == null) return "";
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-function toast(message, kind) {
-  const colour = kind || "success";
+function toast(message, kind = "success") {
   const el = document.createElement("div");
-  el.className = `position-fixed bottom-0 end-0 m-3 alert alert-${colour} shadow-sm rounded-4 py-2 px-3 small fw-semibold`;
+  el.className = `position-fixed bottom-0 end-0 m-3 alert alert-${kind} shadow-sm rounded-4 py-2 px-3 small fw-semibold`;
   el.style.zIndex = "9999";
-  el.textContent  = message;
+  el.textContent = message;
   document.body.appendChild(el);
-  setTimeout(function () { el.remove(); }, 3500);
+  setTimeout(() => el.remove(), 3500);
 }

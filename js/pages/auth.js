@@ -36,11 +36,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   preserveNextOnCrossLinks();
 
   // One-shot check: if Firebase already has a signed-in user when this
-  // page loads, route them away.
-  await auth.authStateReady();
-  if (auth.currentUser) {
-    await routeAfterAuth();
-    return;
+  // page loads, route them away — but NOT on forgot-password (a signed-in
+  // user can legitimately want to reset their password from the profile page).
+  const isForgotPage = window.location.pathname.includes("forgot-password");
+  if (!isForgotPage) {
+    await auth.authStateReady();
+    if (auth.currentUser) {
+      await routeAfterAuth();
+      return;
+    }
   }
 
   // Otherwise wire up the form handlers
@@ -112,12 +116,11 @@ async function routeAfterAuth() {
   const profile = await fetchProfile();
 
   if (profileNeedsOnboarding(profile)) {
-    // Carry next forward through onboarding — the profile page reads
-    // it and redirects there after a successful save.
+    localStorage.setItem('buzzfly.profileIncomplete', '1');
     window.location.href = buildOnboardingUrl(next);
     return;
   }
-  // Profile already complete — go straight to the next page.
+  localStorage.removeItem('buzzfly.profileIncomplete');
   window.location.href = next || HOME_URL;
 }
 
@@ -225,8 +228,7 @@ function initSignupForm() {
     setBusy(submitBtn, true);
     try {
       await signUpWithEmail({ email, password, fullName });
-      // Fresh sign-up always goes to onboarding — pass next through so
-      // the profile-onboarding save lands back on the original page.
+      localStorage.setItem('buzzfly.profileIncomplete', '1');
       window.location.href = buildOnboardingUrl(getNextUrl());
     } catch (err) {
       showError(form, friendlyError(err));
