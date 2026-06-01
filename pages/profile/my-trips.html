@@ -17,6 +17,9 @@
 
   <title>My Trips - Buzz Fly</title>
   <link rel="stylesheet" href="/css/main.min.css" />
+  <script>/* edited by rawan - apply stored theme before first paint */
+    (function(){var t=localStorage.getItem("buzzfly.theme");if(t)document.documentElement.setAttribute("data-bs-theme",t);})();
+  </script>
 </head>
 <body class="bg-light pt-0">
   <div class="d-flex flex-column flex-lg-row min-vh-100">
@@ -80,7 +83,7 @@
         <!-- Filter row 2: Upcoming / Past -->
         <div class="d-flex gap-2 mb-3" data-when-tabs>
           <button type="button" class="btn btn-sm rounded-pill green-btn px-3" data-when-tab="upcoming" aria-pressed="true">Upcoming</button>
-          <button type="button" class="btn btn-sm rounded-pill btn-light px-3" data-when-tab="past" aria-pressed="false">Past</button>
+          <button type="button" class="btn btn-sm rounded-pill btn-outline-secondary px-3" data-when-tab="past" aria-pressed="false">Past</button>
         </div>
 
         <!-- Cards grid -->

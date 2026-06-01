@@ -290,7 +290,7 @@ function paintPicker(container, leg, currentClass, kind) {
     return `
       <button type="button"
               class="d-flex align-items-center justify-content-between p-3 rounded-3 ${activeCls}"
-              style="background:${selected ? "" : "#fff"};border-style:solid;"
+              style="background:${selected ? "" : "var(--bs-card-bg)"};border-style:solid;"
               data-cabin-pick="${escapeAttr(c)}"
               data-cabin-leg="${kind}">
         <span class="fw-semibold d-flex align-items-center">${escapeHtml(c)}${check}</span>
