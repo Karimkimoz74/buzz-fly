@@ -11,7 +11,7 @@
           default  → identity
           price    → sort ascending by pricePerNight
           rating   → sort descending by rating
-          boutique → filter rating >= 4.7
+          topRated → filter rating >= 4.7
      5. Paginate client-side: show 4 initially, +4 per "Discover more" click.
 
    The search query is read from the URL (set by home.js):
@@ -31,7 +31,7 @@ import {
 } from "/js/firebase/hotels.js";
 
 const PAGE_SIZE = 4;
-const BOUTIQUE_RATING_MIN = 4.7;
+const TOP_RATED_MIN = 4.7;
 
 const container       = document.getElementById("cards-container");
 const heroTitleEl     = document.getElementById("hero-title");
@@ -172,8 +172,8 @@ function applyActiveFilter() {
     list.sort((a, b) => (a.pricePerNight || 0) - (b.pricePerNight || 0));
   } else if (state.activeFilter === "rating") {
     list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  } else if (state.activeFilter === "boutique") {
-    state.filtered = list.filter(h => (h.rating || 0) >= BOUTIQUE_RATING_MIN);
+  } else if (state.activeFilter === "topRated") {
+    state.filtered = list.filter(h => (h.rating || 0) >= TOP_RATED_MIN);
     return;
   }
   state.filtered = list;
