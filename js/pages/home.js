@@ -339,31 +339,30 @@ function initFlightSearchForm() {
    (case-insensitive), or city names (exact then substring). */
 function parseAirportPick(input) {
   if (!input) return null;
-  const trimmed = input.trim();
-  if (!trimmed) return null;
+  const q = input.trim();
+  if (!q) return null;
 
-  // Canonical "City · CODE" form (or "City (CODE)") — the datalist value
-  const m = /^(.+?)\s*[·\(]\s*([A-Za-z]{3})\)?\s*$/.exec(trimmed);
-  if (m) {
-    const code = m[2].toUpperCase();
-    const hit  = AIRPORTS.find((a) => a.code === code);
+  const lower = q.toLowerCase();
+
+  // If input is the datalist format "City · CODE", grab the part after " · ".
+  // Otherwise treat the whole input as a code candidate.
+  let code = q;
+  if (q.includes(" · ")) {
+    code = q.split(" · ").pop().trim();
+  }
+  code = code.toUpperCase();
+
+  // Strategies in priority order — first hit wins.
+  const strategies = [
+    (a) => a.code === code,
+    (a) => a.city.toLowerCase() === lower,
+    (a) => a.city.toLowerCase().includes(lower),
+  ];
+
+  for (const matches of strategies) {
+    const hit = AIRPORTS.find(matches);
     if (hit) return hit;
   }
-
-  // Raw IATA code
-  const upper = trimmed.toUpperCase();
-  const byCode = AIRPORTS.find((a) => a.code === upper);
-  if (byCode) return byCode;
-
-  // Exact city (case-insensitive)
-  const lower = trimmed.toLowerCase();
-  const byCityExact = AIRPORTS.find((a) => a.city.toLowerCase() === lower);
-  if (byCityExact) return byCityExact;
-
-  // Substring city match (first hit)
-  const byCityFuzzy = AIRPORTS.find((a) => a.city.toLowerCase().includes(lower));
-  if (byCityFuzzy) return byCityFuzzy;
-
   return null;
 }
 
