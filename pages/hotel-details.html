@@ -144,19 +144,19 @@
             <label for="hd-room-type" class="form-label fw-semibold text-uppercase text-secondary mb-1 small">Room Type</label>
             <select id="hd-room-type" class="form-select rounded-pill mb-2"></select>
 
-            <!-- Check-in / Check-out / Guests (display-only — picked on Stage 1/2) -->
+            <!-- Check-in / Check-out / Guests — editable; price recomputes on change -->
             <div class="row g-2 mb-3">
               <div class="col-6">
                 <label for="hd-checkin" class="form-label small text-uppercase fw-semibold text-secondary mb-1" style="font-size:.6rem;letter-spacing:.8px;">Check-in</label>
-                <input type="date" id="hd-checkin" class="form-control rounded-3" disabled />
+                <input type="date" id="hd-checkin" class="form-control rounded-3" />
               </div>
               <div class="col-6">
                 <label for="hd-checkout" class="form-label small text-uppercase fw-semibold text-secondary mb-1" style="font-size:.6rem;letter-spacing:.8px;">Check-out</label>
-                <input type="date" id="hd-checkout" class="form-control rounded-3" disabled />
+                <input type="date" id="hd-checkout" class="form-control rounded-3" />
               </div>
               <div class="col-12">
                 <label for="hd-guests" class="form-label small text-uppercase fw-semibold text-secondary mb-1" style="font-size:.6rem;letter-spacing:.8px;">Guests</label>
-                <select id="hd-guests" class="form-select rounded-pill" disabled></select>
+                <select id="hd-guests" class="form-select rounded-pill"></select>
               </div>
             </div>
 

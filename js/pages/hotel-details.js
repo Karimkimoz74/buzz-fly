@@ -284,17 +284,47 @@ function populateFormFromState() {
 }
 
 function bindFormHandlers() {
-  // Room-type is the only editable field on this page — the user can
-  // upgrade / downgrade tier without going back to Stage 2.
   if (els.roomType) {
     els.roomType.addEventListener("change", function () {
       state.selectedRoomType = els.roomType.value;
       recompute();
     });
   }
-  // Check-in / check-out / guests are disabled in HTML — picked on
-  // Stage 1 and carried forward via URL. No handlers needed; if the
-  // user wants to change those they go back to the search.
+
+  if (els.checkIn) {
+    els.checkIn.addEventListener("change", function () {
+      const picked = parseIsoDate(els.checkIn.value);
+      if (!picked) return;
+      state.checkIn = picked;
+      // Keep check-out strictly after check-in
+      els.checkOut.min = isoOf(addDays(state.checkIn, 1));
+      if (state.checkOut <= state.checkIn) {
+        state.checkOut = addDays(state.checkIn, 1);
+        els.checkOut.value = isoOf(state.checkOut);
+      }
+      recompute();
+    });
+  }
+
+  if (els.checkOut) {
+    els.checkOut.addEventListener("change", function () {
+      const picked = parseIsoDate(els.checkOut.value);
+      if (!picked || picked <= state.checkIn) return;
+      state.checkOut = picked;
+      recompute();
+    });
+  }
+
+  if (els.guests) {
+    els.guests.addEventListener("change", function () {
+      const n = parseInt(els.guests.value, 10);
+      if (isNaN(n) || n < 1) return;
+      state.guests = Math.min(n, MAX_ROOM_CAPACITY);
+      // Rebuild the room-type select so ineligible rooms get disabled labels.
+      buildRoomTypeSelect();
+      recompute();
+    });
+  }
 
   if (els.confirmBtn) {
     els.confirmBtn.addEventListener("click", onConfirm);
